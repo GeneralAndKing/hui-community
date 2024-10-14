@@ -24,16 +24,23 @@ import java.time.Instant;
 @Slf4j
 @EntityListeners(AuditingEntityListener.class)
 public abstract class Base implements Serializable {
-  @Id
-  @UuidGenerator
-  @Column(name = "id")
-  protected String id;
+    @Id
+    @UuidGenerator
+    @Column(name = "id")
+    protected String id;
 
-  @Column(name = "update_time")
-  @LastModifiedDate
-  protected Instant updateTime;
 
-  @Column(name = "create_time")
-  @CreatedDate
-  protected Instant createTime;
+    @Column(name = "create_by")
+    protected String createBy;
+
+    @Column(name = "update_by")
+    protected String updateBy;
+
+    @Column(name = "update_time")
+    @LastModifiedDate
+    protected Instant updateTime;
+
+    @Column(name = "create_time")
+    @CreatedDate
+    protected Instant createTime;
 }
