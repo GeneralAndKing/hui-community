@@ -16,7 +16,7 @@ import java.time.Instant;
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Table(name = "payment")
+@Table(name = "h_payment")
 @Slf4j
 @EntityListeners(AuditingEntityListener.class)
 public class Payment extends Base {
@@ -25,7 +25,7 @@ public class Payment extends Base {
     @JoinColumn(name = "community_id")
     private Community community;
 
-    @Column(name = "community_id", updatable = false)
+    @Column(name = "community_id", updatable = false,insertable=false)
     private String communityId;
 
     @Column(name = "start_time")

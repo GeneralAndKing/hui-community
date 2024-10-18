@@ -17,7 +17,7 @@ import java.time.Instant;
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Table(name = "bill")
+@Table(name = "h_bill")
 @Slf4j
 @EntityListeners(AuditingEntityListener.class)
 public class Bill extends Base {
@@ -26,7 +26,7 @@ public class Bill extends Base {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "user_id", updatable = false)
+    @Column(name = "user_id", updatable = false, insertable = false)
     private String userId;
 
     @ManyToOne
@@ -34,7 +34,7 @@ public class Bill extends Base {
     private Payment payment;
 
 
-    @Column(name = "payment_id", updatable = false)
+    @Column(name = "payment_id", updatable = false, insertable = false)
     private String paymentId;
 
 
@@ -47,8 +47,8 @@ public class Bill extends Base {
     @Column(name = "completed_time")
     private Instant completedTime;
 
-    @Column(name = "order")
-    private String order;
+    @Column(name = "order_id")
+    private String orderId;
 
 
 }

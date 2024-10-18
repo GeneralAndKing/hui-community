@@ -14,7 +14,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Table(name = "community")
+@Table(name = "h_community")
 @Slf4j
 @EntityListeners(AuditingEntityListener.class)
 public class Community extends Base {
@@ -25,6 +25,10 @@ public class Community extends Base {
     private String name;
 
     private String address;
+
+    @ManyToOne
+    @JoinColumn(name = "area_id")
+    private Area area;
 
     @Column(name = "longitude")
     private Float longitude;

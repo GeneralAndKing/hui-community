@@ -14,7 +14,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Table(name = "business_type")
+@Table(name = "h_business_type")
 @Slf4j
 @EntityListeners(AuditingEntityListener.class)
 public class ShopType extends Base {
@@ -24,7 +24,7 @@ public class ShopType extends Base {
     @JoinColumn(name = "primary_type_id")
     private ShopPrimaryType primaryType;
 
-    @Column(name = "primary_type_id", updatable = false)
+    @Column(name = "primary_type_id", updatable = false,insertable=false)
     private String primaryTypeId;
 
     @Column(name = "name")
