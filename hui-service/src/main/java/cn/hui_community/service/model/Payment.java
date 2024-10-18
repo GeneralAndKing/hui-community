@@ -6,6 +6,8 @@ import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.Instant;
+
 @Entity
 @Getter
 @Setter
@@ -14,21 +16,28 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Table(name = "community")
+@Table(name = "payment")
 @Slf4j
 @EntityListeners(AuditingEntityListener.class)
-public class Community extends Base {
-    @Column(name = "code")
-    private String code;
+public class Payment extends Base {
+
+    @ManyToOne
+    @JoinColumn(name = "community_id")
+    private Community community;
+
+    @Column(name = "community_id", updatable = false)
+    private String communityId;
+
+    @Column(name = "start_time")
+    private Instant startTime;
+
+    @Column(name = "stop_time")
+    private Instant stopTime;
 
     @Column(name = "name")
     private String name;
 
-    private String address;
+    @Column(name = "description")
+    private String description;
 
-    @Column(name = "longitude")
-    private Float longitude;
-
-    @Column(name = "latitude")
-    private Float latitude;
 }

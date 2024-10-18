@@ -1,6 +1,9 @@
 package cn.hui_community.service.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.Table;
 import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
@@ -14,17 +17,16 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Table(name = "community")
+@Table(name = "business")
 @Slf4j
 @EntityListeners(AuditingEntityListener.class)
-public class Community extends Base {
-    @Column(name = "code")
-    private String code;
-
+public class Shop extends Base {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "address")
     private String address;
+
 
     @Column(name = "longitude")
     private Float longitude;

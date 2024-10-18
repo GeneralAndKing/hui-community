@@ -14,21 +14,22 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Table(name = "community")
+@Table(name = "business_type")
 @Slf4j
 @EntityListeners(AuditingEntityListener.class)
-public class Community extends Base {
-    @Column(name = "code")
-    private String code;
+public class ShopType extends Base {
+
+
+    @ManyToOne
+    @JoinColumn(name = "primary_type_id")
+    private ShopPrimaryType primaryType;
+
+    @Column(name = "primary_type_id", updatable = false)
+    private String primaryTypeId;
 
     @Column(name = "name")
     private String name;
 
-    private String address;
-
-    @Column(name = "longitude")
-    private Float longitude;
-
-    @Column(name = "latitude")
-    private Float latitude;
+    @Column(name = "description")
+    private String description;
 }
