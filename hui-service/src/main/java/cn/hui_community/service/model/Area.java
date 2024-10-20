@@ -1,5 +1,6 @@
 package cn.hui_community.service.model;
 
+import cn.hui_community.service.model.dto.AreaResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -39,4 +40,16 @@ public class Area extends Base {
     private String pinyin;
     @Column(name = "pinyin_prefix")
     private String pinyinPrefix;
+
+    public AreaResponse toResponse() {
+        return AreaResponse.builder()
+                .id(this.getId())
+                .parentId(this.getParentId())
+                .code(this.getCode())
+                .name(this.getName())
+                .pinyin(this.getPinyin())
+                .pinyinPrefix(this.getPinyinPrefix())
+                .level(this.getLevel())
+                .build();
+    }
 }
