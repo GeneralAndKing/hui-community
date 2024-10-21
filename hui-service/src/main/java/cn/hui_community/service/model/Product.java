@@ -1,6 +1,10 @@
 package cn.hui_community.service.model;
 
-import jakarta.persistence.*;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.Table;
 import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
@@ -14,22 +18,10 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Table(name = "h_business_type")
+@Table(name = "h_product")
 @Slf4j
 @EntityListeners(AuditingEntityListener.class)
-public class ShopType extends Base {
-
-
-    @ManyToOne
-    @JoinColumn(name = "primary_type_id")
-    private ShopPrimaryType primaryType;
-
-    @Column(name = "primary_type_id", updatable = false,insertable=false)
-    private String primaryTypeId;
-
+public class Product extends Base {
     @Column(name = "name")
     private String name;
-
-    @Column(name = "description")
-    private String description;
 }

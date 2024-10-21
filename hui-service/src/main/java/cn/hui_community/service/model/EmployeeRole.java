@@ -1,13 +1,12 @@
 package cn.hui_community.service.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.util.Set;
 
 @Entity
 @Getter
@@ -17,15 +16,18 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Table(name = "h_business_primary_type")
+@Table(name = "h_employee_role")
 @Slf4j
 @EntityListeners(AuditingEntityListener.class)
-public class ShopPrimaryType extends Base {
+public class EmployeeRole extends Base {
 
-
-    @Column(name = "name")
     private String name;
 
-    @Column(name = "description")
-    private String description;
+    @ManyToMany
+    @JoinTable(
+            name = "h_employee_role_permission_mapping",
+            joinColumns = @JoinColumn(name = "role_id"),
+            inverseJoinColumns = @JoinColumn(name = "permission_id")
+    )
+    private Set<EmployeePermission> permissions;
 }
