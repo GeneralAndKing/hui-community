@@ -17,7 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
-public class DepartmentServiceImpl implements DepartmentService {
+public class DepartmentServiceImpl implements DepartmentService, DepartmentService.Internal {
     private final DepartmentRepository departmentRepository;
     private final CommunityRepository communityRepository;
 
@@ -43,11 +43,16 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public void deleteDepartment(String departmentId) {
+        departmentRepository.deleteById(departmentId);
+    }
 
+
+    @Override
+    public void addEmployee(Department department, Employee employee) {
     }
 
     @Override
-    public void addEmployee(Employee employee) {
-
+    public Integer disbandDepartment(Department department) {
+        return 0;
     }
 }
