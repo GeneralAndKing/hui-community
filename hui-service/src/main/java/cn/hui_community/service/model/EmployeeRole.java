@@ -30,4 +30,5 @@ public class EmployeeRole extends Base {
             inverseJoinColumns = @JoinColumn(name = "permission_id")
     )
     private Set<EmployeePermission> permissions;
+
 }

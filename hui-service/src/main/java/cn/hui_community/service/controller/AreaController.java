@@ -1,4 +1,4 @@
-package cn.hui_community.service.controller.admin;
+package cn.hui_community.service.controller;
 
 import cn.hui_community.service.model.Area;
 import cn.hui_community.service.model.dto.AreaResponse;
