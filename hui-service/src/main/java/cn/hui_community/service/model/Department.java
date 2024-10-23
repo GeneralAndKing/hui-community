@@ -17,7 +17,7 @@ import java.util.List;
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Table(name = "h_deparment")
+@Table(name = "deparment")
 @Slf4j
 @EntityListeners(AuditingEntityListener.class)
 public class Department extends Base {

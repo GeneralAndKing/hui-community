@@ -17,7 +17,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Table(name = "h_shopkeeper")
+@Table(name = "shopkeeper")
 @Slf4j
 @EntityListeners(AuditingEntityListener.class)
 public class Shopkeeper extends Base {

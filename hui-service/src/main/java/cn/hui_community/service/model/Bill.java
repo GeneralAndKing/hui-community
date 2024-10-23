@@ -17,14 +17,14 @@ import java.time.Instant;
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Table(name = "h_bill")
+@Table(name = "bill")
 @Slf4j
 @EntityListeners(AuditingEntityListener.class)
 public class Bill extends Base {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private SysUser user;
 
     @Column(name = "user_id", updatable = false, insertable = false)
     private String userId;

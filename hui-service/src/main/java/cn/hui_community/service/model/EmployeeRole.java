@@ -16,7 +16,7 @@ import java.util.Set;
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Table(name = "h_employee_role")
+@Table(name = "employee_role")
 @Slf4j
 @EntityListeners(AuditingEntityListener.class)
 public class EmployeeRole extends Base {
@@ -25,7 +25,7 @@ public class EmployeeRole extends Base {
 
     @ManyToMany
     @JoinTable(
-            name = "h_employee_role_permission_mapping",
+            name = "employee_role_permission_mapping",
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "permission_id")
     )

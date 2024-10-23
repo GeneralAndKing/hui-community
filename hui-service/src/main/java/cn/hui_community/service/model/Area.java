@@ -17,7 +17,7 @@ import java.util.List;
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Table(name = "h_area")
+@Table(name = "area")
 @Slf4j
 @EntityListeners(AuditingEntityListener.class)
 public class Area extends Base {

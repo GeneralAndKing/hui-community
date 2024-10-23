@@ -17,10 +17,10 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Table(name = "h_user")
+@Table(name = "sys_user")
 @Slf4j
 @EntityListeners(AuditingEntityListener.class)
-public class User extends Base {
+public class SysUser extends Base {
   @Column(name = "name")
   private String name;
 }

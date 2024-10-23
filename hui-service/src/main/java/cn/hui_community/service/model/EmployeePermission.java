@@ -14,7 +14,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Table(name = "h_employee_permission")
+@Table(name = "employee_permission")
 @Slf4j
 @EntityListeners(AuditingEntityListener.class)
 public class EmployeePermission extends Base {

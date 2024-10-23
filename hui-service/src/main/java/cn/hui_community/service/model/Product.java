@@ -18,7 +18,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Table(name = "h_product")
+@Table(name = "product")
 @Slf4j
 @EntityListeners(AuditingEntityListener.class)
 public class Product extends Base {
