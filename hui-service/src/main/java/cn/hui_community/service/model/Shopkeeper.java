@@ -17,11 +17,14 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Table(name = "shopkeeper")
+@Table(name = "h_shopkeeper")
 @Slf4j
 @EntityListeners(AuditingEntityListener.class)
 public class Shopkeeper extends Base {
 
     @Column(name = "name")
     private String name;
+
+    @Column(name = "description")
+    private String description;
 }

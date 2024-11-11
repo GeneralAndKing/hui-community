@@ -1,5 +1,6 @@
 package cn.hui_community.service.model;
 
+import cn.hui_community.service.model.dto.PaymentCategoryResponse;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -17,10 +18,22 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Table(name = "payment_category")
+@Table(name = "h_payment_category")
 @Slf4j
 @EntityListeners(AuditingEntityListener.class)
 public class PaymentCategory extends Base {
     @Column(name = "name")
     private String name;
+
+    @Column(name = "icon")
+    private String icon;
+
+
+    public PaymentCategoryResponse toResponse() {
+        return PaymentCategoryResponse.builder()
+                .id(this.getId())
+                .name(this.getName())
+                .icon(this.getIcon())
+                .build();
+    }
 }

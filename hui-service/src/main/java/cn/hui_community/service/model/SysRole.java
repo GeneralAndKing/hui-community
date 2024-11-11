@@ -16,19 +16,27 @@ import java.util.Set;
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Table(name = "employee_role")
+@Table(name = "h_sys_role")
 @Slf4j
 @EntityListeners(AuditingEntityListener.class)
-public class EmployeeRole extends Base {
+public class SysRole extends Base {
 
     private String name;
+    @ManyToOne
+    @JoinColumn(name = "community_id")
+    private Community community;
+
+    @Column(name = "community_id", updatable = false, insertable = false)
+    private String communityId;
 
     @ManyToMany
     @JoinTable(
-            name = "employee_role_permission_mapping",
+            name = "h_sys_role_permission_mapping",
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "permission_id")
     )
-    private Set<EmployeePermission> permissions;
+    private Set<SysPermission> permissions;
+
+    private String description;
 
 }

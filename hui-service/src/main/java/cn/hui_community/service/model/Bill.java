@@ -17,7 +17,7 @@ import java.time.Instant;
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Table(name = "bill")
+@Table(name = "h_bill")
 @Slf4j
 @EntityListeners(AuditingEntityListener.class)
 public class Bill extends Base {

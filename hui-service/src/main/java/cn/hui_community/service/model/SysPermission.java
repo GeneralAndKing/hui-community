@@ -6,8 +6,6 @@ import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.util.Set;
-
 @Entity
 @Getter
 @Setter
@@ -16,20 +14,15 @@ import java.util.Set;
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Table(name = "employee")
+@Table(name = "h_sys_permission")
 @Slf4j
 @EntityListeners(AuditingEntityListener.class)
-public class Employee extends Base {
+public class SysPermission extends Base {
 
     @Column(name = "name")
     private String name;
 
+    @Column(name = "description")
+    private String description;
 
-    @ManyToMany
-    @JoinTable(
-            name = "employee_role_mapping",
-            joinColumns = @JoinColumn(name = "employee_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<EmployeeRole> roles;
 }

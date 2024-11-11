@@ -17,7 +17,7 @@ import java.util.Set;
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Table(name = "shop_category")
+@Table(name = "h_shop_category")
 @Slf4j
 @EntityListeners(AuditingEntityListener.class)
 public class ShopCategory extends Base {
