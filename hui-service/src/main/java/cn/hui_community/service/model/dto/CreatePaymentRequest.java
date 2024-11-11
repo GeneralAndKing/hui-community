@@ -6,11 +6,10 @@ import lombok.RequiredArgsConstructor;
 
 @Data
 @RequiredArgsConstructor
-public class CreateDepartmentRequest {
+public class CreatePaymentRequest {
     @NotNull(message = "name cannot be null")
     private String name;
 
-    private String parentId;
-    @NotNull(message = "community cannot be null")
-    private String communityId;
+    @NotNull(message = "category cannot be null")
+    private String categoryId;
 }

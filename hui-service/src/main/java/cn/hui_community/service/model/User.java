@@ -20,7 +20,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Table(name = "sys_user")
 @Slf4j
 @EntityListeners(AuditingEntityListener.class)
-public class SysUser extends Base {
+public class User extends Base {
   @Column(name = "name")
   private String name;
 }

@@ -24,7 +24,7 @@ public class Bill extends Base {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private SysUser user;
+    private User user;
 
     @Column(name = "user_id", updatable = false, insertable = false)
     private String userId;

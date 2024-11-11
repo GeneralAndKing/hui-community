@@ -25,8 +25,15 @@ public class Payment extends Base {
     @JoinColumn(name = "community_id")
     private Community community;
 
-    @Column(name = "community_id", updatable = false,insertable=false)
+    @Column(name = "community_id", updatable = false, insertable = false)
     private String communityId;
+
+    @ManyToOne
+    @JoinColumn(name = "payment_category_id")
+    private PaymentCategory category;
+
+    @Column(name = "payment_category_id", updatable = false, insertable = false)
+    private String categoryId;
 
     @Column(name = "start_time")
     private Instant startTime;
