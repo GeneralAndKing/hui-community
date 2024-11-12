@@ -21,9 +21,18 @@ import java.util.Set;
 @EntityListeners(AuditingEntityListener.class)
 public class SysUser extends Base {
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "display_name")
+    private String displayName;
 
+    @Column(name = "username", unique = true)
+    private String username;
+
+
+    @Column(name = "password")
+    private String password;
+
+    @Column(name = "phone")
+    private String phone;
 
     @ManyToMany
     @JoinTable(

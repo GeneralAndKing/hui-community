@@ -39,4 +39,6 @@ public class SysRole extends Base {
 
     private String description;
 
+
+
 }
