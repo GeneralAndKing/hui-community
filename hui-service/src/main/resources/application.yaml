@@ -8,9 +8,10 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+    open-in-view: true
 
 # swagger-ui custom path
 springdoc:
   swagger-ui:
-    path: /docs.html
+    path: /docs
     enabled: true

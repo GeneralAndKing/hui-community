@@ -6,6 +6,7 @@ import cn.hui_community.service.repository.SysUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,6 +28,9 @@ public class SysUserPasswordAuthenticationProvider implements AuthenticationProv
                 .orElseThrow(() -> new BadCredentialsException("can't found username"));
         if (!passwordEncoder.matches(unauthenticated.getPassword(), sysUser.getPassword())) {
             throw new BadCredentialsException("wrong password");
+        }
+        if(sysUser.getLocked()){
+            throw new LockedException("user locked");
         }
         List<SysPermission> sysPermissions = sysUser.getRoles().stream().flatMap(sysRole -> sysRole.getPermissions().stream()).distinct().toList();
         return SysUserPasswordAuthenticationToken.authenticated(unauthenticated.getUsername(), unauthenticated.getPassword(), sysPermissions);

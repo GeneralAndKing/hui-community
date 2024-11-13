@@ -14,7 +14,7 @@ import java.util.List;
 public class PaymentCategoryController {
     private final PaymentCategoryRepository paymentCategoryRepository;
 
-    @GetMapping("/")
+    @GetMapping("")
     public List<PaymentCategoryResponse> all() {
         return paymentCategoryRepository.findAll().stream().map(PaymentCategory::toResponse).toList();
     }

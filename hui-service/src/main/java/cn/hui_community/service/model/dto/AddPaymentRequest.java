@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 
 @Data
 @RequiredArgsConstructor
-public class CreatePaymentRequest {
+public class AddPaymentRequest {
     @NotNull(message = "name cannot be null")
     private String name;
 

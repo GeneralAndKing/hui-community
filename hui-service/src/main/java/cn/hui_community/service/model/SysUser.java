@@ -1,19 +1,22 @@
 package cn.hui_community.service.model;
 
+import cn.hui_community.service.model.dto.SysUserResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Set;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
-@Getter
-@Setter
+@Data
 @Accessors(chain = true)
 @ToString
-@Builder
+@SuperBuilder
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Table(name = "h_sys_user")
@@ -34,6 +37,9 @@ public class SysUser extends Base {
     @Column(name = "phone")
     private String phone;
 
+    @Column(name = "locked")
+    private Boolean locked;
+
     @ManyToMany
     @JoinTable(
             name = "h_sys_user_role_mapping",
@@ -41,4 +47,19 @@ public class SysUser extends Base {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<SysRole> roles;
+
+    public SysUserResponse toResponse() {
+        return SysUserResponse.builder()
+                .id(this.getId())
+                .createTime(this.getCreateTime())
+                .createBy(this.getCreateBy())
+                .updateBy(this.getUpdateBy())
+                .updateTime(this.getUpdateTime())
+                .password("****************")
+                .phone(this.getPhone())
+                .locked(this.getLocked())
+                .displayName(this.getDisplayName())
+                .username(this.getUsername())
+                .build();
+    }
 }

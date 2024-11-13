@@ -2,19 +2,36 @@ package cn.hui_community.service.configuration;
 
 import cn.hui_community.service.configuration.security.SysUserPasswordAuthenticationFilter;
 import cn.hui_community.service.configuration.security.SysUserPasswordAuthenticationProvider;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.io.IOException;
+
 @Configuration
 public class WebSecurityConfiguration {
+
+    static class JsonBodyAuthenticationEntryPoint implements AuthenticationEntryPoint {
+        @Override
+        public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+            response.setContentType("application/json");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("{\"error\": \"" + authException.getMessage() + "\"}");
+        }
+    }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -34,11 +51,13 @@ public class WebSecurityConfiguration {
         filter.setAuthenticationManager(authManager);
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authorize -> authorize
+                .authorizeHttpRequests((authorize) -> authorize
                         .anyRequest().authenticated()
                 )
-                .addFilterAt(filter, UsernamePasswordAuthenticationFilter.class); // 将自定义过滤器加入到安全过滤链中
-
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(new JsonBodyAuthenticationEntryPoint())
+                )
+                .addFilterAt(filter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }

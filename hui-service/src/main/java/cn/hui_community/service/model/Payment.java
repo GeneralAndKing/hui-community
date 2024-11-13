@@ -3,17 +3,18 @@ package cn.hui_community.service.model;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
-@Getter
-@Setter
+@Data
+@SuperBuilder
 @Accessors(chain = true)
 @ToString
-@Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Table(name = "h_payment")

@@ -40,7 +40,7 @@ public class SysUserPasswordAuthenticationFilter extends AbstractAuthenticationP
         }
         String requestBody = IOUtils.toString(request.getInputStream(), StandardCharsets.UTF_8);
         LoginSysUserRequest loginSysUserRequest = objectMapper.readValue(requestBody, LoginSysUserRequest.class);
-        UsernamePasswordAuthenticationToken unauthenticated = UsernamePasswordAuthenticationToken.unauthenticated(loginSysUserRequest.getUsername(), loginSysUserRequest.getPassword());
+        SysUserPasswordAuthenticationToken unauthenticated = SysUserPasswordAuthenticationToken.unauthenticated(loginSysUserRequest.getUsername(), loginSysUserRequest.getPassword());
         unauthenticated.setDetails(authenticationDetailsSource.buildDetails(request));
         return getAuthenticationManager().authenticate(unauthenticated);
     }
