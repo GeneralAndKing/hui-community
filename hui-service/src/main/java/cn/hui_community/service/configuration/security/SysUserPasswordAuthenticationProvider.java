@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
 @RequiredArgsConstructor
+@Component
 public class SysUserPasswordAuthenticationProvider implements AuthenticationProvider {
     private final SysUserRepository sysUserRepository;
 

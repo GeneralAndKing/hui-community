@@ -2,6 +2,7 @@ package cn.hui_community.service.configuration;
 
 import cn.hui_community.service.configuration.security.SysUserPasswordAuthenticationFilter;
 import cn.hui_community.service.configuration.security.SysUserPasswordAuthenticationProvider;
+import cn.hui_community.service.repository.SysUserRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -39,25 +40,26 @@ public class WebSecurityConfiguration {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http, SysUserPasswordAuthenticationProvider provider) throws Exception {
+    public AuthenticationManager authenticationManager(HttpSecurity http, SysUserRepository sysUserRepository, PasswordEncoder passwordEncoder) throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class)
-                .authenticationProvider(provider)
+                .authenticationProvider(new SysUserPasswordAuthenticationProvider(sysUserRepository, passwordEncoder))
                 .build();
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, SysUserPasswordAuthenticationFilter filter, AuthenticationManager authManager) throws Exception {
-
-        filter.setAuthenticationManager(authManager);
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, SysUserPasswordAuthenticationFilter sysUserPasswordAuthenticationFilter) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers("/login").permitAll()
+                        .requestMatchers("/swagger-ui", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()
+
                 )
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(new JsonBodyAuthenticationEntryPoint())
                 )
-                .addFilterAt(filter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterAt(sysUserPasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }

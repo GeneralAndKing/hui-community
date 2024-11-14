@@ -13,5 +13,5 @@ spring:
 # swagger-ui custom path
 springdoc:
   swagger-ui:
-    path: /docs
+    path: /swagger-ui
     enabled: true

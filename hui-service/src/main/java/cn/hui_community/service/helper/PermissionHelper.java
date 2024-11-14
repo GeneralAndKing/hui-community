@@ -1,6 +1,8 @@
 package cn.hui_community.service.helper;
 
+import cn.hui_community.service.model.Community;
 import cn.hui_community.service.model.SysPermission;
+import cn.hui_community.service.repository.CommunityRepository;
 import cn.hui_community.service.repository.SysPermissionRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.AccessLevel;
@@ -15,9 +17,10 @@ import java.util.Optional;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @Component
-public class SysPermissionHelper {
+public class PermissionHelper {
 
     private final SysPermissionRepository sysPermissionRepository;
+    private final CommunityRepository communityRepository;
     private static final List<Pair<String, String>> initSysPermissionList = List.of(
             Pair.of("VISIT", "The visit permission is the initial permission for each community and is used to bind the community to which the user belongs"),
             Pair.of("SUPER", "The super permission is used for platform administrator")
@@ -41,7 +44,7 @@ public class SysPermissionHelper {
 
     }
 
-    public static SysPermission VISIT() {
+    public static SysPermission VisitPermission() {
         return sysPermissionMap.get("VISIT");
     }
 
