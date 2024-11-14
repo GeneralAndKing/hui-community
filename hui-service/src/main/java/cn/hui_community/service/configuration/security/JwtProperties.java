@@ -35,7 +35,7 @@ public class JwtProperties {
   /**
    * Jwt token issuer. Default application name.
    */
-  private String issuer = "lever";
+  private String issuer = "hui-community";
 
   /**
    * Jwt token audience.
