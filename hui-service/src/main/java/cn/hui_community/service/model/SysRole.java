@@ -6,6 +6,7 @@ import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Set;
 
@@ -20,7 +21,7 @@ import java.util.Set;
 @Table(name = "h_sys_role")
 @Slf4j
 @EntityListeners(AuditingEntityListener.class)
-public class SysRole extends Base {
+public class SysRole extends Base implements GrantedAuthority {
 
     private String name;
     @ManyToOne
@@ -41,5 +42,8 @@ public class SysRole extends Base {
     private String description;
 
 
-
+    @Override
+    public String getAuthority() {
+        return "ROLE_COMMUNITY_" + getCommunity().getId();
+    }
 }

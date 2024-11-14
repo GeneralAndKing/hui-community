@@ -1,5 +1,7 @@
 package cn.hui_community.service.model;
 
+import cn.hui_community.service.model.dto.BaseResponse;
+import cn.hui_community.service.model.dto.SysPermissionResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -32,5 +34,18 @@ public class SysPermission extends Base implements GrantedAuthority {
     @Override
     public String getAuthority() {
         return this.getName();
+    }
+
+    public SysPermissionResponse toResponse() {
+        return SysPermissionResponse
+                .builder()
+                .id(getId())
+                .createBy(getCreateBy())
+                .createTime(getCreateTime())
+                .updateBy(getUpdateBy())
+                .updateTime(getUpdateTime())
+                .name(getName())
+                .description(getDescription())
+                .build();
     }
 }

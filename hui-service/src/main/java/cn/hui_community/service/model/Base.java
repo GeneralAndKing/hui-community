@@ -1,5 +1,6 @@
 package cn.hui_community.service.model;
 
+import cn.hui_community.service.model.dto.BaseResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -42,4 +43,16 @@ public abstract class Base implements Serializable {
     @Column(name = "create_time")
     @CreatedDate
     protected Instant createTime;
+
+    public BaseResponse toBaseResponse() {
+        return BaseResponse
+                .builder()
+                .id(getId())
+                .createBy(getCreateBy())
+                .updateBy(getUpdateBy())
+                .updateTime(getUpdateTime())
+                .createTime(getCreateTime())
+                .build();
+    }
+
 }

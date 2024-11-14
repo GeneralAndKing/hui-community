@@ -22,7 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import java.io.IOException;
 
 @Configuration
-public class WebSecurityConfiguration {
+public class SecurityConfiguration {
 
     static class JsonBodyAuthenticationEntryPoint implements AuthenticationEntryPoint {
         @Override
@@ -32,6 +32,8 @@ public class WebSecurityConfiguration {
             response.getWriter().write("{\"error\": \"" + authException.getMessage() + "\"}");
         }
     }
+
+
 
 
     @Bean

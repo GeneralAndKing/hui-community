@@ -1,6 +1,5 @@
 package cn.hui_community.service.model.dto;
 
-import cn.hui_community.service.model.Area;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 

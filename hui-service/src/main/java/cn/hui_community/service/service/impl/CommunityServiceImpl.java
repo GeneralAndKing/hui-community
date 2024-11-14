@@ -7,6 +7,7 @@ import cn.hui_community.service.model.Community;
 import cn.hui_community.service.model.SysRole;
 import cn.hui_community.service.model.dto.AddCommunityRequest;
 import cn.hui_community.service.model.dto.CommunityResponse;
+import cn.hui_community.service.model.dto.UpdateCommunityRequest;
 import cn.hui_community.service.repository.AreaRepository;
 import cn.hui_community.service.repository.CommunityRepository;
 import cn.hui_community.service.repository.SysRoleRepository;
@@ -49,6 +50,26 @@ public class CommunityServiceImpl implements CommunityService {
                         .build()
         );
         return community.toResponse();
+
+    }
+
+    @Override
+    public CommunityResponse updateCommunityById(String communityId, UpdateCommunityRequest request) {
+        Community community = communityRepository.findById(communityId)
+                .orElseThrow(ResponseStatusExceptionHelper.badRequestSupplier("community does not exist", communityId));
+        if (!communityRepository.existsByCode(request.getCode())) {
+            throw ResponseStatusExceptionHelper.badRequest("%s code exists", request.getCode());
+        }
+        Area area = areaRepository.findById(request.getAreaId())
+                .orElseThrow(ResponseStatusExceptionHelper.badRequestSupplier("%s area does not exist", request.getAreaId()));
+
+        community
+                .setCode(request.getCode())
+                .setAddress(request.getAddress())
+                .setArea(area)
+                .setLatitude(request.getLatitude())
+                .setLongitude(request.getLongitude());
+        return communityRepository.save(community).toResponse();
 
     }
 }
