@@ -3,11 +3,11 @@ package cn.hui_community.service.model;
 import cn.hui_community.service.model.dto.SysUserResponse;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.ToString.Exclude;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Set;
 
@@ -46,6 +46,7 @@ public class SysUser extends Base {
             joinColumns = @JoinColumn(name = "sys_user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
+    @Exclude
     private Set<SysRole> roles;
 
     public SysUserResponse toResponse() {

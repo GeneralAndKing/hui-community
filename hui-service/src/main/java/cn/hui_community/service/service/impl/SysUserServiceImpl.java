@@ -4,10 +4,10 @@ import cn.hui_community.service.model.SysUser;
 import cn.hui_community.service.model.dto.SysUserResponse;
 import cn.hui_community.service.repository.SysUserRepository;
 import cn.hui_community.service.service.SysUserService;
-import io.swagger.v3.oas.annotations.servers.Server;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
-@Server
+@Service
 @RequiredArgsConstructor
 public class SysUserServiceImpl implements SysUserService {
     private final SysUserRepository sysUserRepository;
