@@ -5,9 +5,12 @@ import cn.hui_community.service.configuration.security.UserToken;
 import cn.hui_community.service.model.SysUser;
 import cn.hui_community.service.repository.SysUserRepository;
 import cn.hui_community.service.service.AuthenticationService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Instant;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
@@ -69,8 +72,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     return buildToken(user, now,
         now.plus(jwtProperties.getAccessTokenExpiresTime(), jwtProperties.getAccessTokenExpiresUnit()),
 //      TODO: 需要添加用户角色进去
-//        claim -> claim.putAll(buildTokenInfo(user))
-        claim -> claim.putAll(Collections.emptyMap())
+        claim -> claim.putAll(buildTokenInfo(user))
     );
   }
 
@@ -87,19 +89,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     return jwtEncoder.encode(JwtEncoderParameters.from(jwtClaimsSet)).getTokenValue();
   }
 
-//  /**
-//   * Build user token info when user authentication.
-//   *
-//   * @return this token info
-//   */
-//  @SuppressWarnings("unchecked")
-//  private Map<String, Objects> buildTokenInfo(SysUser user) {
+  /**
+   * Build user token info when user authentication.
+   *
+   * @return this token info
+   */
+  @SuppressWarnings("unchecked")
+  private Map<String, Objects> buildTokenInfo(SysUser user) {
 //    Set<String> roleNames = user.getRoleNames();
 //    UserTokenInfo userTokenInfo = new UserTokenInfo()
 //        .setSubject(user.getName())
 //        .setUsername(user.getUsername())
 //        .setRoles(roleNames)
 //        .setPermissions(user.getPermissions());
-//    return new ObjectMapper().convertValue(userTokenInfo, Map.class);
-//  }
+    Map<String, String> data = Collections.singletonMap("roles", "SUPER");
+    return new ObjectMapper().convertValue(data, Map.class);
+  }
 }

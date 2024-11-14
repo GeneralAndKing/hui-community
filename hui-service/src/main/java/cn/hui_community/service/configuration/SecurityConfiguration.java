@@ -54,7 +54,7 @@ public class SecurityConfiguration {
    */
   private JwtAuthenticationConverter authenticationConverter() {
     JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-    grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
+    grantedAuthoritiesConverter.setAuthorityPrefix("");
     grantedAuthoritiesConverter.setAuthoritiesClaimName("roles");
     JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
     jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
