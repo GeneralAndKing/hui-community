@@ -28,6 +28,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final JwtEncoder jwtEncoder;
     private final JwtDecoder jwtDecoder;
     private final JwtConfiguration.Properties jwtProperties;
+    private final ObjectMapper objectMapper;
 
     @Override
     public Token buildTokenFromSysUser(SysUser user) {
@@ -56,8 +57,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return new Token()
                 .setAccessToken(buildAccessToken(user, now))
                 .setRefreshToken(buildRefreshToken(user, now))
-                .setId(user.getUsername())
-                .setSubject(user.getUsername())
+                .setId(user.getId())
+                .setSubject("SYS")
                 .setUsername(user.getUsername());
     }
 
@@ -72,7 +73,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return buildToken(user, now,
                 now.plus(jwtProperties.getAccessTokenExpiresTime(), jwtProperties.getAccessTokenExpiresUnit()),
 //      TODO: 需要添加用户角色进去
-                claim -> claim.putAll(buildTokenInfo(user))
+                claim -> claim.putAll(user.toTokenInfo())
         );
     }
 
@@ -87,22 +88,5 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .claims(claimsConsumer)
                 .build();
         return jwtEncoder.encode(JwtEncoderParameters.from(jwtClaimsSet)).getTokenValue();
-    }
-
-    /**
-     * Build user token info when user authentication.
-     *
-     * @return this token info
-     */
-    @SuppressWarnings("unchecked")
-    private Map<String, Objects> buildTokenInfo(SysUser user) {
-//    Set<String> roleNames = user.getRoleNames();
-//    UserTokenInfo userTokenInfo = new UserTokenInfo()
-//        .setSubject(user.getName())
-//        .setUsername(user.getUsername())
-//        .setRoles(roleNames)
-//        .setPermissions(user.getPermissions());
-        Map<String, String> data = Collections.singletonMap("roles", "SUPER");
-        return new ObjectMapper().convertValue(data, Map.class);
     }
 }

@@ -1,15 +1,12 @@
 package cn.hui_community.service.configuration;
 
-import cn.hui_community.service.configuration.security.authorization.TokenAccessDeniedHandler;
+import cn.hui_community.service.configuration.security.JsonBodyAuthHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -34,7 +31,7 @@ public class SecurityConfiguration {
 
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JsonBodyAuthHandler jsonBodyAuthHandler) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) -> authorize
@@ -44,7 +41,8 @@ public class SecurityConfiguration {
                 )
 
                 .oauth2ResourceServer(oauth2 -> oauth2
-                        .accessDeniedHandler(new TokenAccessDeniedHandler())
+                        .accessDeniedHandler(jsonBodyAuthHandler)
+                        .authenticationEntryPoint(jsonBodyAuthHandler)
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(authenticationConverter()))
                 )
                 .build();
@@ -58,7 +56,7 @@ public class SecurityConfiguration {
     private JwtAuthenticationConverter authenticationConverter() {
         JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
         grantedAuthoritiesConverter.setAuthorityPrefix("");
-        grantedAuthoritiesConverter.setAuthoritiesClaimName("roles");
+        grantedAuthoritiesConverter.setAuthoritiesClaimName("permissions");
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
         return jwtAuthenticationConverter;

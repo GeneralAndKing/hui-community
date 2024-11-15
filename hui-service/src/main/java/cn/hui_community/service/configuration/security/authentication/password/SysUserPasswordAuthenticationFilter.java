@@ -1,8 +1,6 @@
 package cn.hui_community.service.configuration.security.authentication.password;
 
-import cn.hui_community.service.configuration.security.authentication.*;
-import cn.hui_community.service.helper.SpringBeanHelper;
-import cn.hui_community.service.service.AuthenticationService;
+import cn.hui_community.service.configuration.security.JsonBodyAuthHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,15 +27,11 @@ public class SysUserPasswordAuthenticationFilter extends AbstractAuthenticationP
 
     public SysUserPasswordAuthenticationFilter(ObjectMapper objectMapper,
                                                AuthenticationManager authenticationManager,
-                                               GlobalAuthenticationDetailsSource globalAuthenticationDetailsSource,
-                                               GlobalAuthenticationFailureHandler globalAuthenticationFailureHandler,
-                                               GlobalAuthenticationSuccessHandler globalAuthenticationSuccessHandler
+                                               JsonBodyAuthHandler jsonBodyAuthHandler
     ) {
         super(new AntPathRequestMatcher("/login", HttpMethod.POST.name()), authenticationManager);
-
-        setAuthenticationDetailsSource(globalAuthenticationDetailsSource);
-        setAuthenticationSuccessHandler(globalAuthenticationSuccessHandler);
-        setAuthenticationFailureHandler(globalAuthenticationFailureHandler);
+        setAuthenticationSuccessHandler(jsonBodyAuthHandler);
+        setAuthenticationFailureHandler(jsonBodyAuthHandler);
         this.objectMapper = objectMapper;
     }
 
@@ -47,10 +41,7 @@ public class SysUserPasswordAuthenticationFilter extends AbstractAuthenticationP
 
         String requestBody = IOUtils.toString(request.getInputStream(), StandardCharsets.UTF_8);
         Request requestJsonBody = objectMapper.readValue(requestBody, Request.class);
-//        GlobalWebAuthenticationDetails details = (GlobalWebAuthenticationDetails) authenticationDetailsSource.buildDetails(
-//                request);
         SysUserPasswordAuthenticationToken sysUserPasswordAuthenticationToken = SysUserPasswordAuthenticationToken.unauthenticated(requestJsonBody.username(), requestJsonBody.password());
-
         return getAuthenticationManager().authenticate(sysUserPasswordAuthenticationToken);
     }
 }

@@ -1,6 +1,5 @@
 package cn.hui_community.service.service;
 
-import cn.hui_community.service.configuration.security.authentication.GlobalAuthenticationSuccessHandler;
 import cn.hui_community.service.configuration.security.Token;
 import cn.hui_community.service.model.SysUser;
 

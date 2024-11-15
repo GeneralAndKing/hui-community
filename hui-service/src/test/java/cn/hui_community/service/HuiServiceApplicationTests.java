@@ -10,6 +10,7 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.Date;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 class HuiServiceApplicationTests {
 
@@ -26,6 +27,12 @@ class HuiServiceApplicationTests {
         .issueTime(new Date())
         .build();
     System.out.println(jwk.toJSONString());
+  }
+
+  @Test
+  void generatePassword() throws Exception {
+    BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+    System.out.println(bCryptPasswordEncoder.encode("klein123456"));
   }
 
 }

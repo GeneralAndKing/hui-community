@@ -13,6 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 @Component
@@ -30,7 +32,7 @@ public class SysUserPasswordAuthenticationProvider implements AuthenticationProv
                 .orElseThrow(() -> new UsernameNotFoundException("can't found %s sys user.".formatted(username)));
         //TODO auth
         if (passwordEncoder.matches(password, sysUser.getPassword())) {
-            return SysUserPasswordAuthenticationToken.authenticated(sysUser, sysUser.getPassword(), Collections.emptyList());
+            return SysUserPasswordAuthenticationToken.authenticated(sysUser, sysUser.getPassword(), sysUser.generateAuthorities());
         } else {
             throw new BadCredentialsException("%s sys user password is incorrect.".formatted(username));
         }
