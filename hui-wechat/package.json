@@ -2,7 +2,10 @@
   "name": "miniprogram-ts-sass-quickstart",
   "version": "1.0.0",
   "description": "",
-  "scripts": {},
+  "scripts": {
+    "unocss": "unocss miniprogram/pages/**/*.wxml -c unocss.config.js --watch -o miniprogram/unocss.wxss",
+    "unocss:build": "unocss miniprogram/pages/**/*.wxml -c unocss.config.js -o  miniprogram/unocss.wxss"
+  },
   "keywords": [],
   "author": "",
   "license": "",
@@ -10,6 +13,8 @@
     "tdesign-miniprogram": "^1.8.0"
   },
   "devDependencies": {
-    "miniprogram-api-typings": "^2.8.3-1"
+    "miniprogram-api-typings": "^2.8.3-1",
+    "unocss": "^0.64.1",
+    "unocss-preset-weapp": "^0.64.1"
   }
 }
