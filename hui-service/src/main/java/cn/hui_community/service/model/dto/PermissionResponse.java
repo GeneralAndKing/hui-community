@@ -5,9 +5,11 @@ import lombok.experimental.SuperBuilder;
 
 @Getter
 @SuperBuilder
-public class SysPermissionResponse extends BaseResponse {
+public class PermissionResponse extends BaseResponse {
 
     private String name;
+
+    private String type;
 
     private String description;
 }

@@ -1,17 +1,18 @@
 package cn.hui_community.service.service.impl;
 
-import cn.hui_community.service.configuration.security.JwtProperties;
-import cn.hui_community.service.configuration.security.UserToken;
+import cn.hui_community.service.configuration.JwtConfiguration;
+import cn.hui_community.service.configuration.security.Token;
 import cn.hui_community.service.model.SysUser;
 import cn.hui_community.service.repository.SysUserRepository;
 import cn.hui_community.service.service.AuthenticationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.time.Instant;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -23,17 +24,16 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-  private final SysUserRepository sysUserRepository;
-//  private final UserTokenRepository userTokenRepository;
-  private final JwtEncoder jwtEncoder;
-  private final JwtDecoder jwtDecoder;
-  private final JwtProperties jwtProperties;
+    private final SysUserRepository sysUserRepository;
+    private final JwtEncoder jwtEncoder;
+    private final JwtDecoder jwtDecoder;
+    private final JwtConfiguration.Properties jwtProperties;
 
-  @Override
-  public UserToken buildToken(SysUser user) {
-    Instant now = Instant.now();
-    UserToken userToken = generateNewUserToken(user, now);
-    return userToken;
+    @Override
+    public Token buildTokenFromSysUser(SysUser user) {
+        Instant now = Instant.now();
+        Token token = generateNewUserToken(user, now);
+        return token;
 //    TODO：缓存用户 token 以及 SSO
 //    Optional<UserToken> existTokenOptional = userTokenRepository.findById(user.getName());
 //    Boolean onlyOnceOrNoCache = getBoolean(AUTHENTICATION_ONCE) || existTokenOptional.isEmpty();
@@ -50,59 +50,59 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 //      return userToken;
 //    }
 //    return existToken;
-  }
+    }
 
-  private UserToken generateNewUserToken(SysUser user, Instant now) {
-    return new UserToken()
-        .setAccessToken(buildAccessToken(user, now))
-        .setRefreshToken(buildRefreshToken(user, now))
-        .setId(user.getUsername())
-        .setSubject(user.getUsername())
-        .setUsername(user.getUsername());
-  }
+    private Token generateNewUserToken(SysUser user, Instant now) {
+        return new Token()
+                .setAccessToken(buildAccessToken(user, now))
+                .setRefreshToken(buildRefreshToken(user, now))
+                .setId(user.getUsername())
+                .setSubject(user.getUsername())
+                .setUsername(user.getUsername());
+    }
 
-  private String buildRefreshToken(SysUser user, Instant now) {
-    return buildToken(user, now,
-        now.plus(jwtProperties.getRefreshTokenExpiresTime(), jwtProperties.getRefreshTokenExpiresUnit()),
-        claim -> claim.putAll(Collections.emptyMap())
-    );
-  }
+    private String buildRefreshToken(SysUser user, Instant now) {
+        return buildToken(user, now,
+                now.plus(jwtProperties.getRefreshTokenExpiresTime(), jwtProperties.getRefreshTokenExpiresUnit()),
+                claim -> claim.putAll(Collections.emptyMap())
+        );
+    }
 
-  private String buildAccessToken(SysUser user, Instant now) {
-    return buildToken(user, now,
-        now.plus(jwtProperties.getAccessTokenExpiresTime(), jwtProperties.getAccessTokenExpiresUnit()),
+    private String buildAccessToken(SysUser user, Instant now) {
+        return buildToken(user, now,
+                now.plus(jwtProperties.getAccessTokenExpiresTime(), jwtProperties.getAccessTokenExpiresUnit()),
 //      TODO: 需要添加用户角色进去
-        claim -> claim.putAll(buildTokenInfo(user))
-    );
-  }
+                claim -> claim.putAll(buildTokenInfo(user))
+        );
+    }
 
-  private String buildToken(SysUser user, Instant now, Instant expires, Consumer<Map<String, Object>> claimsConsumer) {
-    JwtClaimsSet jwtClaimsSet = JwtClaimsSet.builder()
-        .subject(user.getUsername())
-        .issuer(jwtProperties.getIssuer())
-        .issuedAt(now)
-        .expiresAt(expires)
-        .notBefore(now)
-        .id(user.getId())
-        .claims(claimsConsumer)
-        .build();
-    return jwtEncoder.encode(JwtEncoderParameters.from(jwtClaimsSet)).getTokenValue();
-  }
+    private String buildToken(SysUser user, Instant now, Instant expires, Consumer<Map<String, Object>> claimsConsumer) {
+        JwtClaimsSet jwtClaimsSet = JwtClaimsSet.builder()
+                .subject(user.getUsername())
+                .issuer(jwtProperties.getIssuer())
+                .issuedAt(now)
+                .expiresAt(expires)
+                .notBefore(now)
+                .id(user.getId())
+                .claims(claimsConsumer)
+                .build();
+        return jwtEncoder.encode(JwtEncoderParameters.from(jwtClaimsSet)).getTokenValue();
+    }
 
-  /**
-   * Build user token info when user authentication.
-   *
-   * @return this token info
-   */
-  @SuppressWarnings("unchecked")
-  private Map<String, Objects> buildTokenInfo(SysUser user) {
+    /**
+     * Build user token info when user authentication.
+     *
+     * @return this token info
+     */
+    @SuppressWarnings("unchecked")
+    private Map<String, Objects> buildTokenInfo(SysUser user) {
 //    Set<String> roleNames = user.getRoleNames();
 //    UserTokenInfo userTokenInfo = new UserTokenInfo()
 //        .setSubject(user.getName())
 //        .setUsername(user.getUsername())
 //        .setRoles(roleNames)
 //        .setPermissions(user.getPermissions());
-    Map<String, String> data = Collections.singletonMap("roles", "SUPER");
-    return new ObjectMapper().convertValue(data, Map.class);
-  }
+        Map<String, String> data = Collections.singletonMap("roles", "SUPER");
+        return new ObjectMapper().convertValue(data, Map.class);
+    }
 }

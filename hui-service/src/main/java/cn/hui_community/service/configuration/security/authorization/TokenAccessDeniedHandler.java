@@ -9,9 +9,9 @@ import org.springframework.security.oauth2.server.resource.BearerTokenErrorCodes
 import org.springframework.security.oauth2.server.resource.authentication.AbstractOAuth2TokenAuthenticationToken;
 import org.springframework.security.web.access.AccessDeniedHandler;
 
+@Setter
 public class TokenAccessDeniedHandler implements AccessDeniedHandler {
 
-  @Setter
   private String realmName;
 
   /**

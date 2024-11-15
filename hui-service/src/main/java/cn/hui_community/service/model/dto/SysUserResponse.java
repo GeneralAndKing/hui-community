@@ -3,6 +3,8 @@ package cn.hui_community.service.model.dto;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
+import java.time.Instant;
+
 @Getter
 @SuperBuilder
 public class SysUserResponse extends BaseResponse {
@@ -15,5 +17,6 @@ public class SysUserResponse extends BaseResponse {
 
     private String phone;
 
-    private Boolean locked;
+    private Instant lockedTime;
+    private Instant expiredTime;
 }

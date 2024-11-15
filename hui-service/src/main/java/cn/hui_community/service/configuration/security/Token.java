@@ -1,5 +1,6 @@
 package cn.hui_community.service.configuration.security;
 
+import cn.hui_community.service.configuration.JwtConfiguration;
 import cn.hui_community.service.model.SysUser;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -25,7 +26,7 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-public class UserToken {
+public class Token {
 
   /**
    * User subject.

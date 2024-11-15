@@ -1,7 +1,6 @@
 package cn.hui_community.service.model;
 
-import cn.hui_community.service.model.dto.BaseResponse;
-import cn.hui_community.service.model.dto.SysPermissionResponse;
+import cn.hui_community.service.model.dto.PermissionResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -9,8 +8,6 @@ import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
-
-import java.io.Serializable;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -20,24 +17,28 @@ import java.io.Serializable;
 @SuperBuilder
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Table(name = "h_sys_permission")
+@Table(name = "h_permission", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "type"})})
 @Slf4j
 @EntityListeners(AuditingEntityListener.class)
-public class SysPermission extends Base implements GrantedAuthority {
+public class Permission extends Base implements GrantedAuthority {
 
-    @Column(name = "name", unique = true, nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
+
+
+    @Column(name = "type", nullable = false)
+    private String type;
 
     @Column(name = "description")
     private String description;
 
     @Override
     public String getAuthority() {
-        return this.getName();
+        return getType() + "_" + getName();
     }
 
-    public SysPermissionResponse toResponse() {
-        return SysPermissionResponse
+    public PermissionResponse toResponse() {
+        return PermissionResponse
                 .builder()
                 .id(getId())
                 .createBy(getCreateBy())
@@ -45,6 +46,7 @@ public class SysPermission extends Base implements GrantedAuthority {
                 .updateBy(getUpdateBy())
                 .updateTime(getUpdateTime())
                 .name(getName())
+                .type(getType())
                 .description(getDescription())
                 .build();
     }

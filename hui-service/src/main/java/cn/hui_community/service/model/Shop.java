@@ -40,6 +40,9 @@ public class Shop extends Base {
     @Column(name = "latitude")
     private Float latitude;
 
+    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL)
+    private Set<ShopRoleMapping> roles;
+
     @ManyToMany
     @JoinTable(
             name = "h_shop_shop_category_mapping",

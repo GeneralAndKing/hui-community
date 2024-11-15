@@ -8,6 +8,8 @@ import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.util.Set;
+
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
@@ -39,6 +41,10 @@ public class Community extends Base {
 
     @Column(name = "latitude")
     private Float latitude;
+
+    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL)
+    private Set<CommunityRoleMapping> roles;
+
 
     public CommunityResponse toResponse() {
         return CommunityResponse.builder()

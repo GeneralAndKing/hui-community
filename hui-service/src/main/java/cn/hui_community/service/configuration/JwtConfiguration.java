@@ -1,29 +1,26 @@
-package cn.hui_community.service.configuration.security;
+package cn.hui_community.service.configuration;
 
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.JWKSet;
-import com.nimbusds.jose.jwk.KeyUse;
 import com.nimbusds.jose.jwk.RSAKey;
-import com.nimbusds.jose.jwk.gen.RSAKeyGenerator;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
-import com.nimbusds.jose.util.IOUtils;
-import com.nimbusds.jose.util.X509CertUtils;
-import java.io.File;
+
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.text.ParseException;
 import java.time.Duration;
-import java.util.UUID;
+import java.time.temporal.ChronoUnit;
+import java.util.Collections;
+import java.util.List;
+
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
@@ -35,7 +32,6 @@ import org.springframework.security.oauth2.jwt.JwtTimestampValidator;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider;
-import org.springframework.util.StreamUtils;
 
 /**
  * The configuration customize:
@@ -56,10 +52,47 @@ import org.springframework.util.StreamUtils;
 @Configuration
 public class JwtConfiguration {
 
-  private final RSAKey jwk;
-  private final JwtProperties jwtProperties;
+  @Data
+  @Configuration
+  @ConfigurationProperties("jwt")
+  static public class Properties {
 
-  public JwtConfiguration(JwtProperties jwtProperties) throws IOException, ParseException, KeyStoreException, CertificateException, NoSuchAlgorithmException {
+    /**
+     * User access token expires time. Default 12 hours.
+     */
+    private Integer accessTokenExpiresTime = 12;
+
+    /**
+     * User refresh token expires time. Default 7 days.
+     */
+    private Integer refreshTokenExpiresTime = 7;
+
+    /**
+     * User access token expires time unit. Default {@link ChronoUnit#HOURS}.
+     */
+    private ChronoUnit accessTokenExpiresUnit = ChronoUnit.HOURS;
+
+    /**
+     * User refresh token expires time unit. Default {@link ChronoUnit#DAYS}.
+     */
+    private ChronoUnit refreshTokenExpiresUnit = ChronoUnit.DAYS;
+
+    /**
+     * Jwt token issuer. Default application name.
+     */
+    private String issuer = "hui-community";
+
+    /**
+     * Jwt token audience.
+     */
+    private List<String> audience = Collections.emptyList();
+
+  }
+
+  private final RSAKey jwk;
+  private final Properties jwtProperties;
+
+  public JwtConfiguration(Properties jwtProperties) throws IOException, ParseException, KeyStoreException, CertificateException, NoSuchAlgorithmException {
     String content = new DefaultResourceLoader().getResource("classpath:key-store.json")
         .getContentAsString(StandardCharsets.UTF_8);
     jwk = RSAKey.parse(content);

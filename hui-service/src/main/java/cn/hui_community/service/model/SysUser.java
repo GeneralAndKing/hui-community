@@ -8,7 +8,10 @@ import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.security.core.SpringSecurityCoreVersion;
 
+import java.io.Serial;
+import java.time.Instant;
 import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
@@ -23,6 +26,8 @@ import java.util.Set;
 @Slf4j
 @EntityListeners(AuditingEntityListener.class)
 public class SysUser extends Base {
+    @Serial
+    private static final long serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID;
 
     @Column(name = "display_name")
     private String displayName;
@@ -37,8 +42,11 @@ public class SysUser extends Base {
     @Column(name = "phone")
     private String phone;
 
-    @Column(name = "locked")
-    private Boolean locked;
+    @Column(name = "locked_time")
+    private Instant lockedTime;
+
+    @Column(name = "expired_time")
+    private Instant expiredTime;
 
     @ManyToMany
     @JoinTable(
@@ -47,20 +55,21 @@ public class SysUser extends Base {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     @Exclude
-    private Set<SysRole> roles;
+    private Set<SysUserRole> roles;
 
     public SysUserResponse toResponse() {
         return SysUserResponse.builder()
-                .id(this.getId())
-                .createTime(this.getCreateTime())
-                .createBy(this.getCreateBy())
-                .updateBy(this.getUpdateBy())
-                .updateTime(this.getUpdateTime())
+                .id(getId())
+                .createTime(getCreateTime())
+                .createBy(getCreateBy())
+                .updateBy(getUpdateBy())
+                .updateTime(getUpdateTime())
                 .password("****************")
-                .phone(this.getPhone())
-                .locked(this.getLocked())
-                .displayName(this.getDisplayName())
-                .username(this.getUsername())
+                .phone(getPhone())
+                .lockedTime(getLockedTime())
+                .expiredTime(getExpiredTime())
+                .displayName(getDisplayName())
+                .username(getUsername())
                 .build();
     }
 }
