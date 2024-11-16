@@ -2,23 +2,21 @@ package cn.hui_community.service.service.impl;
 
 import cn.hui_community.service.configuration.JwtConfiguration;
 import cn.hui_community.service.configuration.security.Token;
+import cn.hui_community.service.enums.SubjectEnum;
 import cn.hui_community.service.model.SysUser;
 import cn.hui_community.service.repository.SysUserRepository;
 import cn.hui_community.service.service.AuthenticationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.time.Instant;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Objects;
-import java.util.function.Consumer;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
+
+import java.time.Instant;
+import java.util.Map;
+import java.util.function.Consumer;
 
 @Service
 @RequiredArgsConstructor
@@ -58,14 +56,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .setAccessToken(buildAccessToken(user, now))
                 .setRefreshToken(buildRefreshToken(user, now))
                 .setId(user.getId())
-                .setSubject("SYS")
+                .setSubject(SubjectEnum.SYS.getValue())
                 .setUsername(user.getUsername());
     }
 
     private String buildRefreshToken(SysUser user, Instant now) {
         return buildToken(user, now,
                 now.plus(jwtProperties.getRefreshTokenExpiresTime(), jwtProperties.getRefreshTokenExpiresUnit()),
-                claim -> claim.putAll(Map.of("id", user.getId(), "subject", "SYS"))
+                claim -> claim.putAll(Map.of("id", user.getId(), "subject", SubjectEnum.SYS.getValue()))
         );
     }
 

@@ -1,5 +1,6 @@
 package cn.hui_community.service.configuration.security.authentication.token;
 
+import cn.hui_community.service.enums.SubjectEnum;
 import cn.hui_community.service.model.SysUser;
 import cn.hui_community.service.repository.SysUserRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,12 +27,15 @@ public class RefreshTokenAuthenticationProvider implements AuthenticationProvide
         if (!jwt.getClaims().getOrDefault("id", "").equals(id)) {
             throw new BadJwtException("token does not match user.");
         }
-        Object subject = jwt.getClaims().getOrDefault("subject", "").toString();
-        if (subject.equals("SYS")) {
-            SysUser sysUser = sysUserRepository.findById(id)
-                    .orElseThrow(() -> new BadCredentialsException("can't found sys user."));
-            return RefreshTokenAuthenticationToken.authenticated(sysUser, sysUser.getPassword(), sysUser.generateAuthorities());
+        String subject = jwt.getClaims().getOrDefault("subject", "").toString();
+        switch (SubjectEnum.valueOf(subject)){
+            case SYS -> {
+                SysUser sysUser = sysUserRepository.findById(id)
+                        .orElseThrow(() -> new BadCredentialsException("can't found sys user."));
+                return RefreshTokenAuthenticationToken.authenticated(sysUser, sysUser.getPassword(), sysUser.generateAuthorities());
+            }
         }
+
         throw new BadCredentialsException("can't found %s subject.".formatted(subject));
     }
 
