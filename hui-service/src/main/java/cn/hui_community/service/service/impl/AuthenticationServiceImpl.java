@@ -65,7 +65,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private String buildRefreshToken(SysUser user, Instant now) {
         return buildToken(user, now,
                 now.plus(jwtProperties.getRefreshTokenExpiresTime(), jwtProperties.getRefreshTokenExpiresUnit()),
-                claim -> claim.putAll(Collections.emptyMap())
+                claim -> claim.putAll(Map.of("id", user.getId(), "subject", "SYS"))
         );
     }
 

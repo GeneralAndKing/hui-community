@@ -1,8 +1,10 @@
 package cn.hui_community.service.configuration.security;
 
 import cn.hui_community.service.configuration.security.authentication.password.SysUserPasswordAuthenticationToken;
+import cn.hui_community.service.configuration.security.authentication.token.RefreshTokenAuthenticationToken;
 import cn.hui_community.service.model.SysUser;
 import cn.hui_community.service.service.AuthenticationService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -52,6 +54,16 @@ public class JsonBodyAuthHandler implements AuthenticationFailureHandler, Authen
         process(request, response, authException);
     }
 
+
+    private void onSysUserSuccess(HttpServletRequest request,
+                                  HttpServletResponse response, SysUser sysUser) throws IOException {
+        Token token = authenticationService.buildTokenFromSysUser(sysUser);
+        String responseBody = objectMapper.writeValueAsString(token);
+        try (PrintWriter writer = response.getWriter()) {
+            writer.write(responseBody);
+        }
+    }
+
     @Override
     public void onAuthenticationSuccess(
             HttpServletRequest request,
@@ -63,10 +75,10 @@ public class JsonBodyAuthHandler implements AuthenticationFailureHandler, Authen
 
         if (authentication instanceof SysUserPasswordAuthenticationToken authenticationToken) {
             SysUser sysUser = (SysUser) authenticationToken.getPrincipal();
-            Token token = authenticationService.buildTokenFromSysUser(sysUser);
-            String responseBody = objectMapper.writeValueAsString(token);
-            try (PrintWriter writer = response.getWriter()) {
-                writer.write(responseBody);
+            onSysUserSuccess(request, response, sysUser);
+        } else if (authentication instanceof RefreshTokenAuthenticationToken) {
+            if (authentication.getPrincipal() instanceof SysUser sysUser) {
+                onSysUserSuccess(request, response, sysUser);
             }
         }
         //other auth method

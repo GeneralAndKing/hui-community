@@ -5,19 +5,12 @@ import cn.hui_community.service.repository.SysUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
-
-import java.util.Collections;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
-@Component
 @RequiredArgsConstructor
 public class SysUserPasswordAuthenticationProvider implements AuthenticationProvider {
     private final SysUserRepository sysUserRepository;

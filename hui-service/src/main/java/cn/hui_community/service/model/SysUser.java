@@ -89,7 +89,7 @@ public class SysUser extends Base {
         tokenInfo.put("displayName", getDisplayName());
         tokenInfo.put("phone", getPhone());
         tokenInfo.put("permissions", generateAuthorities().stream().map(GrantedAuthority::getAuthority).toList());
-        tokenInfo.put("roles", getRoles().stream().map(role -> role.getName() + "_" + role.getCommunityId()).toList());
+        tokenInfo.put("roles", getRoles().stream().map(role -> "ROLE_" + role.getName() + "_" + role.getCommunityId()).toList());
         return tokenInfo;
     }
 }

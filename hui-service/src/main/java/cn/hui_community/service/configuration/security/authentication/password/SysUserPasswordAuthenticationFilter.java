@@ -17,8 +17,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Component;
-
-@Component
 public class SysUserPasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
     record Request(String username, String password) {
     }
@@ -29,7 +27,7 @@ public class SysUserPasswordAuthenticationFilter extends AbstractAuthenticationP
                                                AuthenticationManager authenticationManager,
                                                JsonBodyAuthHandler jsonBodyAuthHandler
     ) {
-        super(new AntPathRequestMatcher("/login", HttpMethod.POST.name()), authenticationManager);
+        super(new AntPathRequestMatcher("/sys/login", HttpMethod.POST.name()), authenticationManager);
         setAuthenticationSuccessHandler(jsonBodyAuthHandler);
         setAuthenticationFailureHandler(jsonBodyAuthHandler);
         this.objectMapper = objectMapper;
