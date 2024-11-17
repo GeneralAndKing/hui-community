@@ -3,8 +3,8 @@ package cn.hui_community.service.configuration.security;
 import cn.hui_community.service.configuration.security.authentication.password.SysUserPasswordAuthenticationToken;
 import cn.hui_community.service.configuration.security.authentication.token.RefreshTokenAuthenticationToken;
 import cn.hui_community.service.model.SysUser;
-import cn.hui_community.service.service.AuthenticationService;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import cn.hui_community.service.model.Token;
+import cn.hui_community.service.service.TokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,7 +33,7 @@ public class JsonBodyAuthHandler implements AuthenticationFailureHandler, Authen
     record Body(String message) {
     }
 
-    private final AuthenticationService authenticationService;
+    private final TokenService tokenService;
     private final ObjectMapper objectMapper;
 
 
@@ -57,7 +57,7 @@ public class JsonBodyAuthHandler implements AuthenticationFailureHandler, Authen
 
     private void onSysUserSuccess(HttpServletRequest request,
                                   HttpServletResponse response, SysUser sysUser) throws IOException {
-        Token token = authenticationService.buildTokenFromSysUser(sysUser);
+        Token token = tokenService.buildTokenFromSysUser(sysUser);
         String responseBody = objectMapper.writeValueAsString(token);
         try (PrintWriter writer = response.getWriter()) {
             writer.write(responseBody);

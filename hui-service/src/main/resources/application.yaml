@@ -9,6 +9,16 @@ spring:
     hibernate:
       ddl-auto: update
     open-in-view: true
+  data:
+    redis:
+      database: 0
+      host: ${REDIS_HOST:localhost}
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+        shutdown-timeout: 100ms
+      password: ${REDIS_PASSWORD:test123}
 
 # swagger-ui custom path
 springdoc:

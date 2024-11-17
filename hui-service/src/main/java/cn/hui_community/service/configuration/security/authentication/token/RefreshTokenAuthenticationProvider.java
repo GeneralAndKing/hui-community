@@ -3,6 +3,7 @@ package cn.hui_community.service.configuration.security.authentication.token;
 import cn.hui_community.service.enums.SubjectEnum;
 import cn.hui_community.service.model.SysUser;
 import cn.hui_community.service.repository.SysUserRepository;
+import cn.hui_community.service.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -17,6 +18,8 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 public class RefreshTokenAuthenticationProvider implements AuthenticationProvider {
     private final JwtDecoder jwtDecoder;
     private final SysUserRepository sysUserRepository;
+    private final TokenService tokenService;
+
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -27,8 +30,11 @@ public class RefreshTokenAuthenticationProvider implements AuthenticationProvide
         if (!jwt.getClaims().getOrDefault("id", "").equals(id)) {
             throw new BadJwtException("token does not match user.");
         }
+        if (!tokenService.validateRefreshToken(id, refreshToken)) {
+            throw new BadCredentialsException("invalid refresh token.");
+        }
         String subject = jwt.getClaims().getOrDefault("subject", "").toString();
-        switch (SubjectEnum.valueOf(subject)){
+        switch (SubjectEnum.valueOf(subject)) {
             case SYS -> {
                 SysUser sysUser = sysUserRepository.findById(id)
                         .orElseThrow(() -> new BadCredentialsException("can't found sys user."));

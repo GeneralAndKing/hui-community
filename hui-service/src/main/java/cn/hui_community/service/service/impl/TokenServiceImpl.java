@@ -1,11 +1,12 @@
 package cn.hui_community.service.service.impl;
 
 import cn.hui_community.service.configuration.JwtConfiguration;
-import cn.hui_community.service.configuration.security.Token;
+import cn.hui_community.service.model.Token;
 import cn.hui_community.service.enums.SubjectEnum;
 import cn.hui_community.service.model.SysUser;
 import cn.hui_community.service.repository.SysUserRepository;
-import cn.hui_community.service.service.AuthenticationService;
+import cn.hui_community.service.repository.TokenRepository;
+import cn.hui_community.service.service.TokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
@@ -13,42 +14,41 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 @Service
 @RequiredArgsConstructor
-public class AuthenticationServiceImpl implements AuthenticationService {
+public class TokenServiceImpl implements TokenService {
 
     private final SysUserRepository sysUserRepository;
     private final JwtEncoder jwtEncoder;
     private final JwtDecoder jwtDecoder;
     private final JwtConfiguration.Properties jwtProperties;
     private final ObjectMapper objectMapper;
+    private final TokenRepository tokenRepository;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Token buildTokenFromSysUser(SysUser user) {
         Instant now = Instant.now();
         Token token = generateNewUserToken(user, now);
+        tokenRepository.save(token);
         return token;
-//    TODO：缓存用户 token 以及 SSO
-//    Optional<UserToken> existTokenOptional = userTokenRepository.findById(user.getName());
-//    Boolean onlyOnceOrNoCache = getBoolean(AUTHENTICATION_ONCE) || existTokenOptional.isEmpty();
-//    if (Boolean.TRUE.equals(onlyOnceOrNoCache)) {
-//      userTokenRepository.deleteById(user.getName());
-//      userTokenRepository.save(userToken);
-//      return userToken;
-//    }
-//    UserToken existToken = existTokenOptional.get();
-//    Instant expiresAt = jwtDecoder.decode(existToken.getRefreshToken()).getExpiresAt();
-//    if (Objects.isNull(expiresAt) || expiresAt.isBefore(now)) {
-//      userTokenRepository.deleteById(user.getName());
-//      userTokenRepository.save(userToken);
-//      return userToken;
-//    }
-//    return existToken;
+    }
+
+    @Override
+    public Boolean validateRefreshToken(String id, String refreshToken) {
+        Optional<Token> optionalToken = tokenRepository.findById(id);
+        if (optionalToken.isPresent()) {
+            Token token = optionalToken.get();
+            return token.getRefreshToken().equals(refreshToken);
+        }
+        return Boolean.FALSE;
     }
 
     private Token generateNewUserToken(SysUser user, Instant now) {

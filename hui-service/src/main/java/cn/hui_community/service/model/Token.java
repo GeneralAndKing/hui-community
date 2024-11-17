@@ -1,9 +1,10 @@
-package cn.hui_community.service.configuration.security;
+package cn.hui_community.service.model;
 
 import cn.hui_community.service.configuration.JwtConfiguration;
-import cn.hui_community.service.model.SysUser;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
 
 /**
  * Provide token information after user authentication. This is a necessary
@@ -26,11 +27,13 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
+@RedisHash(value = "token", timeToLive = 604800)
 public class Token {
 
     /**
      * User subject.
      */
+    @Id
     private String id;
 
     private String subject;

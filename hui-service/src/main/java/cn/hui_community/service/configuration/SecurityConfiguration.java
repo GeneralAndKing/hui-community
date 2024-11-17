@@ -6,6 +6,7 @@ import cn.hui_community.service.configuration.security.authentication.password.S
 import cn.hui_community.service.configuration.security.authentication.token.RefreshTokenAuthenticationFilter;
 import cn.hui_community.service.configuration.security.authentication.token.RefreshTokenAuthenticationProvider;
 import cn.hui_community.service.repository.SysUserRepository;
+import cn.hui_community.service.service.TokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -30,6 +31,7 @@ public class SecurityConfiguration {
     private final JwtDecoder jwtDecoder;
     private final SysUserRepository sysUserRepository;
     private final ObjectMapper objectMapper;
+    private final TokenService tokenService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -41,7 +43,7 @@ public class SecurityConfiguration {
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder =
                 http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.authenticationProvider(new RefreshTokenAuthenticationProvider(jwtDecoder, sysUserRepository))
+        authenticationManagerBuilder.authenticationProvider(new RefreshTokenAuthenticationProvider(jwtDecoder, sysUserRepository, tokenService))
                 .authenticationProvider(new SysUserPasswordAuthenticationProvider(sysUserRepository, passwordEncoder()))
                 .parentAuthenticationManager(null);
         return authenticationManagerBuilder.build();
@@ -53,7 +55,7 @@ public class SecurityConfiguration {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/sys/login","/refresh-token").permitAll()
+                        .requestMatchers("/sys/login", "/refresh-token").permitAll()
                         .requestMatchers("/swagger-ui", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()
                 )
