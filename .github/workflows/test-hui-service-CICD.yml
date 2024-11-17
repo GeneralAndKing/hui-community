@@ -8,6 +8,7 @@
 name: Test hui-service CICD
 
 on:
+
   push:
     branches: [ "master" ]
     paths:
@@ -16,9 +17,9 @@ on:
     branches: [ "master" ]
     paths:
       - 'hui-service/**'
-
+  workflow_dispatch:
 jobs:
-  build-push:
+  ci-cd:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -54,7 +55,7 @@ jobs:
 
       - name: SCP files to remote server
         run: |
-          sshpass -p "$REMOTE_PASSWORD" scp -o StrictHostKeyChecking=no ./build/libs/${{PROJECT_NAME}}-${{PROJECT_VERSION}}.jar $REMOTE_USER@$REMOTE_HOST:/root/${{PROJECT_NAME}}.jar
+          sshpass -p "$REMOTE_PASSWORD" scp -o StrictHostKeyChecking=no ./build/libs/${{ env.PROJECT_NAME }}-${{ env.PROJECT_VERSION }}.jar $REMOTE_USER@$REMOTE_HOST:/root/${{ env.PROJECT_NAME }}.jar
         env:
           REMOTE_HOST: ${{ secrets.TEST_SSH_HOST }}
           REMOTE_USER: ${{ secrets.TEST_SSH_USERNAME }}
@@ -76,7 +77,7 @@ jobs:
           password: ${{ secrets.TEST_SSH_PASSWORD }}
           port: 21
           script: |
-            PROJECT_NAME=${{PROJECT_NAME}}
+            PROJECT_NAME=${{env.PROJECT_NAME}}
             PID=$(ps -ef | grep "$PROJECT_NAME.jar" | grep -v grep | awk '{print $2}')
             if [ ! -z "$PID" ]; then
             echo "Process $PID is running. Stopping it..."
