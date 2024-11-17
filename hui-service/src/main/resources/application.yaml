@@ -1,8 +1,8 @@
 spring:
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:hui}
-    username: ${DB_USER:postgres}
-    password: ${DB_PASS:test123}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:test123}
 
   jpa:
     show-sql: true
