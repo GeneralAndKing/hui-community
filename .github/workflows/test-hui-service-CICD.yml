@@ -37,7 +37,7 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
 
-      - name: Set Docker image tag from Gradle
+      - name: Set Env from Gradle
         id: vars
         run: |
           IMAGE_NAME=$(./gradlew -q properties | grep '^name:' | awk '{print $2}')
@@ -47,22 +47,22 @@ jobs:
         working-directory: ./hui-service
 
       - name: Build with Gradle Wrapper
-        run: ./gradlew bootJar
+        run: ./gradlew bootBuildImage
         working-directory: ./hui-service
 
-      - name: Install sshpass
-        run: sudo apt-get install -y sshpass
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: SCP files to remote server
-        run: |
-          sshpass -p "$REMOTE_PASSWORD" scp -o StrictHostKeyChecking=no ./build/libs/${{ env.PROJECT_NAME }}-${{ env.PROJECT_VERSION }}.jar $REMOTE_USER@$REMOTE_HOST:/root/${{ env.PROJECT_NAME }}.jar
-        env:
-          REMOTE_HOST: ${{ secrets.TEST_SSH_HOST }}
-          REMOTE_USER: ${{ secrets.TEST_SSH_USERNAME }}
-          REMOTE_PASSWORD: ${{ secrets.TEST_SSH_PASSWORD }}
-        working-directory: ./hui-service
+      - name: Tag image explicitly for Docker Hub
+        run: docker tag ${{ env.PROJECT_NAME }}:${{ env.PROJECT_VERSION }} ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.PROJECT_NAME }}:test
+      - name: Push pre-built image
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.PROJECT_NAME }}:test
 
-      - name: executing deploy remote ssh commands using password
+
+      - name: Executing deploy remote ssh commands using password
         uses: appleboy/ssh-action@v1.1.0
         env:
           DB_HOST: ${{ secrets.TEST_DB_HOST }}
@@ -77,13 +77,23 @@ jobs:
           password: ${{ secrets.TEST_SSH_PASSWORD }}
           port: 21
           script: |
-            PROJECT_NAME=${{env.PROJECT_NAME}}
-            PID=$(ps -ef | grep "$PROJECT_NAME.jar" | grep -v grep | awk '{print $2}')
-            if [ ! -z "$PID" ]; then
-            echo "Process $PID is running. Stopping it..."
-            kill -9 $PID
-            else
-            echo "No running process found for $PROJECT_NAME.jar"
+            CONTAINER_NAME="{{ env.PROJECT_NAME }}_container"
+            if [ "$(docker ps -q -f name=${CONTAINER_NAME})" ]; then
+            echo "Stopping and removing existing container..."
+            docker stop ${CONTAINER_NAME}
+            docker rm ${CONTAINER_NAME}
             fi
-            echo "Starting new instance..."
-            nohup java -jar /root/$PROJECT_NAME.jar > app.log 2>&1 &
+            echo "Pulling the latest Docker image..."
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.PROJECT_NAME }}:test
+            # 启动新的容器并传入环境变量
+            echo "Starting new container..."
+            docker run -d \
+            --name ${CONTAINER_NAME} \
+            -p 8080:8080 \
+            -e DB_HOST=${DB_HOST} \
+            -e DB_NAME=${DB_NAME} \
+            -e DB_USERNAME=${DB_USERNAME} \
+            -e DB_PASSWORD=${DB_PASSWORD} \
+            -e REDIS_HOST=${REDIS_HOST} \
+            -e REDIS_PASSWORD=${REDIS_PASSWORD} \
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.PROJECT_NAME }}:test
