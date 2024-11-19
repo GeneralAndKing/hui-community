@@ -75,7 +75,7 @@ jobs:
           host: ${{ secrets.TEST_SSH_HOST }}
           username: ${{ secrets.TEST_SSH_USERNAME }}
           password: ${{ secrets.TEST_SSH_PASSWORD }}
-          port: 21
+          port: 22
           script: |
             CONTAINER_NAME="{{ env.PROJECT_NAME }}_container"
             if [ "$(docker ps -q -f name=${CONTAINER_NAME})" ]; then
