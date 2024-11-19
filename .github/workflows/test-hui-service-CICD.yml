@@ -64,13 +64,6 @@ jobs:
 
       - name: Executing deploy remote ssh commands using password
         uses: appleboy/ssh-action@v1.1.0
-        env:
-          DB_HOST: ${{ secrets.TEST_DB_HOST }}
-          DB_NAME: ${{ secrets.TEST_DB_NAME }}
-          DB_USERNAME: ${{ secrets.TEST_DB_USERNAME }}
-          DB_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
-          REDIS_HOST: ${{ secrets.TEST_REDIS_HOST }}
-          REDIS_PASSWORD: ${{ secrets.TEST_REDIS_PASSWORD }}
         with:
           host: ${{ secrets.TEST_SSH_HOST }}
           username: ${{ secrets.TEST_SSH_USERNAME }}
@@ -90,10 +83,10 @@ jobs:
             docker run -d \
             --name ${CONTAINER_NAME} \
             -p 8080:8080 \
-            -e DB_HOST=${DB_HOST} \
-            -e DB_NAME=${DB_NAME} \
-            -e DB_USERNAME=${DB_USERNAME} \
-            -e DB_PASSWORD=${DB_PASSWORD} \
-            -e REDIS_HOST=${REDIS_HOST} \
-            -e REDIS_PASSWORD=${REDIS_PASSWORD} \
+            -e DB_HOST=${{ secrets.TEST_DB_HOST }} \
+            -e DB_NAME=${{ secrets.TEST_DB_NAME }} \
+            -e DB_USERNAME=${{ secrets.TEST_DB_USERNAME }} \
+            -e DB_PASSWORD=${{ secrets.TEST_DB_PASSWORD }} \
+            -e REDIS_HOST=${{ secrets.TEST_REDIS_HOST }} \
+            -e REDIS_PASSWORD=${{ secrets.TEST_REDIS_PASSWORD }} \
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.PROJECT_NAME }}:test
