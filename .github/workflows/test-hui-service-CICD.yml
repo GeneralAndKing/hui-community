@@ -89,4 +89,6 @@ jobs:
             -e DB_PASSWORD=${{ secrets.TEST_DB_PASSWORD }} \
             -e REDIS_HOST=${{ secrets.TEST_REDIS_HOST }} \
             -e REDIS_PASSWORD=${{ secrets.TEST_REDIS_PASSWORD }} \
+            -e WECHAT_USER_SECRET=${{secrets.WECHAT_USER_SECRET }} \
+            -e WECHAT_USER_APP_ID=${{ secrets.WECHAT_USER_APP_ID }} \
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.PROJECT_NAME }}:test
