@@ -1,10 +1,7 @@
 package cn.hui_community.service.model;
 
 import cn.hui_community.service.enums.CardEnum;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
@@ -19,11 +16,28 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @SuperBuilder
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Table(name = "h_card")
+@Table(name = "h_card_template")
 @Slf4j
 @EntityListeners(AuditingEntityListener.class)
-public class Card extends Base {
+public class CardTemplate extends Base {
+
+    @ManyToOne
+    @JoinColumn(name = "shopkeeper_id")
+    private Shopkeeper shopkeeper;
+
+    @Column(name = "shopkeeper_id", insertable = false, updatable = false)
+    private String shopkeeperId;
+
+    @Column(name = "description")
+    private String description;
 
     @Column(name = "type")
     private CardEnum type;
+
+    @Column(name = "unit")
+    private String unit;
+
+    @Column(name = "image")
+    private String image;
+
 }

@@ -1,4 +1,4 @@
-package cn.hui_community.service.configuration.security.authentication.token;
+package cn.hui_community.service.configuration.security.authentication.wechat;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -8,7 +8,7 @@ import org.springframework.util.Assert;
 import java.io.Serial;
 import java.util.Collection;
 
-public class RefreshTokenAuthenticationToken extends AbstractAuthenticationToken {
+public class UserWechatMiniTokenAuthenticationToken extends AbstractAuthenticationToken {
 
     @Serial
     private static final long serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID;
@@ -18,7 +18,7 @@ public class RefreshTokenAuthenticationToken extends AbstractAuthenticationToken
     private Object credentials;
 
 
-    public RefreshTokenAuthenticationToken(Object principal, Object credentials) {
+    public UserWechatMiniTokenAuthenticationToken(Object principal, Object credentials) {
         super(null);
         this.principal = principal;
         this.credentials = credentials;
@@ -26,8 +26,8 @@ public class RefreshTokenAuthenticationToken extends AbstractAuthenticationToken
     }
 
 
-    public RefreshTokenAuthenticationToken(Object principal, Object credentials,
-                                           Collection<? extends GrantedAuthority> authorities) {
+    public UserWechatMiniTokenAuthenticationToken(Object principal, Object credentials,
+                                                  Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
         this.principal = principal;
         this.credentials = credentials;
@@ -35,14 +35,13 @@ public class RefreshTokenAuthenticationToken extends AbstractAuthenticationToken
     }
 
 
-    public static RefreshTokenAuthenticationToken unauthenticated(Object principal, Object credentials) {
-        return new RefreshTokenAuthenticationToken(principal, credentials);
+    public static UserWechatMiniTokenAuthenticationToken unauthenticated(Object principal, Object credentials) {
+        return new UserWechatMiniTokenAuthenticationToken(principal, credentials);
     }
 
-
-    public static RefreshTokenAuthenticationToken authenticated(Object principal, Object credentials,
-                                                                Collection<? extends GrantedAuthority> authorities) {
-        return new RefreshTokenAuthenticationToken(principal, credentials, authorities);
+    public static UserWechatMiniTokenAuthenticationToken authenticated(Object principal, Object credentials,
+                                                                       Collection<? extends GrantedAuthority> authorities) {
+        return new UserWechatMiniTokenAuthenticationToken(principal, credentials, authorities);
     }
 
     @Override

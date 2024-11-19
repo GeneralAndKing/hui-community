@@ -29,3 +29,8 @@ springdoc:
 logging:
   level:
     org.springframework.security: debug
+
+wechat-mini:
+  user:
+    app-id: ${WECHAT_USER_APP_ID}
+    secret: ${WECHAT_USER_SECRET}

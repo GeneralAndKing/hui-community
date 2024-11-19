@@ -1,6 +1,7 @@
 package cn.hui_community.service.model;
 
 import cn.hui_community.service.configuration.JwtConfiguration;
+import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;
@@ -28,6 +29,7 @@ import org.springframework.data.redis.core.RedisHash;
 @Data
 @Accessors(chain = true)
 @RedisHash(value = "token", timeToLive = 604800)
+@Builder
 public class Token {
 
     /**

@@ -9,9 +9,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
 
 @RequiredArgsConstructor
+@Component
 public class SysUserPasswordAuthenticationProvider implements AuthenticationProvider {
     private final SysUserRepository sysUserRepository;
     private final PasswordEncoder passwordEncoder;
@@ -23,7 +25,6 @@ public class SysUserPasswordAuthenticationProvider implements AuthenticationProv
         String password = sysUserPasswordAuthenticationToken.getCredentials().toString();
         SysUser sysUser = sysUserRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("can't found %s sys user.".formatted(username)));
-        //TODO auth
         if (passwordEncoder.matches(password, sysUser.getPassword())) {
             return SysUserPasswordAuthenticationToken.authenticated(sysUser, sysUser.getPassword(), sysUser.generateAuthorities());
         } else {

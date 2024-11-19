@@ -2,7 +2,9 @@ package cn.hui_community.service.configuration.security.authentication.token;
 
 import cn.hui_community.service.enums.SubjectEnum;
 import cn.hui_community.service.model.SysUser;
+import cn.hui_community.service.model.User;
 import cn.hui_community.service.repository.SysUserRepository;
+import cn.hui_community.service.repository.UserRepository;
 import cn.hui_community.service.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -12,12 +14,17 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.jwt.BadJwtException;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.stereotype.Component;
+
+import java.util.Collections;
 
 
 @RequiredArgsConstructor
+@Component
 public class RefreshTokenAuthenticationProvider implements AuthenticationProvider {
     private final JwtDecoder jwtDecoder;
     private final SysUserRepository sysUserRepository;
+    private final UserRepository userRepository;
     private final TokenService tokenService;
 
 
@@ -39,6 +46,11 @@ public class RefreshTokenAuthenticationProvider implements AuthenticationProvide
                 SysUser sysUser = sysUserRepository.findById(id)
                         .orElseThrow(() -> new BadCredentialsException("can't found sys user."));
                 return RefreshTokenAuthenticationToken.authenticated(sysUser, sysUser.getPassword(), sysUser.generateAuthorities());
+            }
+            case USER -> {
+                User user = userRepository.findById(id)
+                        .orElseThrow(() -> new BadCredentialsException("can't found user."));
+                return RefreshTokenAuthenticationToken.authenticated(user, null, Collections.emptySet());
             }
         }
 

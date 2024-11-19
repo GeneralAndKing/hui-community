@@ -1,4 +1,4 @@
-package cn.hui_community.service.configuration.security.authentication.token;
+package cn.hui_community.service.configuration.security.authentication.wechat;
 
 import cn.hui_community.service.configuration.security.GlobalAuthHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,15 +17,15 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 @Component
-public class RefreshTokenAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
-    record Request(String refreshToken, String id) {
+public class UserWechatMiniAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
+    record Request(String code, String username) {
     }
 
     private final ObjectMapper objectMapper;
 
 
-    public RefreshTokenAuthenticationFilter(ObjectMapper objectMapper, AuthenticationManager authenticationManager) {
-        super(new AntPathRequestMatcher("/refresh-token", HttpMethod.POST.name()), authenticationManager);
+    public UserWechatMiniAuthenticationFilter(ObjectMapper objectMapper, AuthenticationManager authenticationManager) {
+        super(new AntPathRequestMatcher("/user/login", HttpMethod.POST.name()), authenticationManager);
         this.objectMapper = objectMapper;
     }
 
@@ -33,7 +33,7 @@ public class RefreshTokenAuthenticationFilter extends AbstractAuthenticationProc
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException {
         String requestBody = IOUtils.toString(request.getInputStream(), StandardCharsets.UTF_8);
         Request requestJsonBody = objectMapper.readValue(requestBody, Request.class);
-        RefreshTokenAuthenticationToken refreshTokenAuthenticationToken = RefreshTokenAuthenticationToken.unauthenticated(requestJsonBody.id(), requestJsonBody.refreshToken());
+        UserWechatMiniTokenAuthenticationToken refreshTokenAuthenticationToken = UserWechatMiniTokenAuthenticationToken.unauthenticated(requestJsonBody.username(), requestJsonBody.code());
         return getAuthenticationManager().authenticate(refreshTokenAuthenticationToken);
     }
 }

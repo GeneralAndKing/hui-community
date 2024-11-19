@@ -2,8 +2,10 @@ package cn.hui_community.service.configuration.security;
 
 import cn.hui_community.service.configuration.security.authentication.password.SysUserPasswordAuthenticationToken;
 import cn.hui_community.service.configuration.security.authentication.token.RefreshTokenAuthenticationToken;
+import cn.hui_community.service.configuration.security.authentication.wechat.UserWechatMiniTokenAuthenticationToken;
 import cn.hui_community.service.model.SysUser;
 import cn.hui_community.service.model.Token;
+import cn.hui_community.service.model.User;
 import cn.hui_community.service.service.TokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
@@ -29,7 +31,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class JsonBodyAuthHandler implements AuthenticationFailureHandler, AuthenticationSuccessHandler, AuthenticationEntryPoint, AccessDeniedHandler {
+public class GlobalAuthHandler implements AuthenticationFailureHandler, AuthenticationSuccessHandler, AuthenticationEntryPoint, AccessDeniedHandler {
     record Body(String message) {
     }
 
@@ -64,6 +66,15 @@ public class JsonBodyAuthHandler implements AuthenticationFailureHandler, Authen
         }
     }
 
+    private void onUserSuccess(HttpServletRequest request, HttpServletResponse response, User user) throws IOException {
+        Token token = tokenService.buildTokenFromUser(user);
+        String responseBody = objectMapper.writeValueAsString(token);
+        try (PrintWriter writer = response.getWriter()) {
+            writer.write(responseBody);
+        }
+    }
+
+
     @Override
     public void onAuthenticationSuccess(
             HttpServletRequest request,
@@ -79,11 +90,17 @@ public class JsonBodyAuthHandler implements AuthenticationFailureHandler, Authen
         } else if (authentication instanceof RefreshTokenAuthenticationToken) {
             if (authentication.getPrincipal() instanceof SysUser sysUser) {
                 onSysUserSuccess(request, response, sysUser);
+            } else if (authentication.getPrincipal() instanceof User user) {
+                onUserSuccess(request, response, user);
             }
+        } else if (authentication instanceof UserWechatMiniTokenAuthenticationToken) {
+            User user = (User) authentication.getPrincipal();
+            onUserSuccess(request, response, user);
         }
         //other auth method
 
     }
+
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {

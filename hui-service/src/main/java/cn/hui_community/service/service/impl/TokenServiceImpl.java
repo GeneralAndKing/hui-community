@@ -4,6 +4,7 @@ import cn.hui_community.service.configuration.JwtConfiguration;
 import cn.hui_community.service.model.Token;
 import cn.hui_community.service.enums.SubjectEnum;
 import cn.hui_community.service.model.SysUser;
+import cn.hui_community.service.model.User;
 import cn.hui_community.service.repository.SysUserRepository;
 import cn.hui_community.service.repository.TokenRepository;
 import cn.hui_community.service.service.TokenService;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -25,18 +27,33 @@ import java.util.function.Consumer;
 @RequiredArgsConstructor
 public class TokenServiceImpl implements TokenService {
 
-    private final SysUserRepository sysUserRepository;
     private final JwtEncoder jwtEncoder;
-    private final JwtDecoder jwtDecoder;
     private final JwtConfiguration.Properties jwtProperties;
-    private final ObjectMapper objectMapper;
     private final TokenRepository tokenRepository;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Token buildTokenFromSysUser(SysUser user) {
         Instant now = Instant.now();
-        Token token = generateNewUserToken(user, now);
+        Token token = Token.builder()
+                .accessToken(buildAccessToken(user.getId(), SubjectEnum.SYS.getValue(), now, user.toTokenInfo()))
+                .refreshToken(buildRefreshToken(user.getId(), SubjectEnum.SYS.getValue(), now))
+                .id(user.getId())
+                .subject(SubjectEnum.SYS.getValue())
+                .username(user.getUsername()).build();
+        tokenRepository.save(token);
+        return token;
+    }
+
+    @Override
+    public Token buildTokenFromUser(User user) {
+        Instant now = Instant.now();
+        Token token = Token.builder()
+                .accessToken(buildAccessToken(user.getId(), SubjectEnum.SYS.getValue(), now, Map.of()))
+                .refreshToken(buildRefreshToken(user.getId(), SubjectEnum.SYS.getValue(), now))
+                .id(user.getId())
+                .subject(SubjectEnum.USER.getValue())
+                .username(user.getName()).build();
         tokenRepository.save(token);
         return token;
     }
@@ -51,38 +68,29 @@ public class TokenServiceImpl implements TokenService {
         return Boolean.FALSE;
     }
 
-    private Token generateNewUserToken(SysUser user, Instant now) {
-        return new Token()
-                .setAccessToken(buildAccessToken(user, now))
-                .setRefreshToken(buildRefreshToken(user, now))
-                .setId(user.getId())
-                .setSubject(SubjectEnum.SYS.getValue())
-                .setUsername(user.getUsername());
-    }
 
-    private String buildRefreshToken(SysUser user, Instant now) {
-        return buildToken(user, now,
+    private String buildRefreshToken(String id, String subject, Instant now) {
+        return buildToken(id, subject, now,
                 now.plus(jwtProperties.getRefreshTokenExpiresTime(), jwtProperties.getRefreshTokenExpiresUnit()),
-                claim -> claim.putAll(Map.of("id", user.getId(), "subject", SubjectEnum.SYS.getValue()))
+                claim -> claim.putAll(Map.of("id", id, "subject", subject))
         );
     }
 
-    private String buildAccessToken(SysUser user, Instant now) {
-        return buildToken(user, now,
+    private String buildAccessToken(String id, String subject, Instant now, Map<String, Object> info) {
+        return buildToken(id, subject, now,
                 now.plus(jwtProperties.getAccessTokenExpiresTime(), jwtProperties.getAccessTokenExpiresUnit()),
-//      TODO: 需要添加用户角色进去
-                claim -> claim.putAll(user.toTokenInfo())
+                claim -> claim.putAll(info)
         );
     }
 
-    private String buildToken(SysUser user, Instant now, Instant expires, Consumer<Map<String, Object>> claimsConsumer) {
+    private String buildToken(String id, String subject, Instant now, Instant expires, Consumer<Map<String, Object>> claimsConsumer) {
         JwtClaimsSet jwtClaimsSet = JwtClaimsSet.builder()
-                .subject(user.getUsername())
+                .subject(subject)
                 .issuer(jwtProperties.getIssuer())
                 .issuedAt(now)
                 .expiresAt(expires)
                 .notBefore(now)
-                .id(user.getId())
+                .id(id)
                 .claims(claimsConsumer)
                 .build();
         return jwtEncoder.encode(JwtEncoderParameters.from(jwtClaimsSet)).getTokenValue();

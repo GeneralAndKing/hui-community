@@ -1,6 +1,6 @@
 package cn.hui_community.service.configuration.security.authentication.password;
 
-import cn.hui_community.service.configuration.security.JsonBodyAuthHandler;
+import cn.hui_community.service.configuration.security.GlobalAuthHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,6 +17,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Component;
+
+@Component
 public class SysUserPasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
     record Request(String username, String password) {
     }
@@ -24,12 +26,9 @@ public class SysUserPasswordAuthenticationFilter extends AbstractAuthenticationP
     private final ObjectMapper objectMapper;
 
     public SysUserPasswordAuthenticationFilter(ObjectMapper objectMapper,
-                                               AuthenticationManager authenticationManager,
-                                               JsonBodyAuthHandler jsonBodyAuthHandler
+                                               AuthenticationManager authenticationManager
     ) {
         super(new AntPathRequestMatcher("/sys/login", HttpMethod.POST.name()), authenticationManager);
-        setAuthenticationSuccessHandler(jsonBodyAuthHandler);
-        setAuthenticationFailureHandler(jsonBodyAuthHandler);
         this.objectMapper = objectMapper;
     }
 
