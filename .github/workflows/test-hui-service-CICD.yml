@@ -71,7 +71,7 @@ jobs:
           port: 22
           script: |
             CONTAINER_NAME="${{ env.PROJECT_NAME }}_container"
-            if [ "$(docker ps -q -f name=${CONTAINER_NAME})" ]; then
+            if [ "$(docker ps -a -q -f name=${CONTAINER_NAME})" ]; then
             echo "Stopping and removing existing container..."
             docker stop ${CONTAINER_NAME}
             docker rm ${CONTAINER_NAME}
