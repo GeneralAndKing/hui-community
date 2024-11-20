@@ -37,6 +37,7 @@ public class SecurityConfiguration {
             log.info("configuration provider: %s".formatted(key));
             authenticationManagerBuilder.authenticationProvider(provider);
         });
+        authenticationManagerBuilder.parentAuthenticationManager(null);
         return authenticationManagerBuilder.build();
     }
 
@@ -58,7 +59,6 @@ public class SecurityConfiguration {
             log.info("configuration filter: %s".formatted(key));
             filter.setAuthenticationSuccessHandler(globalAuthHandler);
             filter.setAuthenticationFailureHandler(globalAuthHandler);
-            filter.setAuthenticationManager(authenticationManager);
             httpSecurity.addFilterAfter(filter, BearerTokenAuthenticationFilter.class);
         });
         return httpSecurity.build();

@@ -27,6 +27,7 @@ public class WechatMiniClient {
             String sessionKey) {
     }
 
+
     private final WechatMiniConfiguration.Properties properties;
 
     private final RestTemplate wechatRestTemplate;
@@ -59,7 +60,7 @@ public class WechatMiniClient {
     public String authUserOpenId(String code) {
         String targetUri = UriComponentsBuilder.fromHttpUrl(LOGIN_URL)
                 .queryParam("appid", properties.getUser().getAppId())
-                .queryParam("secret", properties.getShopkeeper().getSecret())
+                .queryParam("secret", properties.getUser().getSecret())
                 .queryParam("js_code", code)
                 .queryParam("grant_type", "authorization_code")
                 .toUriString();
