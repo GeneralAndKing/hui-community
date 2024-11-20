@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "unocss": "unocss miniprogram/pages/**/*.wxml -c unocss.config.js --watch -o miniprogram/unocss.wxss",
-    "unocss:build": "unocss miniprogram/pages/**/*.wxml -c unocss.config.js -o  miniprogram/unocss.wxss"
+    "unocss": "unocss miniprogram/{pages,components}/**/*.wxml -c unocss.config.js --watch -o miniprogram/unocss.wxss",
+    "unocss:build": "unocss miniprogram/{pages,components}/**/*.wxml -c unocss.config.js -o  miniprogram/unocss.wxss"
   },
   "keywords": [],
   "author": "",

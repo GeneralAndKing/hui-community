@@ -1,0 +1,8 @@
+{
+  "usingComponents": {
+    "layout": "/components/layout/layout",
+    "shop-item": "/components/shop-item/shop-item",
+    "t-search": "tdesign-miniprogram/search/search",
+    "t-sticky": "tdesign-miniprogram/sticky/sticky"
+  }
+}

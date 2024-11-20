@@ -1,0 +1,14 @@
+<!--components/shop-item/shop-item.wxml-->
+<view class="flex flex-row gap-2 bg-white">
+  <t-image src="/image/vue-color-avatar.png" width="84" height="84" shape="round" aria-label="一个放置在墙角的黄色行李箱" />
+  <view class="flex flex-col p-r-2">
+    <view class="line-clamp-1">肠旺面湖南面豆花面肠旺面湖南面豆花面面豆花面面豆花面</view>
+    <view class="line-clamp-1 text-xs text-gray-400">这是一家很绝绝子的店</view>
+    <view class="flex flex-row gap-1 nowrap mt-3">
+      <t-tag class="margin-16" variant="light" theme="primary" size="small">商家配送</t-tag>
+      <t-tag class="margin-16" variant="light" theme="warning" size="small">会员卡</t-tag>
+      <t-tag class="margin-16" variant="light" theme="danger" size="small">储蓄卡</t-tag>
+      <t-tag class="margin-16" variant="light" theme="success" size="small">2.5km</t-tag>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,21 @@
+<!--pages/user/user.wxml-->
+<t-navbar t-class-placeholder="t-navbar-placeholder" t-class-content="t-navbar-content" title="我的" t-class-title="nav-title" />
+<layout title="我的" value="/pages/user/user" nav="{{false}}">
+  <view class="bg-gray-50 h-screen">
+    <view class="user-bg w-full relative flex flex-col pt-4">
+      <view class="flex flex-row justify-between items-center px-4 ">
+        <view class="flex flex-row items-center gap-2 text-white">
+          <t-avatar size="28px" image="/image/vue-color-avatar.png" />
+          <view>笑笑笑笑怪</view>
+        </view>
+        <view class="text-sm text-gray-200">
+          设置 >
+        </view>
+      </view>
+      <view class="absolute card px-4 w-full">
+        
+    <t-button theme="primary" size="large" open-type="getPhoneNumber" bindgetphonenumber="getUserInfo">确认登录</t-button>
+      </view>
+    </view>
+  </view>
+</layout>

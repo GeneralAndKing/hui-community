@@ -1,0 +1,13 @@
+<!--pages/home/home.wxml-->
+<layout title="店铺列表" value="/pages/home/home" nav="{{true}}">
+  <view class="bg-gray-50 h-screen">
+    <t-sticky offset-top="{{ 85 }}">
+      <t-search placeholder="输入店铺名称" />
+    </t-sticky>
+    <view class="m-2 flex flex-col gap-y-3">
+      <shop-item />
+      <shop-item />
+      <shop-item />
+    </view>
+  </view>
+</layout>
