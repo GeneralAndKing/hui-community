@@ -25,18 +25,27 @@ import java.util.Map;
 @Slf4j
 public class SecurityConfiguration {
 
-    private final Map<String, AbstractAuthenticationProcessingFilter> filterMap;
-
-
-
-
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+    @Bean
+    public AuthenticationManager authManager(HttpSecurity http,Map<String, AuthenticationProvider> providerMap) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder =
+                http.getSharedObject(AuthenticationManagerBuilder.class);
+        providerMap.forEach((key, provider) -> {
+            log.info("configuration provider: %s".formatted(key));
+            authenticationManagerBuilder.authenticationProvider(provider);
+        });
+        return authenticationManagerBuilder.build();
+    }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, GlobalAuthHandler globalAuthHandler, AuthenticationManager authenticationManager) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, GlobalAuthHandler globalAuthHandler, AuthenticationManager authenticationManager, Map<String, AbstractAuthenticationProcessingFilter> filterMap) throws Exception {
         HttpSecurity httpSecurity = http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/sys/login", "/refresh-token","/user/login").permitAll()
+                        .requestMatchers("/sys/login", "/refresh-token", "/user/login").permitAll()
                         .requestMatchers("/swagger-ui", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()
                 ).oauth2ResourceServer(oauth2 -> oauth2
