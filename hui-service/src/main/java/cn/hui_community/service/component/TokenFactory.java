@@ -1,39 +1,34 @@
-package cn.hui_community.service.service.impl;
+package cn.hui_community.service.component;
 
 import cn.hui_community.service.configuration.JwtConfiguration;
-import cn.hui_community.service.model.Token;
 import cn.hui_community.service.enums.SubjectEnum;
+import cn.hui_community.service.model.Token;
 import cn.hui_community.service.model.SysUser;
 import cn.hui_community.service.model.User;
-import cn.hui_community.service.repository.SysUserRepository;
 import cn.hui_community.service.repository.TokenRepository;
-import cn.hui_community.service.service.TokenService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-@Service
+@Component
 @RequiredArgsConstructor
-public class TokenServiceImpl implements TokenService {
+public class TokenFactory {
+
 
     private final JwtEncoder jwtEncoder;
     private final JwtConfiguration.Properties jwtProperties;
     private final TokenRepository tokenRepository;
 
-    @Override
     @Transactional(rollbackFor = Exception.class)
-    public Token buildTokenFromSysUser(SysUser user) {
+    public Token buildFromSysUser(SysUser user) {
         Instant now = Instant.now();
         Token token = Token.builder()
                 .accessToken(buildAccessToken(user.getId(), SubjectEnum.SYS.getValue(), now, user.toTokenInfo()))
@@ -45,12 +40,12 @@ public class TokenServiceImpl implements TokenService {
         return token;
     }
 
-    @Override
-    public Token buildTokenFromUser(User user) {
+    @Transactional(rollbackFor = Exception.class)
+    public Token buildFromUser(User user) {
         Instant now = Instant.now();
         Token token = Token.builder()
-                .accessToken(buildAccessToken(user.getId(), SubjectEnum.SYS.getValue(), now, Map.of()))
-                .refreshToken(buildRefreshToken(user.getId(), SubjectEnum.SYS.getValue(), now))
+                .accessToken(buildAccessToken(user.getId(), SubjectEnum.USER.getValue(), now, Map.of()))
+                .refreshToken(buildRefreshToken(user.getId(), SubjectEnum.USER.getValue(), now))
                 .id(user.getId())
                 .subject(SubjectEnum.USER.getValue())
                 .username(user.getName()).build();
@@ -58,7 +53,6 @@ public class TokenServiceImpl implements TokenService {
         return token;
     }
 
-    @Override
     public Boolean validateRefreshToken(String id, String refreshToken) {
         Optional<Token> optionalToken = tokenRepository.findById(id);
         if (optionalToken.isPresent()) {

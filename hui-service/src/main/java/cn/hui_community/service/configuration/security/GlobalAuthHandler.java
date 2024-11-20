@@ -6,7 +6,7 @@ import cn.hui_community.service.configuration.security.authentication.wechat.Use
 import cn.hui_community.service.model.SysUser;
 import cn.hui_community.service.model.Token;
 import cn.hui_community.service.model.User;
-import cn.hui_community.service.service.TokenService;
+import cn.hui_community.service.component.TokenFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,7 +35,7 @@ public class GlobalAuthHandler implements AuthenticationFailureHandler, Authenti
     record Body(String message) {
     }
 
-    private final TokenService tokenService;
+    private final TokenFactory tokenFactory;
     private final ObjectMapper objectMapper;
 
 
@@ -59,7 +59,7 @@ public class GlobalAuthHandler implements AuthenticationFailureHandler, Authenti
 
     private void onSysUserSuccess(HttpServletRequest request,
                                   HttpServletResponse response, SysUser sysUser) throws IOException {
-        Token token = tokenService.buildTokenFromSysUser(sysUser);
+        Token token = tokenFactory.buildFromSysUser(sysUser);
         String responseBody = objectMapper.writeValueAsString(token);
         try (PrintWriter writer = response.getWriter()) {
             writer.write(responseBody);
@@ -67,7 +67,7 @@ public class GlobalAuthHandler implements AuthenticationFailureHandler, Authenti
     }
 
     private void onUserSuccess(HttpServletRequest request, HttpServletResponse response, User user) throws IOException {
-        Token token = tokenService.buildTokenFromUser(user);
+        Token token = tokenFactory.buildFromUser(user);
         String responseBody = objectMapper.writeValueAsString(token);
         try (PrintWriter writer = response.getWriter()) {
             writer.write(responseBody);

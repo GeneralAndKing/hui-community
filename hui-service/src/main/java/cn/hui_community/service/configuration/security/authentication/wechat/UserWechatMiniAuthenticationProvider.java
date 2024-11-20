@@ -1,18 +1,12 @@
 package cn.hui_community.service.configuration.security.authentication.wechat;
 
 import cn.hui_community.service.component.WechatMiniClient;
-import cn.hui_community.service.enums.SubjectEnum;
-import cn.hui_community.service.model.SysUser;
 import cn.hui_community.service.model.User;
-import cn.hui_community.service.repository.SysUserRepository;
 import cn.hui_community.service.repository.UserRepository;
-import cn.hui_community.service.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;

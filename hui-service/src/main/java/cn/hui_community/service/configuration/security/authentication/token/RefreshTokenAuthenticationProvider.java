@@ -5,7 +5,7 @@ import cn.hui_community.service.model.SysUser;
 import cn.hui_community.service.model.User;
 import cn.hui_community.service.repository.SysUserRepository;
 import cn.hui_community.service.repository.UserRepository;
-import cn.hui_community.service.service.TokenService;
+import cn.hui_community.service.component.TokenFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -25,7 +25,7 @@ public class RefreshTokenAuthenticationProvider implements AuthenticationProvide
     private final JwtDecoder jwtDecoder;
     private final SysUserRepository sysUserRepository;
     private final UserRepository userRepository;
-    private final TokenService tokenService;
+    private final TokenFactory tokenFactory;
 
 
     @Override
@@ -37,7 +37,7 @@ public class RefreshTokenAuthenticationProvider implements AuthenticationProvide
         if (!jwt.getClaims().getOrDefault("id", "").equals(id)) {
             throw new BadJwtException("token does not match user.");
         }
-        if (!tokenService.validateRefreshToken(id, refreshToken)) {
+        if (!tokenFactory.validateRefreshToken(id, refreshToken)) {
             throw new BadCredentialsException("invalid refresh token.");
         }
         String subject = jwt.getClaims().getOrDefault("subject", "").toString();

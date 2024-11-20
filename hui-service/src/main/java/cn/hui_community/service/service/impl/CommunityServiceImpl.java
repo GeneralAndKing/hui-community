@@ -1,7 +1,7 @@
 package cn.hui_community.service.service.impl;
 
 import cn.hui_community.service.helper.ResponseStatusExceptionHelper;
-import cn.hui_community.service.helper.PermissionHelper;
+import cn.hui_community.service.helper.AuthHelper;
 import cn.hui_community.service.model.Area;
 import cn.hui_community.service.model.Community;
 import cn.hui_community.service.model.SysUserRole;
@@ -45,7 +45,7 @@ public class CommunityServiceImpl implements CommunityService {
         sysRoleRepository.save(
                 SysUserRole.builder()
                         .community(community)
-                        .permissions(Collections.singleton(PermissionHelper.VisitSysPermission()))
+                        .permissions(Collections.singleton(AuthHelper.VisitSysPermission()))
                         .name("VISITOR")
                         .build()
         );

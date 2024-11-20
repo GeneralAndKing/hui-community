@@ -9,45 +9,62 @@ import java.util.function.Supplier;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ResponseStatusExceptionHelper {
-  public static Supplier<ResponseStatusException> notFoundSupplier(String message) {
-    return () -> notFound(message);
-  }
+    public static Supplier<ResponseStatusException> notFoundSupplier(String message) {
+        return () -> notFound(message);
+    }
 
-  public static Supplier<ResponseStatusException> notFoundSupplier(String message, Object... args) {
-    return () -> notFound(message, args);
-  }
+    public static Supplier<ResponseStatusException> notFoundSupplier(String message, Object... args) {
+        return () -> notFound(message, args);
+    }
 
-  public static ResponseStatusException notFound(String message) {
-    return new ResponseStatusException(HttpStatus.NOT_FOUND, message);
-  }
+    public static ResponseStatusException notFound(String message) {
+        return new ResponseStatusException(HttpStatus.NOT_FOUND, message);
+    }
 
-  public static ResponseStatusException notFound(String messageFormat, Object... args) {
-    return new ResponseStatusException(HttpStatus.NOT_FOUND, messageFormat.formatted(args));
-  }
+    public static ResponseStatusException notFound(String messageFormat, Object... args) {
+        return new ResponseStatusException(HttpStatus.NOT_FOUND, messageFormat.formatted(args));
+    }
 
-  public static Supplier<ResponseStatusException> badRequestSupplier(
-      String message, Object... args) {
-    return () -> badRequest(message, args);
-  }
+    public static ResponseStatusException unauthorized(String message) {
+        return new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+    }
 
-  public static Supplier<ResponseStatusException> badRequestSupplier(String message) {
-    return () -> badRequest(message);
-  }
+    public static ResponseStatusException unauthorized(String messageFormat, Object... args) {
+        return new ResponseStatusException(HttpStatus.UNAUTHORIZED, messageFormat.formatted(args));
+    }
 
-  public static ResponseStatusException badRequest(String message) {
-    return new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
-  }
+    public static Supplier<ResponseStatusException> unauthorizedSupplier(
+            String message, Object... args) {
+        return () -> unauthorized(message, args);
+    }
 
-  public static ResponseStatusException badRequest(String messageFormat, Object... args) {
-    return new ResponseStatusException(HttpStatus.BAD_REQUEST, messageFormat.formatted(args));
-  }
+    public static Supplier<ResponseStatusException> unauthorizedSupplier(String message) {
+        return () -> unauthorized(message);
+    }
 
-  public static ResponseStatusException internalServerError(String message) {
-    return new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, message);
-  }
+    public static Supplier<ResponseStatusException> badRequestSupplier(
+            String message, Object... args) {
+        return () -> badRequest(message, args);
+    }
 
-  public static ResponseStatusException internalServerError(String messageFormat, Object... args) {
-    return new ResponseStatusException(
-        HttpStatus.INTERNAL_SERVER_ERROR, messageFormat.formatted(args));
-  }
+    public static Supplier<ResponseStatusException> badRequestSupplier(String message) {
+        return () -> badRequest(message);
+    }
+
+    public static ResponseStatusException badRequest(String message) {
+        return new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
+    }
+
+    public static ResponseStatusException badRequest(String messageFormat, Object... args) {
+        return new ResponseStatusException(HttpStatus.BAD_REQUEST, messageFormat.formatted(args));
+    }
+
+    public static ResponseStatusException internalServerError(String message) {
+        return new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, message);
+    }
+
+    public static ResponseStatusException internalServerError(String messageFormat, Object... args) {
+        return new ResponseStatusException(
+                HttpStatus.INTERNAL_SERVER_ERROR, messageFormat.formatted(args));
+    }
 }

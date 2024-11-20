@@ -1,25 +1,38 @@
 package cn.hui_community.service.helper;
 
 import cn.hui_community.service.model.Permission;
+import cn.hui_community.service.model.User;
 import cn.hui_community.service.repository.CommunityRepository;
 import cn.hui_community.service.repository.PermissionRepository;
+import cn.hui_community.service.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.tuple.Triple;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.stream.Stream;
 
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-@Component
-public class PermissionHelper {
 
-    private final PermissionRepository permissionRepository;
-    private final CommunityRepository communityRepository;
+@Component
+public class AuthHelper {
+
+    private static PermissionRepository permissionRepository;
+    private static CommunityRepository communityRepository;
+    private static UserRepository userRepository;
+
+    private AuthHelper(PermissionRepository permissionRepository, CommunityRepository communityRepository, UserRepository userRepository) {
+        AuthHelper.communityRepository = communityRepository;
+        AuthHelper.permissionRepository = permissionRepository;
+        AuthHelper.userRepository = userRepository;
+
+    }
+
     private static final List<Triple<String, String, String>> assignedSysPermissions = List.of(
             Triple.of("VISIT", "SYS", "The visit permission is the initial permission for each community and is used to bind the community to which the user belongs"),
             Triple.of("ADMIN", "SYS", "The Admin permission can manage their associated communities")
@@ -56,9 +69,13 @@ public class PermissionHelper {
                 }).toList();
     }
 
-    public static Boolean currentUserHasGrantedAuthority(String authority) {
-        return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
-                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(authority));
+    public static User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication instanceof JwtAuthenticationToken jwtAuthenticationToken) {
+            return userRepository.findById(jwtAuthenticationToken.getToken().getId())
+                    .orElseThrow(ResponseStatusExceptionHelper.unauthorizedSupplier("can't found current user."));
+        }
+        throw ResponseStatusExceptionHelper.unauthorized("can't found current user.");
     }
 
 

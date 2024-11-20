@@ -1,6 +1,6 @@
 package cn.hui_community.service.controller.admin;
 
-import cn.hui_community.service.helper.PermissionHelper;
+import cn.hui_community.service.helper.AuthHelper;
 import cn.hui_community.service.model.Permission;
 import cn.hui_community.service.model.dto.PermissionResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ public class PermissionController {
     @GetMapping("")
     @PreAuthorize("hasAuthority('SUPER') or hasAuthority('ADMIN')")
     public List<PermissionResponse> all() {
-        return PermissionHelper.assignedPermissions()
+        return AuthHelper.assignedPermissions()
                 .stream()
                 .map(Permission::toResponse).toList();
     }

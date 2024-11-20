@@ -42,7 +42,7 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, GlobalAuthHandler globalAuthHandler, AuthenticationManager authenticationManager, Map<String, AbstractAuthenticationProcessingFilter> filterMap) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, GlobalAuthHandler globalAuthHandler, Map<String, AbstractAuthenticationProcessingFilter> filterMap) throws Exception {
         HttpSecurity httpSecurity = http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) -> authorize
