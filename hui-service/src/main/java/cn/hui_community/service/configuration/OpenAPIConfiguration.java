@@ -32,7 +32,7 @@ import java.util.Map;
 @OpenAPIDefinition(
         info = @Info(title = "Hui-Community Doc", version = "0.0.1"),
         servers = {
-//                @Server(description = "Test env", url = "https://vuu5A:Phuquee4up@insight.meta001.net/"),
+                @Server(description = "Test env", url = "http://139.155.2.12:8080"),
                 @Server(description = "Development env", url = "http://localhost:8080")
         }
 //        ,
