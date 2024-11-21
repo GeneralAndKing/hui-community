@@ -1,4 +1,4 @@
-package cn.hui_community.service.controller.admin;
+package cn.hui_community.service.controller.sys;
 
 import cn.hui_community.service.model.dto.AddCommunityRequest;
 import cn.hui_community.service.model.dto.CommunityResponse;

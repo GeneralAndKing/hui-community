@@ -46,7 +46,7 @@ public class SecurityConfiguration {
         HttpSecurity httpSecurity = http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/sys/login", "/refresh-token", "/user/login").permitAll()
+                        .requestMatchers("/sys-api/login", "/refresh-token", "/user-api/login").permitAll()
                         .requestMatchers("/swagger-ui", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()
                 ).oauth2ResourceServer(oauth2 -> oauth2

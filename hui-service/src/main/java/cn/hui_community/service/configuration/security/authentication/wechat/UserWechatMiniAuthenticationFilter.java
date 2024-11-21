@@ -18,14 +18,14 @@ import java.nio.charset.StandardCharsets;
 
 @Component
 public class UserWechatMiniAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
-    record Request(String code, String username) {
+    public record Request(String code, String username) {
     }
 
     private final ObjectMapper objectMapper;
 
 
     public UserWechatMiniAuthenticationFilter(ObjectMapper objectMapper, AuthenticationManager authenticationManager) {
-        super(new AntPathRequestMatcher("/user/login", HttpMethod.POST.name()), authenticationManager);
+        super(new AntPathRequestMatcher("/user-api/login", HttpMethod.POST.name()), authenticationManager);
         this.objectMapper = objectMapper;
     }
 

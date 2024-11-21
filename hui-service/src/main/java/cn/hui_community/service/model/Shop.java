@@ -1,5 +1,6 @@
 package cn.hui_community.service.model;
 
+import cn.hui_community.service.model.dto.ShopShowResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -28,6 +29,17 @@ public class Shop extends Base {
     private String address;
 
     @ManyToOne
+    @JoinColumn(name = "area_id")
+    private Area area;
+
+    @Column(name = "area_id", insertable = false, updatable = false)
+    private String areaId;
+
+
+    @Column(name = "image")
+    private String image;
+
+    @ManyToOne
     @JoinColumn(name = "owner_id")
     private Shopkeeper owner;
 
@@ -50,4 +62,12 @@ public class Shop extends Base {
             inverseJoinColumns = @JoinColumn(name = "shop_category_id")
     )
     private Set<ShopCategory> categories;
+
+
+    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL)
+    private Set<CommunityShopMapping> communityShopMappings;
+
+    public ShopShowResponse toShowResponse() {
+    return null;
+    }
 }

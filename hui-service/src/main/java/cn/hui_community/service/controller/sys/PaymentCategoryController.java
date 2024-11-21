@@ -1,4 +1,4 @@
-package cn.hui_community.service.controller.admin;
+package cn.hui_community.service.controller.sys;
 
 import cn.hui_community.service.model.PaymentCategory;
 import cn.hui_community.service.model.dto.PaymentCategoryResponse;

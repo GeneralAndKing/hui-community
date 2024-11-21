@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class SysUserPasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
-    record Request(String username, String password) {
+    public record Request(String username, String password) {
     }
 
     private final ObjectMapper objectMapper;
@@ -28,7 +28,7 @@ public class SysUserPasswordAuthenticationFilter extends AbstractAuthenticationP
     public SysUserPasswordAuthenticationFilter(ObjectMapper objectMapper,
                                                AuthenticationManager authenticationManager
     ) {
-        super(new AntPathRequestMatcher("/sys/login", HttpMethod.POST.name()), authenticationManager);
+        super(new AntPathRequestMatcher("/sys-api/login", HttpMethod.POST.name()), authenticationManager);
         this.objectMapper = objectMapper;
     }
 

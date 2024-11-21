@@ -1,4 +1,4 @@
-package cn.hui_community.service.controller.admin;
+package cn.hui_community.service.controller.sys;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

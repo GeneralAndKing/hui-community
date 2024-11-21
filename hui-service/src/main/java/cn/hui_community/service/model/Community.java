@@ -43,7 +43,11 @@ public class Community extends Base {
     private Float latitude;
 
     @OneToMany(mappedBy = "community", cascade = CascadeType.ALL)
-    private Set<CommunityRoleMapping> roles;
+    private Set<CommunityRoleMapping> roleMappings;
+
+
+    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL)
+    private Set<CommunityShopMapping> shopMappings;
 
 
     public CommunityResponse toResponse() {

@@ -11,22 +11,21 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Map;
 
 @Configuration
 @RequiredArgsConstructor
 @Slf4j
-public class WebMvcConfiguration  {
-//    @Override
-//    protected void configurePathMatch(PathMatchConfigurer configurer) {
-//        configurer.addPathPrefix("/admin",
-//                        clazz -> clazz.getPackageName().startsWith("cn.hui_community.service.controller.admin"))
-//                .addPathPrefix("/user",
-//                        clazz -> clazz.getPackageName().startsWith("cn.hui_community.service.controller.user"))
-//                .addPathPrefix("/shopkeeper",
-//                        clazz -> clazz.getPackageName().startsWith("cn.hui_community.service.controller.shopkeeper"));
-//    }
-
-
+public class WebMvcConfiguration  implements WebMvcConfigurer {
+    @Override
+    public void configurePathMatch(PathMatchConfigurer configurer) {
+        configurer.addPathPrefix("/sys-api",
+                        clazz -> clazz.getPackageName().startsWith("cn.hui_community.service.controller.sys"))
+                .addPathPrefix("/user-api",
+                        clazz -> clazz.getPackageName().startsWith("cn.hui_community.service.controller.user"))
+                .addPathPrefix("/shopkeeper-api",
+                        clazz -> clazz.getPackageName().startsWith("cn.hui_community.service.controller.shopkeeper"));
+    }
 }

@@ -18,7 +18,7 @@ import java.nio.charset.StandardCharsets;
 
 @Component
 public class RefreshTokenAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
-    record Request(String refreshToken, String id) {
+    public record Request(String refreshToken, String id) {
     }
 
     private final ObjectMapper objectMapper;
