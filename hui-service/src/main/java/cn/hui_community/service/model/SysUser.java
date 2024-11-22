@@ -1,5 +1,6 @@
 package cn.hui_community.service.model;
 
+import cn.hui_community.service.model.dto.SysUserPageResponse;
 import cn.hui_community.service.model.dto.SysUserResponse;
 import jakarta.persistence.*;
 import lombok.*;
@@ -68,7 +69,23 @@ public class SysUser extends Base {
                 .createBy(getCreateBy())
                 .updateBy(getUpdateBy())
                 .updateTime(getUpdateTime())
-                .password("****************")
+                .roles(getRoles().stream().map(SysUserRole::toResponse).collect(Collectors.toSet()))
+                .phone(getPhone())
+                .lockedTime(getLockedTime())
+                .expiredTime(getExpiredTime())
+                .displayName(getDisplayName())
+                .username(getUsername())
+                .build();
+    }
+
+    public SysUserPageResponse toPageResponse() {
+        return SysUserPageResponse.builder()
+                .id(getId())
+                .createTime(getCreateTime())
+                .createBy(getCreateBy())
+                .updateBy(getUpdateBy())
+                .updateTime(getUpdateTime())
+                .roles(getRoles().stream().map(role -> role.getName() + "_" + role.getCommunityId()).collect(Collectors.toSet()))
                 .phone(getPhone())
                 .lockedTime(getLockedTime())
                 .expiredTime(getExpiredTime())

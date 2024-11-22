@@ -4,6 +4,12 @@ import cn.hui_community.service.model.SysUserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
-public interface SysRoleRepository extends JpaRepository<SysUserRole, String> {
+public interface SysUserRoleRepository extends JpaRepository<SysUserRole, String> {
+
+    Optional<SysUserRole> findByCommunityIdAndName(String communityId, String name);
+
+
 }

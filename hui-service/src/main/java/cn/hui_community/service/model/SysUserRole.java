@@ -1,5 +1,6 @@
 package cn.hui_community.service.model;
 
+import cn.hui_community.service.model.dto.SysUserRoleResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 @SuperBuilder
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Table(name = "h_sys_user_role")
+@Table(name = "h_sys_user_role", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "community_id"})})
 @Slf4j
 @EntityListeners(AuditingEntityListener.class)
 public class SysUserRole extends Base {
@@ -43,12 +44,28 @@ public class SysUserRole extends Base {
 
     private String description;
 
-    //对于系统用户来说，需要加上小区作为权限名
+
     public Set<GrantedAuthority> generateAuthorities() {
         return getPermissions()
                 .stream()
                 .map(permission -> new SimpleGrantedAuthority(permission.getAuthority() + "_" + getCommunityId()))
                 .collect(Collectors.toSet());
+    }
+
+    public SysUserRoleResponse toResponse() {
+        return SysUserRoleResponse
+                .builder()
+                .id(getId())
+                .createBy(getCreateBy())
+                .updateBy(getUpdateBy())
+                .createTime(getCreateTime())
+                .updateTime(getUpdateTime())
+                .communityName(getCommunity().getName())
+                .communityId(getCommunityId())
+                .description(getDescription())
+                .permissions(getPermissions().stream().map(Permission::toResponse).collect(Collectors.toSet()))
+                .name(getName())
+                .build();
     }
 
 
