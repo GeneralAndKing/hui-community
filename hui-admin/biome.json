@@ -7,7 +7,7 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "ignore": []
+    "ignore": ["./typed-router.d.ts"]
   },
   "formatter": {
     "indentStyle": "space",
