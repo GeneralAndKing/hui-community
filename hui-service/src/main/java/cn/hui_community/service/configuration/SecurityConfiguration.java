@@ -45,6 +45,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http, GlobalAuthHandler globalAuthHandler, Map<String, AbstractAuthenticationProcessingFilter> filterMap) throws Exception {
         HttpSecurity httpSecurity = http
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/sys-api/login", "/refresh-token", "/user-api/login").permitAll()
                         .requestMatchers("/swagger-ui", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
