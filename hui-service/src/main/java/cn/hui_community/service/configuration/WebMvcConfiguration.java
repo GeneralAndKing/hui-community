@@ -19,7 +19,7 @@ import java.util.Map;
 @Configuration
 @RequiredArgsConstructor
 @Slf4j
-public class WebMvcConfiguration  implements WebMvcConfigurer {
+public class WebMvcConfiguration implements WebMvcConfigurer {
     @Override
     public void configurePathMatch(PathMatchConfigurer configurer) {
         configurer.addPathPrefix("/sys-api",
@@ -30,12 +30,4 @@ public class WebMvcConfiguration  implements WebMvcConfigurer {
                         clazz -> clazz.getPackageName().startsWith("cn.hui_community.service.controller.shopkeeper"));
     }
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOriginPatterns("*")
-                .allowCredentials(true)
-                .allowedMethods("*")
-                .maxAge(3600);
-    }
 }

@@ -17,26 +17,26 @@ public class CommunityController {
     private final SysUserService sysUserService;
 
     @PostMapping("")
-    @PreAuthorize("hasAuthority(auth.SUPER_PERMISSION_NAME+'_001')")
+//    @PreAuthorize("hasAuthority(auth.SUPER_PERMISSION_NAME+'_001')")
     public CommunityResponse addCommunity(@RequestBody AddCommunityRequest request) {
         return communityService.addCommunity(request);
     }
 
 
     @PutMapping("/{communityId}")
-    @PreAuthorize("hasAuthority(auth.SUPER_PERMISSION_NAME+'_001')")
+//    @PreAuthorize("hasAuthority(auth.SUPER_PERMISSION_NAME+'_001')")
     public CommunityResponse updateCommunityById(@PathVariable String communityId, @RequestBody UpdateCommunityRequest request) {
         return communityService.updateCommunityById(communityId, request);
     }
 
     @PostMapping("/{communityId}/sys-user")
-    @PreAuthorize("hasAuthority(auth.ADMIN_PERMISSION_NAME+#communityId) or hasAuthority(@auth.SUPER_PERMISSION_NAME+'_001')")
+//    @PreAuthorize("hasAuthority(auth.ADMIN_PERMISSION_NAME+#communityId) or hasAuthority(@auth.SUPER_PERMISSION_NAME+'_001')")
     public SysUserResponse addSysUser(@PathVariable String communityId, @RequestBody AddSysUserRequest request) {
         return sysUserService.addSysUser(request, communityId);
     }
 
     @GetMapping("/{communityId}/sys-user/page")
-    @PreAuthorize("hasAuthority(@auth.ADMIN_PERMISSION_NAME+#communityId) or hasAuthority(@auth.SUPER_PERMISSION_NAME+'_001')")
+//    @PreAuthorize("hasAuthority(@auth.ADMIN_PERMISSION_NAME+#communityId) or hasAuthority(@auth.SUPER_PERMISSION_NAME+'_001')")
     public Page<SysUserPageResponse> sysUserPage(@PathVariable String communityId,
                                                  @RequestParam(required = false) String likedUsername,
                                                  @RequestParam(required = false) String likedDisplayName,
@@ -45,7 +45,7 @@ public class CommunityController {
     }
 
     @PostMapping("/{communityId}/role")
-    @PreAuthorize("hasAuthority(@auth.ADMIN_PERMISSION_NAME+#communityId) or hasAuthority(@auth.SUPER_PERMISSION_NAME+'_001')")
+//    @PreAuthorize("hasAuthority(@auth.ADMIN_PERMISSION_NAME+#communityId) or hasAuthority(@auth.SUPER_PERMISSION_NAME+'_001')")
     public SysUserRoleResponse addNewSysUserRole(@PathVariable String communityId, AddSysRoleRequest request) {
         return communityService.addSysRole(communityId, request);
     }

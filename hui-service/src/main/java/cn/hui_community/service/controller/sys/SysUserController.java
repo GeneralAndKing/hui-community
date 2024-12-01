@@ -19,7 +19,7 @@ public class SysUserController {
         return AuthHelper.currentSysUser().toResponse();
     }
     @PostMapping("/{sysUserId}/roles")
-    @PreAuthorize("hasAuthority(auth.SUPER_PERMISSION_NAME+'_001') or auth.hasAssignedRoles(request.roleIds)")
+//    @PreAuthorize("hasAuthority(auth.SUPER_PERMISSION_NAME+'_001') or auth.hasAssignedRoles(request.roleIds)")
     public SysUserResponse assignRoles(AssignRolesRequest request, @PathVariable String sysUserId){
         return sysUserService.assignRoles(sysUserId,request);
 

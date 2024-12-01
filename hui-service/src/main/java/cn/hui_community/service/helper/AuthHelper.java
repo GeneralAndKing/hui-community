@@ -117,7 +117,11 @@ public class AuthHelper {
                 .toList();
     }
 
-
+    /**
+     * 判断是否有可分配的权限
+     * @param roleIds
+     * @return
+     */
     public Boolean hasAssignedRoles(Set<String> roleIds) {
         List<String> adminCommunityIds = currentSysUser().getRoles()
                 .stream()

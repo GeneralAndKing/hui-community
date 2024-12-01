@@ -17,7 +17,7 @@ import java.util.List;
 public class PermissionController {
 
     @GetMapping("")
-    @PreAuthorize("hasAuthority('SUPER') or hasAuthority('ADMIN')")
+//    @PreAuthorize("hasAuthority(auth.SUPER_PERMISSION_NAME+'_001')")
     public List<PermissionResponse> all() {
         return AuthHelper.assignedPermissions()
                 .stream()
