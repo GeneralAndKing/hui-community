@@ -1,47 +1,57 @@
-import { ref, computed, reactive } from "vue";
+import { ref, computed, reactive, onMounted } from 'vue'
 import { defineStore } from "pinia";
-import type { paths } from "@/types/client";
 import { client } from "@/request";
 import { MessagePlugin } from "tdesign-vue-next";
-import type { AuthToken, ResponseError } from '@/types'
+import type { AuthToken, ResponseError } from "@/types";
 import { useRouter } from "vue-router";
+import type { components } from '@/types/client'
 
 const useAuthStore = defineStore(
   "auth",
   () => {
     const auth = reactive<AuthToken>({});
+    const information = ref<components["schemas"]["PermissionResponse"]>()
     const signInLoading = ref<boolean>(false);
     const isAuth = computed(() => auth.accessToken !== undefined);
-    const router = useRouter();
+    const username = computed(() => auth.username);
 
-    const signIn = (formData: { username: string; password: string }) => {
+    const router = useRouter();
+    const getUserInfo = async () => {
+      if (!isAuth) {
+        await router.push("/auth");
+        return;
+      }
+      const {data} = await client.GET('/sys-api/sys-user/my')
+      information.value = data
+    }
+
+    const signIn = async (formData: { username: string; password: string }) => {
       signInLoading.value = true;
-      client
-        .POST("/sys-api/login", {
-          body: formData
-        })
-        .then(({ data, error }) => {
-          if (error) {
-            console.error(error);
-            void MessagePlugin.error(`登录失败: ${(error as ResponseError).message}`);
-            return;
-          }
-          auth.id = data.subject;
-          auth.subject = data.subject;
-          auth.username = data.username;
-          auth.accessToken = data.accessToken;
-          auth.refreshToken = data.refreshToken;
-          void MessagePlugin.success("登录成功");
-          void router.push("/dashboard");
-        })
-        .finally(() => {
-          signInLoading.value = false;
-        });
+      try {
+        const { data, error } = await client.POST("/sys-api/login", { body: formData });
+        if (error) {
+          console.error(error);
+          void MessagePlugin.error(`登录失败: ${(error as ResponseError).message}`);
+          return;
+        }
+        auth.id = data.subject;
+        auth.subject = data.subject;
+        auth.username = data.username;
+        auth.accessToken = data.accessToken;
+        auth.refreshToken = data.refreshToken;
+        void MessagePlugin.success("登录成功");
+        void router.push("/dashboard");
+      } finally {
+        signInLoading.value = false;
+      }
     };
 
     return {
       signIn,
+      getUserInfo,
+      username,
       auth,
+      information,
       isAuth,
       isLoading: signInLoading
     };

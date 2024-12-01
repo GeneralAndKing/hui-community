@@ -11,13 +11,13 @@ if (import.meta.hot) {
   handleHotUpdate(router);
 }
 
-const noAuth = [
-  '/auth', '/'
+export const NO_AUTH_PATH = [
+  '/auth', '/', '/sys-api/login'
 ]
 
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore()
-  if (noAuth.includes(to.path)) {
+  if (NO_AUTH_PATH.includes(to.path)) {
     next()
     return
   }
