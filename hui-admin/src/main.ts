@@ -11,11 +11,11 @@ import router from "./router";
 
 const app = createApp(App);
 
-const plugin = createPinia();
-plugin.use(piniaPluginPersistedstate);
-
-app.use(plugin);
 app.use(router);
 app.use(TDesign);
+
+const pinia = createPinia();
+pinia.use(piniaPluginPersistedstate);
+app.use(pinia);
 
 app.mount("#app");

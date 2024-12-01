@@ -2,5 +2,5 @@ import createClient from "openapi-fetch";
 import type { paths } from "./types/client";
 
 export const client = createClient<paths>({
-  baseUrl: "http://139.155.2.12:8080"
+  baseUrl: import.meta.env.VITE_SERVICE_BASE_URL
 });

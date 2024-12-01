@@ -2,7 +2,7 @@
 import { DesktopIcon, LockOnIcon } from "tdesign-icons-vue-next";
 import { type FormProps, MessagePlugin } from "tdesign-vue-next";
 import { reactive } from "vue";
-import { client } from "@/request";
+import useAuthStore from "@/stores/auth";
 const rules: FormProps["rules"] = {
   username: [
     {
@@ -32,9 +32,9 @@ const rules: FormProps["rules"] = {
 };
 const formData: FormProps["data"] = reactive({
   username: "",
-  password: "",
-  isLoading: false
+  password: ""
 });
+const authStore = useAuthStore();
 
 const onSubmit: FormProps["onSubmit"] = ({ validateResult, firstError }) => {
   if (validateResult === false) {
@@ -42,24 +42,10 @@ const onSubmit: FormProps["onSubmit"] = ({ validateResult, firstError }) => {
     void MessagePlugin.warning(`${firstError}`);
     return;
   }
-  formData.isLoading = true;
-  client
-    .POST("/sys-api/login", {
-      username: formData.username,
-      password: formData.password
-    })
-    .then(({data, error}) => {
-      if (error) {
-        console.error(error)
-        return
-      }
-      console.log(data);
-      MessagePlugin.success("提交成功");
-    })
-    .catch((err) => {})
-    .finally(() => {
-      formData.isLoading = false;
-    });
+  authStore.signIn({
+    username: formData.username,
+    password: formData.password
+  });
 };
 </script>
 
