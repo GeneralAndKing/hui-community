@@ -14,6 +14,8 @@ import cn.hui_community.service.repository.CommunityRepository;
 import cn.hui_community.service.repository.SysUserRepository;
 import cn.hui_community.service.repository.SysUserRoleRepository;
 import cn.hui_community.service.service.SysUserService;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -57,7 +59,7 @@ public class SysUserServiceImpl implements SysUserService {
         Page<SysUser> sysUserPage = sysUserRepository.findAll((root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
             if (StringUtils.isNotBlank(communityId)) {
-                predicates.add(criteriaBuilder.equal(root.get("communityId"), communityId));
+                predicates.add(criteriaBuilder.equal(root.join("roles", JoinType.INNER).get("communityId"), communityId));
             }
 
             if (StringUtils.isNotBlank(likedUsername)) {
