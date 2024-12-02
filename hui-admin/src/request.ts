@@ -1,7 +1,7 @@
 import createClient, { type Middleware } from "openapi-fetch";
 import type { paths } from "./types/client";
 import useAuthStore from "@/stores/auth";
-import { NO_AUTH_PATH } from "@/router";
+import router, { NO_AUTH_PATH } from "@/router";
 import type { ResponseError } from "@/types";
 import { MessagePlugin } from "tdesign-vue-next";
 
@@ -24,13 +24,17 @@ const errorMiddleware: Middleware = {
       return;
     }
     const data: ResponseError = await response.clone().json();
+    let message = `未知错误： ${data.message}`
     if (response.status >= 500) {
-      void MessagePlugin.error(`服务器内部错误：${data.message}`);
+      message = `服务器内部错误：${data.message}`
     } else if (response.status === 401) {
-      void MessagePlugin.error(`当前未登录：${data.message}`);
+      message = `当前未登录：${data.message}`
+      void router.push('/auth')
     } else if (response.status === 403) {
-      void MessagePlugin.error(`当前没有权限访问：${data.message}`);
+      message = `当前没有权限访问：${data.message}`
     }
+    void MessagePlugin.error(message);
+    throw new Error(message)
   }
 };
 

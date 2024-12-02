@@ -10,7 +10,7 @@ const useAuthStore = defineStore(
   "auth",
   () => {
     const auth = reactive<AuthToken>({});
-    const information = ref<components["schemas"]["PermissionResponse"]>()
+    const information = ref<components["schemas"]["SysUserResponse"]>()
     const signInLoading = ref<boolean>(false);
     const isAuth = computed(() => auth.accessToken !== undefined);
     const username = computed(() => auth.username);
