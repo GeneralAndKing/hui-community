@@ -12,9 +12,9 @@ import java.time.Instant;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Data
+@Getter
+@Setter
 @Accessors(chain = true)
-@ToString
 @SuperBuilder
 @RequiredArgsConstructor
 @AllArgsConstructor

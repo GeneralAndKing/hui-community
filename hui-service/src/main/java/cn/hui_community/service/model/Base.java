@@ -15,9 +15,9 @@ import java.io.Serializable;
 import java.time.Instant;
 
 @MappedSuperclass
-@Data
+@Getter
+@Setter
 @Accessors(chain = true)
-@ToString
 @SuperBuilder
 @RequiredArgsConstructor
 @AllArgsConstructor

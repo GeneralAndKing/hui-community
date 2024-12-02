@@ -22,9 +22,9 @@ import java.util.stream.Collectors;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Data
+@Getter
+@Setter
 @Accessors(chain = true)
-@ToString
 @SuperBuilder
 @RequiredArgsConstructor
 @AllArgsConstructor

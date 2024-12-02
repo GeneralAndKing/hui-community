@@ -7,6 +7,6 @@ import java.util.Set;
 
 @Data
 @RequiredArgsConstructor
-public class AssignRolesRequest {
+public class RolesRequest {
     private Set<String> roleIds;
 }

@@ -8,7 +8,10 @@ import io.swagger.v3.core.converter.ModelConverters;
 import io.swagger.v3.core.converter.ResolvedSchema;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.servers.Server;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
@@ -34,12 +37,22 @@ import java.util.Map;
         servers = {
                 @Server(description = "Test env", url = "http://139.155.2.12:8080"),
                 @Server(description = "Development env", url = "http://localhost:8080")
+        },
+        security = {
+                @SecurityRequirement(name = "bearerAuth") // 全局定义需要的安全认证
         }
+
 //        ,
 //        externalDocs =
 //        @ExternalDocumentation(
 //                description = "Project Description",
 //                url = "https://github.com/MetaTrustLabs/insight-backend/README.md")
+)
+@SecurityScheme(
+        name = "bearerAuth",
+        type = SecuritySchemeType.HTTP,
+        scheme = "bearer",
+        bearerFormat = "JWT"
 )
 @Configuration
 public class OpenAPIConfiguration {

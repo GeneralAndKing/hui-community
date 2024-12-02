@@ -22,6 +22,15 @@ public class CommunityController {
         return communityService.addCommunity(request);
     }
 
+    @GetMapping("/page")
+//    @PreAuthorize("hasAuthority(@auth.SUPER_AUTHORITY_PREFIX+'001')")
+    public Page<CommunityResponse> communityPage(
+            @RequestParam(required = false) String areaOrParentAreaId,
+            @RequestParam(required = false) String likedName,
+            @RequestParam(required = false) String likedCode, Pageable pageable) {
+        return communityService.page(likedCode,likedName,areaOrParentAreaId,pageable);
+    }
+
 
     @PutMapping("/{communityId}")
     @PreAuthorize("hasAuthority(@auth.SUPER_AUTHORITY_PREFIX+'001')")
@@ -39,8 +48,7 @@ public class CommunityController {
     @PreAuthorize("hasAuthority(@auth.ADMIN_AUTHORITY_PREFIX+#communityId) or hasAuthority(@auth.SUPER_AUTHORITY_PREFIX+'001')")
     public Page<SysUserPageResponse> sysUserPage(@PathVariable String communityId,
                                                  @RequestParam(required = false) String likedUsername,
-                                                 @RequestParam(required = false) String likedDisplayName,
-                                                 @RequestParam Pageable pageable) {
+                                                 @RequestParam(required = false) String likedDisplayName, Pageable pageable) {
         return sysUserService.page(communityId, likedUsername, likedDisplayName, pageable);
     }
 

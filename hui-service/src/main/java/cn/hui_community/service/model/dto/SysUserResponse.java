@@ -14,7 +14,6 @@ public class SysUserResponse extends BaseResponse {
 
     private String username;
 
-
     private String phone;
 
     private Instant lockedTime;

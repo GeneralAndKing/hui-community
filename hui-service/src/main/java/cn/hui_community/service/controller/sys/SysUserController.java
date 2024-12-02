@@ -1,7 +1,7 @@
 package cn.hui_community.service.controller.sys;
 
 import cn.hui_community.service.helper.AuthHelper;
-import cn.hui_community.service.model.dto.AssignRolesRequest;
+import cn.hui_community.service.model.dto.RolesRequest;
 import cn.hui_community.service.model.dto.SysUserResponse;
 import cn.hui_community.service.service.SysUserService;
 import lombok.RequiredArgsConstructor;
@@ -18,11 +18,18 @@ public class SysUserController {
     public SysUserResponse my() {
         return AuthHelper.currentSysUser().toResponse();
     }
+
+
     @PostMapping("/{sysUserId}/roles")
     @PreAuthorize("hasAuthority(@auth.SUPER_PERMISSION_NAME+'001') or @auth.hasAssignedRolesAuthority(request.roleIds)")
-    public SysUserResponse assignRoles(AssignRolesRequest request, @PathVariable String sysUserId){
-        return sysUserService.assignRoles(sysUserId,request);
+    public SysUserResponse assignRoles(@PathVariable String sysUserId, @RequestBody RolesRequest request) {
+        return sysUserService.assignRoles(sysUserId, request);
+    }
 
+    @DeleteMapping("/{sysUserId}/roles")
+    @PreAuthorize("hasAuthority(@auth.SUPER_PERMISSION_NAME+'001') or @auth.hasAssignedRolesAuthority(request.roleIds)")
+    public SysUserResponse cancelRoles(@PathVariable String sysUserId, @RequestBody RolesRequest request) {
+        return sysUserService.cancelRoles(sysUserId, request);
     }
 
 }

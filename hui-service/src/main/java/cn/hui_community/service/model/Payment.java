@@ -11,10 +11,10 @@ import java.time.Instant;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Data
+@Getter
+@Setter
 @SuperBuilder
 @Accessors(chain = true)
-@ToString
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Table(name = "h_payment")

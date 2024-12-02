@@ -1,5 +1,6 @@
 package cn.hui_community.service.service.impl;
 
+import cn.hui_community.service.helper.PageHelper;
 import cn.hui_community.service.helper.ResponseStatusExceptionHelper;
 import cn.hui_community.service.helper.AuthHelper;
 import cn.hui_community.service.model.Area;
@@ -12,14 +13,20 @@ import cn.hui_community.service.repository.CommunityRepository;
 import cn.hui_community.service.repository.PermissionRepository;
 import cn.hui_community.service.repository.SysUserRoleRepository;
 import cn.hui_community.service.service.CommunityService;
+import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -95,5 +102,47 @@ public class CommunityServiceImpl implements CommunityService {
                 .communityId(communityId)
                 .permissions(new HashSet<>(permissions))
                 .build()).toResponse();
+    }
+
+    @Override
+    public Page<CommunityResponse> page(String likedCode, String likedName, String areaOrParentAreaId, Pageable pageable) {
+        ArrayList<String> areaIds = new ArrayList<>();
+        if (StringUtils.isNotBlank(areaOrParentAreaId)) {
+            Area area = areaRepository.findById(areaOrParentAreaId)
+                    .orElseThrow(ResponseStatusExceptionHelper.badRequestSupplier("area %s does not exist", areaOrParentAreaId));
+            if (area.getLevel() < 2) {
+                throw ResponseStatusExceptionHelper.badRequest("The area is too large, level is %s", area.getLevel());
+            }
+            List<Area> processAreas = Collections.singletonList(area);
+
+            areaIds.add(area.getId());
+            while (true) {
+                ArrayList<Area> tmpAreas = new ArrayList<>();
+                for (Area processArea : processAreas) {
+                    tmpAreas.addAll(processArea.getChildren());
+                }
+                if (tmpAreas.isEmpty()) {
+                    break;
+                }
+                areaIds.addAll(tmpAreas.stream().map(Area::getId).toList());
+                processAreas = tmpAreas;
+            }
+        }
+        Page<Community> communityPage = communityRepository.findAll((root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if (StringUtils.isNotBlank(likedCode)) {
+                predicates.add(criteriaBuilder.like(root.get("code"), "%" + likedCode + "%"));
+            }
+
+            if (StringUtils.isNotBlank(likedName)) {
+                predicates.add(criteriaBuilder.like(root.get("name"), "%" + likedName + "%"));
+            }
+
+            if (!areaIds.isEmpty()) {
+                predicates.add(root.get("areaId").in(areaIds));
+            }
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        }, pageable);
+        return PageHelper.map(communityPage, Community::toResponse);
     }
 }

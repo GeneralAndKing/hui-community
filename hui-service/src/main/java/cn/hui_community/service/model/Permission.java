@@ -11,9 +11,9 @@ import org.springframework.security.core.GrantedAuthority;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Data
+@Getter
+@Setter
 @Accessors(chain = true)
-@ToString
 @SuperBuilder
 @RequiredArgsConstructor
 @AllArgsConstructor
