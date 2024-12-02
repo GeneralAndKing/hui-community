@@ -10,6 +10,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.tuple.Triple;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Component;
@@ -30,9 +31,11 @@ public class AuthHelper {
     public static final String VISIT_PERMISSION_NAME = "VISIT";
     public static final String ADMIN_ROLE_NAME = "ADMINER";
     public static final String ADMIN_PERMISSION_NAME = "ADMIN";
+    public static final String ADMIN_AUTHORITY_PREFIX = "SYS_" + ADMIN_PERMISSION_NAME + "_";
 
     public static final String SUPER_ROLE_NAME = "SUPER_ADMINER";
     public static final String SUPER_PERMISSION_NAME = "SUPER_ADMIN";
+    public static final String SUPER_AUTHORITY_PREFIX = "SYS_" + SUPER_PERMISSION_NAME + "_";
 
     private AuthHelper(PermissionRepository permissionRepository, CommunityRepository communityRepository, UserRepository userRepository, SysUserRepository sysUserRepository, SysUserRoleRepository sysUserRoleRepository) {
         AuthHelper.communityRepository = communityRepository;
@@ -64,7 +67,7 @@ public class AuthHelper {
                             .description(permissionTriple.getRight())
                             .build()
                     ))).get();
-            sysPermissionMap.put(permission.getId(), permission);
+            sysPermissionMap.put(permissionTriple.getLeft(), permission);
         }
 
     }
@@ -119,10 +122,11 @@ public class AuthHelper {
 
     /**
      * 判断是否有可分配的权限
+     *
      * @param roleIds
      * @return
      */
-    public Boolean hasAssignedRoles(Set<String> roleIds) {
+    public boolean hasAssignedRolesAuthority(Set<String> roleIds) {
         List<String> adminCommunityIds = currentSysUser().getRoles()
                 .stream()
                 .filter(role -> Objects.equals(role.getName(), ADMIN_ROLE_NAME))
@@ -133,6 +137,16 @@ public class AuthHelper {
         }
         return CollectionUtils.containsAll(adminCommunityIds, roleIds);
 
+    }
+
+    public boolean hasAuthorityPrefix(String permissionPrefix) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        for (GrantedAuthority grantedAuthority : authentication.getAuthorities()) {
+            if (grantedAuthority.getAuthority().startsWith(permissionPrefix)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

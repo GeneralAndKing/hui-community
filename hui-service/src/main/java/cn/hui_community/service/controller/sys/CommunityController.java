@@ -17,20 +17,20 @@ public class CommunityController {
     private final SysUserService sysUserService;
 
     @PostMapping("")
-//    @PreAuthorize("hasAuthority(auth.SUPER_PERMISSION_NAME+'_001')")
+    @PreAuthorize("hasAuthority(@auth.SUPER_AUTHORITY_PREFIX+'001')")
     public CommunityResponse addCommunity(@RequestBody AddCommunityRequest request) {
         return communityService.addCommunity(request);
     }
 
 
     @PutMapping("/{communityId}")
-//    @PreAuthorize("hasAuthority(auth.SUPER_PERMISSION_NAME+'_001')")
+    @PreAuthorize("hasAuthority(@auth.SUPER_AUTHORITY_PREFIX+'001')")
     public CommunityResponse updateCommunityById(@PathVariable String communityId, @RequestBody UpdateCommunityRequest request) {
         return communityService.updateCommunityById(communityId, request);
     }
 
     @PostMapping("/{communityId}/sys-user")
-//    @PreAuthorize("hasAuthority(auth.ADMIN_PERMISSION_NAME+#communityId) or hasAuthority(@auth.SUPER_PERMISSION_NAME+'_001')")
+    @PreAuthorize("hasAuthority(@auth.SUPER_AUTHORITY_PREFIX+#communityId) or hasAuthority(@auth.SUPER_AUTHORITY_PREFIX+'001')")
     public SysUserResponse addSysUser(@PathVariable String communityId, @RequestBody AddSysUserRequest request) {
         return sysUserService.addSysUser(request, communityId);
     }
