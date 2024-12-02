@@ -4,9 +4,7 @@
 </script>
 
 <template>
-  <div>
-    Community
-  </div>
+  <div>Home</div>
 </template>
 
 <style scoped>

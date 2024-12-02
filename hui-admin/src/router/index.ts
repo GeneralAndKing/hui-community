@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import { routes, handleHotUpdate } from "vue-router/auto-routes";
 import useAuthStore from '@/stores/auth'
 import { MessagePlugin } from 'tdesign-vue-next'
+import type { AsideMenu } from '@/types'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -10,6 +11,19 @@ const router = createRouter({
 if (import.meta.hot) {
   handleHotUpdate(router);
 }
+
+export const asideMenu: AsideMenu[] = [
+  {
+    name: '/dashboard/[communityId]/',
+    title: '仪表盘',
+    icon: 'dashboard'
+  },
+  {
+    name: '/dashboard/[communityId]/community/',
+    title: '社区管理',
+    icon: 'dashboard'
+  },
+]
 
 export const NO_AUTH_PATH = [
   '/auth', '/', '/sys-api/login'

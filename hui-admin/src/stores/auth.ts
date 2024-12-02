@@ -1,30 +1,19 @@
-import { ref, computed, reactive, onMounted } from 'vue'
+import { ref, computed, reactive, onMounted } from "vue";
 import { defineStore } from "pinia";
 import { client } from "@/request";
 import { MessagePlugin } from "tdesign-vue-next";
-import type { AuthToken, ResponseError } from "@/types";
+import type { AuthToken, Community, ResponseError } from "@/types";
 import { useRouter } from "vue-router";
-import type { components } from '@/types/client'
 
 const useAuthStore = defineStore(
   "auth",
   () => {
     const auth = reactive<AuthToken>({});
-    const information = ref<components["schemas"]["SysUserResponse"]>()
     const signInLoading = ref<boolean>(false);
     const isAuth = computed(() => auth.accessToken !== undefined);
     const username = computed(() => auth.username);
 
     const router = useRouter();
-    const getUserInfo = async () => {
-      if (!isAuth) {
-        await router.push("/auth");
-        return;
-      }
-      const {data} = await client.GET('/sys-api/sys-user/my')
-      information.value = data
-    }
-
     const signIn = async (formData: { username: string; password: string }) => {
       signInLoading.value = true;
       try {
@@ -45,13 +34,10 @@ const useAuthStore = defineStore(
         signInLoading.value = false;
       }
     };
-
     return {
       signIn,
-      getUserInfo,
       username,
       auth,
-      information,
       isAuth,
       isLoading: signInLoading
     };
