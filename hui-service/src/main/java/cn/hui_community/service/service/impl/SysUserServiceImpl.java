@@ -47,7 +47,7 @@ public class SysUserServiceImpl implements SysUserService {
                 .expiredTime(request.getExpiredTime())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .username(request.getUsername())
-                .roles(Collections.singleton(AuthHelper.visitorRole(communityId)))
+                .roles(Collections.singleton(AuthHelper.visitorSysUserRole(communityId)))
                 .displayName(request.getDisplayName()).build()
         ).toResponse();
     }

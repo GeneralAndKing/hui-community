@@ -1,6 +1,6 @@
 package cn.hui_community.service.configuration.security.authentication.token;
 
-import cn.hui_community.service.enums.SubjectEnum;
+import cn.hui_community.service.enums.PermissionTypeEnum;
 import cn.hui_community.service.model.SysUser;
 import cn.hui_community.service.model.User;
 import cn.hui_community.service.repository.SysUserRepository;
@@ -41,7 +41,7 @@ public class RefreshTokenAuthenticationProvider implements AuthenticationProvide
             throw new BadCredentialsException("invalid refresh token.");
         }
         String subject = jwt.getClaims().getOrDefault("subject", "").toString();
-        switch (SubjectEnum.valueOf(subject)) {
+        switch (PermissionTypeEnum.valueOf(subject)) {
             case SYS -> {
                 SysUser sysUser = sysUserRepository.findById(id)
                         .orElseThrow(() -> new BadCredentialsException("can't found sys user."));

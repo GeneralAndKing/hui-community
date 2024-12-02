@@ -3,14 +3,14 @@ package cn.hui_community.service.enums;
 import lombok.Getter;
 
 @Getter
-public enum SubjectEnum {
+public enum PermissionTypeEnum {
 
     SYS("SYS"),
     USER("USER"),
     SHOPKEEPER("SHOPKEEPER");
     private final String value;
 
-    SubjectEnum(String value) {
+    PermissionTypeEnum(String value) {
         this.value = value;
     }
 

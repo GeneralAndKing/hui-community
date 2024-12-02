@@ -36,7 +36,7 @@ public class CommunityController {
     }
 
     @GetMapping("/{communityId}/sys-user/page")
-//    @PreAuthorize("hasAuthority(@auth.ADMIN_PERMISSION_NAME+#communityId) or hasAuthority(@auth.SUPER_PERMISSION_NAME+'_001')")
+    @PreAuthorize("hasAuthority(@auth.ADMIN_AUTHORITY_PREFIX+#communityId) or hasAuthority(@auth.SUPER_AUTHORITY_PREFIX+'001')")
     public Page<SysUserPageResponse> sysUserPage(@PathVariable String communityId,
                                                  @RequestParam(required = false) String likedUsername,
                                                  @RequestParam(required = false) String likedDisplayName,
@@ -45,7 +45,7 @@ public class CommunityController {
     }
 
     @PostMapping("/{communityId}/role")
-//    @PreAuthorize("hasAuthority(@auth.ADMIN_PERMISSION_NAME+#communityId) or hasAuthority(@auth.SUPER_PERMISSION_NAME+'_001')")
+    @PreAuthorize("hasAuthority(@auth.ADMIN_AUTHORITY_PREFIX+#communityId) or hasAuthority(@auth.SUPER_AUTHORITY_PREFIX+'001')")
     public SysUserRoleResponse addNewSysUserRole(@PathVariable String communityId, AddSysRoleRequest request) {
         return communityService.addSysRole(communityId, request);
     }

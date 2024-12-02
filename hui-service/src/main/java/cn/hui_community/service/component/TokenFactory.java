@@ -1,7 +1,7 @@
 package cn.hui_community.service.component;
 
 import cn.hui_community.service.configuration.JwtConfiguration;
-import cn.hui_community.service.enums.SubjectEnum;
+import cn.hui_community.service.enums.PermissionTypeEnum;
 import cn.hui_community.service.model.Token;
 import cn.hui_community.service.model.SysUser;
 import cn.hui_community.service.model.User;
@@ -31,10 +31,10 @@ public class TokenFactory {
     public Token buildFromSysUser(SysUser user) {
         Instant now = Instant.now();
         Token token = Token.builder()
-                .accessToken(buildAccessToken(user.getId(), SubjectEnum.SYS.getValue(), now, user.toTokenInfo()))
-                .refreshToken(buildRefreshToken(user.getId(), SubjectEnum.SYS.getValue(), now))
+                .accessToken(buildAccessToken(user.getId(), PermissionTypeEnum.SYS.getValue(), now, user.toTokenInfo()))
+                .refreshToken(buildRefreshToken(user.getId(), PermissionTypeEnum.SYS.getValue(), now))
                 .id(user.getId())
-                .subject(SubjectEnum.SYS.getValue())
+                .subject(PermissionTypeEnum.SYS.getValue())
                 .username(user.getUsername()).build();
         tokenRepository.save(token);
         return token;
@@ -44,10 +44,10 @@ public class TokenFactory {
     public Token buildFromUser(User user) {
         Instant now = Instant.now();
         Token token = Token.builder()
-                .accessToken(buildAccessToken(user.getId(), SubjectEnum.USER.getValue(), now, Map.of()))
-                .refreshToken(buildRefreshToken(user.getId(), SubjectEnum.USER.getValue(), now))
+                .accessToken(buildAccessToken(user.getId(), PermissionTypeEnum.USER.getValue(), now, Map.of()))
+                .refreshToken(buildRefreshToken(user.getId(), PermissionTypeEnum.USER.getValue(), now))
                 .id(user.getId())
-                .subject(SubjectEnum.USER.getValue())
+                .subject(PermissionTypeEnum.USER.getValue())
                 .username(user.getName()).build();
         tokenRepository.save(token);
         return token;

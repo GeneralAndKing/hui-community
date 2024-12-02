@@ -19,7 +19,7 @@ public class PermissionController {
     @GetMapping("")
     @PreAuthorize("hasAuthority(@auth.SUPER_AUTHORITY_PREFIX+'001') or @auth.hasAuthorityPrefix(@auth.ADMIN_AUTHORITY_PREFIX)")
     public List<PermissionResponse> all() {
-        return AuthHelper.assignedPermissions()
+        return AuthHelper.assignedSysPermissions()
                 .stream()
                 .map(Permission::toResponse).toList();
     }

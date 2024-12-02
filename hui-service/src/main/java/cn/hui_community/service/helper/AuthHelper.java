@@ -1,11 +1,11 @@
 package cn.hui_community.service.helper;
 
+import cn.hui_community.service.enums.PermissionTypeEnum;
 import cn.hui_community.service.model.Permission;
 import cn.hui_community.service.model.SysUser;
 import cn.hui_community.service.model.SysUserRole;
 import cn.hui_community.service.model.User;
 import cn.hui_community.service.repository.*;
-import jakarta.annotation.PostConstruct;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.tuple.Triple;
@@ -29,36 +29,37 @@ public class AuthHelper {
 
     public static final String VISITOR_ROLE_NAME = "VISITOR";
     public static final String VISIT_PERMISSION_NAME = "VISIT";
-    public static final String ADMIN_ROLE_NAME = "ADMINER";
+    public static final String VISIT_AUTHORITY_PREFIX = PermissionTypeEnum.SYS.getValue() + "_" + VISIT_PERMISSION_NAME + "_";
+
     public static final String ADMIN_PERMISSION_NAME = "ADMIN";
-    public static final String ADMIN_AUTHORITY_PREFIX = "SYS_" + ADMIN_PERMISSION_NAME + "_";
+    public static final String ADMIN_AUTHORITY_PREFIX = PermissionTypeEnum.SYS.getValue() + "_" + ADMIN_PERMISSION_NAME + "_";
 
-    public static final String SUPER_ROLE_NAME = "SUPER_ADMINER";
     public static final String SUPER_PERMISSION_NAME = "SUPER_ADMIN";
-    public static final String SUPER_AUTHORITY_PREFIX = "SYS_" + SUPER_PERMISSION_NAME + "_";
+    public static final String SUPER_AUTHORITY_PREFIX = PermissionTypeEnum.SYS.getValue() + "_" + SUPER_PERMISSION_NAME + "_";
 
-    private AuthHelper(PermissionRepository permissionRepository, CommunityRepository communityRepository, UserRepository userRepository, SysUserRepository sysUserRepository, SysUserRoleRepository sysUserRoleRepository) {
+
+    private static final List<Triple<String, String, String>> assignedSysPermissions = List.of(
+            Triple.of(VISIT_PERMISSION_NAME, PermissionTypeEnum.SYS.getValue(), "The visit permission is the initial permission for each community and is used to bind the community to which the user belongs"),
+            Triple.of(ADMIN_PERMISSION_NAME, PermissionTypeEnum.SYS.getValue(), "The Admin permission can manage their associated communities")
+
+    );
+    private static final List<Triple<String, String, String>> hiddenSysPermissionList = List.of(
+            Triple.of(SUPER_PERMISSION_NAME, PermissionTypeEnum.SYS.getValue(), "The super permission is used for platform administrator")
+    );
+
+    private static final Map<String, Permission> sysPermissionMap = new HashMap<>();
+
+    private AuthHelper(PermissionRepository permissionRepository,
+                       CommunityRepository communityRepository,
+                       UserRepository userRepository,
+                       SysUserRepository sysUserRepository,
+                       SysUserRoleRepository sysUserRoleRepository) {
         AuthHelper.communityRepository = communityRepository;
         AuthHelper.permissionRepository = permissionRepository;
         AuthHelper.userRepository = userRepository;
         AuthHelper.sysUserRepository = sysUserRepository;
         AuthHelper.sysUserRoleRepository = sysUserRoleRepository;
 
-    }
-
-    private static final List<Triple<String, String, String>> assignedSysPermissions = List.of(
-            Triple.of(VISIT_PERMISSION_NAME, "SYS", "The visit permission is the initial permission for each community and is used to bind the community to which the user belongs"),
-            Triple.of(ADMIN_PERMISSION_NAME, "SYS", "The Admin permission can manage their associated communities")
-
-    );
-    private static final List<Triple<String, String, String>> hiddenSysPermissionList = List.of(
-            Triple.of(SUPER_PERMISSION_NAME, "SYS", "The super permission is used for platform administrator")
-    );
-
-    private static final Map<String, Permission> sysPermissionMap = new HashMap<>();
-
-    @PostConstruct
-    private void init() {
         for (Triple<String, String, String> permissionTriple : ListUtils.union(assignedSysPermissions, hiddenSysPermissionList)) {
             Permission permission = permissionRepository.findByName(permissionTriple.getLeft()).or(() -> Optional.of(
                     permissionRepository.save(Permission.builder()
@@ -69,8 +70,8 @@ public class AuthHelper {
                     ))).get();
             sysPermissionMap.put(permissionTriple.getLeft(), permission);
         }
-
     }
+
 
     public static List<Permission> currentUserPermissions() {
         return SecurityContextHolder.getContext().getAuthentication().getAuthorities()
@@ -110,15 +111,17 @@ public class AuthHelper {
     }
 
 
-    public static SysUserRole visitorRole(String communityId) {
+    public static SysUserRole visitorSysUserRole(String communityId) {
         return sysUserRoleRepository.findByCommunityIdAndName(communityId, VISITOR_ROLE_NAME).get();
     }
 
 
-    public static List<Permission> assignedPermissions() {
+    public static List<Permission> assignedSysPermissions() {
         return assignedSysPermissions.stream().map(stringStringPair -> sysPermissionMap.get(stringStringPair.getLeft()))
                 .toList();
     }
+
+
 
     /**
      * 判断是否有可分配的权限
@@ -129,7 +132,8 @@ public class AuthHelper {
     public boolean hasAssignedRolesAuthority(Set<String> roleIds) {
         List<String> adminCommunityIds = currentSysUser().getRoles()
                 .stream()
-                .filter(role -> Objects.equals(role.getName(), ADMIN_ROLE_NAME))
+                .filter(role -> role.getPermissions().stream()
+                        .anyMatch(permission -> permission.getType().equals(PermissionTypeEnum.SYS.getValue()) && permission.getName().equals(ADMIN_PERMISSION_NAME)))
                 .map(SysUserRole::getCommunityId).toList();
         List<SysUserRole> roles = sysUserRoleRepository.findAllById(roleIds);
         if (roles.size() != roleIds.size()) {
