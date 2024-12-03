@@ -41,18 +41,18 @@ public class SysUser extends Base {
     @Column(name = "username", unique = true)
     private String username;
 
-
     @Column(name = "password")
     private String password;
 
     @Column(name = "phone")
     private String phone;
 
+    @Column(name = "email")
+    private String email;
+
     @Column(name = "locked_time")
     private Instant lockedTime;
 
-    @Column(name = "expired_time")
-    private Instant expiredTime;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -69,10 +69,10 @@ public class SysUser extends Base {
                 .createBy(getCreateBy())
                 .updateBy(getUpdateBy())
                 .updateTime(getUpdateTime())
+                .email(getEmail())
                 .roles(getRoles().stream().map(SysUserRole::toResponse).collect(Collectors.toSet()))
                 .phone(getPhone())
                 .lockedTime(getLockedTime())
-                .expiredTime(getExpiredTime())
                 .displayName(getDisplayName())
                 .username(getUsername())
                 .build();
@@ -85,10 +85,10 @@ public class SysUser extends Base {
                 .createBy(getCreateBy())
                 .updateBy(getUpdateBy())
                 .updateTime(getUpdateTime())
+                .email(getEmail())
                 .roles(getRoles().stream().map(role -> role.getName() + "_" + role.getCommunityId()).collect(Collectors.toSet()))
                 .phone(getPhone())
                 .lockedTime(getLockedTime())
-                .expiredTime(getExpiredTime())
                 .displayName(getDisplayName())
                 .username(getUsername())
                 .build();

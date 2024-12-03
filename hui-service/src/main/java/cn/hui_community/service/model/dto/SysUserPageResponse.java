@@ -16,6 +16,8 @@ public class SysUserPageResponse extends BaseResponse {
 
     private String phone;
 
+    private String email;
+
     private Instant lockedTime;
     private Instant expiredTime;
 

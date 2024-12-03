@@ -122,7 +122,6 @@ public class AuthHelper {
     }
 
 
-
     /**
      * 判断是否有可分配的权限
      *
@@ -152,5 +151,6 @@ public class AuthHelper {
         }
         return false;
     }
+
 
 }

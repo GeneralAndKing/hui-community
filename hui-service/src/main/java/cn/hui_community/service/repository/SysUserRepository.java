@@ -12,5 +12,7 @@ public interface SysUserRepository extends JpaRepository<SysUser, String>, JpaSp
 
     Optional<SysUser> findByUsername(String username);
 
+    Boolean existsByUsername(String username);
+
 
 }

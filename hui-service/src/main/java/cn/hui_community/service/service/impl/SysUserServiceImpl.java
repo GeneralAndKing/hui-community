@@ -6,15 +6,11 @@ import cn.hui_community.service.helper.ResponseStatusExceptionHelper;
 import cn.hui_community.service.model.Community;
 import cn.hui_community.service.model.SysUser;
 import cn.hui_community.service.model.SysUserRole;
-import cn.hui_community.service.model.dto.AddSysUserRequest;
-import cn.hui_community.service.model.dto.RolesRequest;
-import cn.hui_community.service.model.dto.SysUserPageResponse;
-import cn.hui_community.service.model.dto.SysUserResponse;
+import cn.hui_community.service.model.dto.*;
 import cn.hui_community.service.repository.CommunityRepository;
 import cn.hui_community.service.repository.SysUserRepository;
 import cn.hui_community.service.repository.SysUserRoleRepository;
 import cn.hui_community.service.service.SysUserService;
-import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -46,7 +43,6 @@ public class SysUserServiceImpl implements SysUserService {
         }
         return sysUserRepository.save(SysUser.builder()
                 .phone(request.getPhone())
-                .expiredTime(request.getExpiredTime())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .username(request.getUsername())
                 .roles(Collections.singleton(AuthHelper.visitorSysUserRole(communityId)))
@@ -89,6 +85,48 @@ public class SysUserServiceImpl implements SysUserService {
                 .orElseThrow(ResponseStatusExceptionHelper.badRequestSupplier("can't found %s sysUser", sysUserId));
         List<SysUserRole> roles = sysUserRoleRepository.findAllById(request.getRoleIds());
         roles.forEach(sysUser.getRoles()::remove);
+        return sysUserRepository.save(sysUser).toResponse();
+    }
+
+    @Override
+    public void updatePassword(String sysUserId, String newPassword) {
+        SysUser sysUser = sysUserRepository.findById(sysUserId)
+                .orElseThrow(ResponseStatusExceptionHelper.badRequestSupplier("can't found %s sysUser", sysUserId));
+        sysUser.setPassword(passwordEncoder.encode(newPassword));
+        sysUserRepository.save(sysUser);
+    }
+
+    @Override
+    public SysUserResponse updateSysUser(String sysUserId, UpdateSysUserRequest request) {
+        SysUser sysUser = sysUserRepository.findById(sysUserId)
+                .orElseThrow(ResponseStatusExceptionHelper.badRequestSupplier("can't found %s sysUser", sysUserId));
+        if ((!sysUser.getUsername().equals(request.getUsername())) && checkUsername(request.getUsername())) {
+            throw ResponseStatusExceptionHelper.badRequest("username %s already exists", request.getUsername());
+        }
+        sysUser.setPhone(request.getPhone())
+                .setDisplayName(request.getDisplayName())
+                .setUsername(request.getUsername())
+                .setEmail(request.getEmail());
+        return sysUserRepository.save(sysUser).toResponse();
+    }
+
+    public Boolean checkUsername(String username) {
+        return sysUserRepository.existsByUsername(username);
+    }
+
+    @Override
+    public SysUserResponse lock(String sysUserId) {
+        SysUser sysUser = sysUserRepository.findById(sysUserId).
+                orElseThrow(ResponseStatusExceptionHelper.badRequestSupplier("can't found %s sys user", sysUserId));
+        sysUser.setLockedTime(Instant.now());
+        return sysUserRepository.save(sysUser).toResponse();
+    }
+
+    @Override
+    public SysUserResponse unlock(String sysUserId) {
+        SysUser sysUser = sysUserRepository.findById(sysUserId).
+                orElseThrow(ResponseStatusExceptionHelper.badRequestSupplier("can't found %s sys user", sysUserId));
+        sysUser.setLockedTime(null);
         return sysUserRepository.save(sysUser).toResponse();
     }
 }
