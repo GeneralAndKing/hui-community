@@ -20,7 +20,7 @@ public class AreaController {
   private final AreaRepository areaRepository;
 
   @GetMapping("")
-  @PreAuthorize("hasAuthority('SYS_SUPER_001')")
+  @PreAuthorize("hasAuthority(@auth.SUPER_AUTHORITY_PREFIX+'001')")
   public List<AreaResponse> all() {
     Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     System.out.println(principal);
