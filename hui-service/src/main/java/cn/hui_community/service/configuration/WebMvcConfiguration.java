@@ -30,4 +30,13 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
                         clazz -> clazz.getPackageName().startsWith("cn.hui_community.service.controller.shopkeeper"));
     }
 
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowCredentials(true)
+                .allowedOriginPatterns("*")
+                .allowedMethods("GET", "POST", "PUT", "DELETE")
+                .allowedHeaders("*")
+                .exposedHeaders("*");
+    }
 }
