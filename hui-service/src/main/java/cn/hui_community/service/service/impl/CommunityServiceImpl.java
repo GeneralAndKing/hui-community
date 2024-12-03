@@ -7,7 +7,11 @@ import cn.hui_community.service.model.Area;
 import cn.hui_community.service.model.Community;
 import cn.hui_community.service.model.Permission;
 import cn.hui_community.service.model.SysUserRole;
-import cn.hui_community.service.model.dto.*;
+import cn.hui_community.service.model.dto.request.AddCommunityRequest;
+import cn.hui_community.service.model.dto.request.AddSysRoleRequest;
+import cn.hui_community.service.model.dto.request.UpdateCommunityRequest;
+import cn.hui_community.service.model.dto.response.CommunityResponse;
+import cn.hui_community.service.model.dto.response.SysUserRoleResponse;
 import cn.hui_community.service.repository.AreaRepository;
 import cn.hui_community.service.repository.CommunityRepository;
 import cn.hui_community.service.repository.PermissionRepository;
@@ -26,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

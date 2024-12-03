@@ -1,6 +1,6 @@
 package cn.hui_community.service.model;
 
-import cn.hui_community.service.model.dto.BaseResponse;
+import cn.hui_community.service.model.dto.response.BaseResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;

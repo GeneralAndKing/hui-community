@@ -2,7 +2,7 @@ package cn.hui_community.service.controller.sys;
 
 import cn.hui_community.service.helper.AuthHelper;
 import cn.hui_community.service.model.Permission;
-import cn.hui_community.service.model.dto.PermissionResponse;
+import cn.hui_community.service.model.dto.response.PermissionResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;

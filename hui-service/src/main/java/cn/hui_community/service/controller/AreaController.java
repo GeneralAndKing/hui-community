@@ -1,7 +1,7 @@
 package cn.hui_community.service.controller;
 
 import cn.hui_community.service.model.Area;
-import cn.hui_community.service.model.dto.AreaResponse;
+import cn.hui_community.service.model.dto.response.AreaResponse;
 import cn.hui_community.service.repository.AreaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;

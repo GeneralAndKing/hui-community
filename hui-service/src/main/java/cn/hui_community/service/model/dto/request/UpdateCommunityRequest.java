@@ -1,4 +1,4 @@
-package cn.hui_community.service.model.dto;
+package cn.hui_community.service.model.dto.request;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

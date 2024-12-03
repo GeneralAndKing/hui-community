@@ -1,6 +1,6 @@
 package cn.hui_community.service.model;
 
-import cn.hui_community.service.model.dto.PaymentCategoryResponse;
+import cn.hui_community.service.model.dto.response.PaymentCategoryResponse;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;

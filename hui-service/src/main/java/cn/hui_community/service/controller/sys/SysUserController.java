@@ -1,9 +1,9 @@
 package cn.hui_community.service.controller.sys;
 
 import cn.hui_community.service.helper.AuthHelper;
-import cn.hui_community.service.model.dto.RolesRequest;
-import cn.hui_community.service.model.dto.SysUserResponse;
-import cn.hui_community.service.model.dto.UpdateSysUserRequest;
+import cn.hui_community.service.model.dto.request.UpdateRolesRequest;
+import cn.hui_community.service.model.dto.response.SysUserResponse;
+import cn.hui_community.service.model.dto.request.UpdateSysUserRequest;
 import cn.hui_community.service.service.SysUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,13 +42,13 @@ public class SysUserController {
 
     @PostMapping("/{sysUserId}/roles")
     @PreAuthorize("hasAuthority(@auth.SUPER_AUTHORITY_PREFIX+'001') or @auth.hasAssignedRolesAuthority(request.roleIds)")
-    public SysUserResponse assignRoles(@PathVariable String sysUserId, @RequestBody RolesRequest request) {
+    public SysUserResponse assignRoles(@PathVariable String sysUserId, @RequestBody UpdateRolesRequest request) {
         return sysUserService.assignRoles(sysUserId, request);
     }
 
     @DeleteMapping("/{sysUserId}/roles")
     @PreAuthorize("hasAuthority(@auth.SUPER_AUTHORITY_PREFIX+'001') or @auth.hasAssignedRolesAuthority(request.roleIds)")
-    public SysUserResponse cancelRoles(@PathVariable String sysUserId, @RequestBody RolesRequest request) {
+    public SysUserResponse cancelRoles(@PathVariable String sysUserId, @RequestBody UpdateRolesRequest request) {
         return sysUserService.cancelRoles(sysUserId, request);
     }
 

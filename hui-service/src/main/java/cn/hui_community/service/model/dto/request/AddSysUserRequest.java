@@ -1,6 +1,5 @@
-package cn.hui_community.service.model.dto;
+package cn.hui_community.service.model.dto.request;
 
-import jakarta.persistence.Column;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 

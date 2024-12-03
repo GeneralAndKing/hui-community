@@ -1,7 +1,7 @@
 package cn.hui_community.service.controller.sys;
 
 import cn.hui_community.service.model.PaymentCategory;
-import cn.hui_community.service.model.dto.PaymentCategoryResponse;
+import cn.hui_community.service.model.dto.response.PaymentCategoryResponse;
 import cn.hui_community.service.repository.PaymentCategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

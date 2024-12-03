@@ -1,6 +1,13 @@
 package cn.hui_community.service.controller.sys;
 
-import cn.hui_community.service.model.dto.*;
+import cn.hui_community.service.model.dto.request.AddCommunityRequest;
+import cn.hui_community.service.model.dto.request.AddSysRoleRequest;
+import cn.hui_community.service.model.dto.request.AddSysUserRequest;
+import cn.hui_community.service.model.dto.request.UpdateCommunityRequest;
+import cn.hui_community.service.model.dto.response.CommunityResponse;
+import cn.hui_community.service.model.dto.response.SysUserPageResponse;
+import cn.hui_community.service.model.dto.response.SysUserResponse;
+import cn.hui_community.service.model.dto.response.SysUserRoleResponse;
 import cn.hui_community.service.service.CommunityService;
 import cn.hui_community.service.service.SysUserService;
 import lombok.RequiredArgsConstructor;

@@ -80,9 +80,11 @@ jobs:
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.PROJECT_NAME }}:test
             # 启动新的容器并传入环境变量
             echo "Starting new container..."
+            docker network create hui
             docker run -d \
             --name ${CONTAINER_NAME} \
             -p 8080:8080 \
+            --network hui \
             -e DB_HOST=${{ secrets.TEST_DB_HOST }} \
             -e DB_NAME=${{ secrets.TEST_DB_NAME }} \
             -e DB_USERNAME=${{ secrets.TEST_DB_USERNAME }} \

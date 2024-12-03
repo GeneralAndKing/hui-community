@@ -6,7 +6,11 @@ import cn.hui_community.service.helper.ResponseStatusExceptionHelper;
 import cn.hui_community.service.model.Community;
 import cn.hui_community.service.model.SysUser;
 import cn.hui_community.service.model.SysUserRole;
-import cn.hui_community.service.model.dto.*;
+import cn.hui_community.service.model.dto.request.AddSysUserRequest;
+import cn.hui_community.service.model.dto.request.UpdateRolesRequest;
+import cn.hui_community.service.model.dto.request.UpdateSysUserRequest;
+import cn.hui_community.service.model.dto.response.SysUserPageResponse;
+import cn.hui_community.service.model.dto.response.SysUserResponse;
 import cn.hui_community.service.repository.CommunityRepository;
 import cn.hui_community.service.repository.SysUserRepository;
 import cn.hui_community.service.repository.SysUserRoleRepository;
@@ -71,7 +75,7 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
-    public SysUserResponse assignRoles(String sysUserId, RolesRequest request) {
+    public SysUserResponse assignRoles(String sysUserId, UpdateRolesRequest request) {
         SysUser sysUser = sysUserRepository.findById(sysUserId)
                 .orElseThrow(ResponseStatusExceptionHelper.badRequestSupplier("can't found %s sysUser", sysUserId));
         List<SysUserRole> roles = sysUserRoleRepository.findAllById(request.getRoleIds());
@@ -80,7 +84,7 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
-    public SysUserResponse cancelRoles(String sysUserId, RolesRequest request) {
+    public SysUserResponse cancelRoles(String sysUserId, UpdateRolesRequest request) {
         SysUser sysUser = sysUserRepository.findById(sysUserId)
                 .orElseThrow(ResponseStatusExceptionHelper.badRequestSupplier("can't found %s sysUser", sysUserId));
         List<SysUserRole> roles = sysUserRoleRepository.findAllById(request.getRoleIds());

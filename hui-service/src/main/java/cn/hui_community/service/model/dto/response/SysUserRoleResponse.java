@@ -1,7 +1,5 @@
-package cn.hui_community.service.model.dto;
+package cn.hui_community.service.model.dto.response;
 
-import cn.hui_community.service.model.Community;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 

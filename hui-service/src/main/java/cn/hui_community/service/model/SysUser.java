@@ -1,17 +1,15 @@
 package cn.hui_community.service.model;
 
-import cn.hui_community.service.model.dto.SysUserPageResponse;
-import cn.hui_community.service.model.dto.SysUserResponse;
+import cn.hui_community.service.model.dto.response.SysUserPageResponse;
+import cn.hui_community.service.model.dto.response.SysUserResponse;
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.ToString.Exclude;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.SpringSecurityCoreVersion;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.io.Serial;
 import java.time.Instant;

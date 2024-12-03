@@ -1,4 +1,4 @@
-package cn.hui_community.service.model.dto;
+package cn.hui_community.service.model.dto.response;
 
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
@@ -6,10 +6,9 @@ import lombok.experimental.SuperBuilder;
 import java.time.Instant;
 import java.util.Set;
 
-@Getter
 @SuperBuilder
-public class SysUserResponse extends BaseResponse {
-
+@Getter
+public class SysUserPageResponse extends BaseResponse {
     private String displayName;
 
     private String username;
@@ -19,6 +18,7 @@ public class SysUserResponse extends BaseResponse {
     private String email;
 
     private Instant lockedTime;
+    private Instant expiredTime;
 
-    private Set<SysUserRoleResponse> roles;
+    private Set<String> roles;
 }

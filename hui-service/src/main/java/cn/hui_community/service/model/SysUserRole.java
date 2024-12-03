@@ -1,6 +1,6 @@
 package cn.hui_community.service.model;
 
-import cn.hui_community.service.model.dto.SysUserRoleResponse;
+import cn.hui_community.service.model.dto.response.SysUserRoleResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
