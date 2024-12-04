@@ -68,11 +68,11 @@ public class OpenAPIConfiguration {
                 ResolvedSchema requestSchema = ModelConverters.getInstance().readAllAsResolvedSchema(pair.getRight());
                 ApiResponse successResponse = new ApiResponse()
                         .content(new Content()
-                                .addMediaType("*/*", new MediaType().schema(responseSchema.schema)));
+                                .addMediaType("application/json", new MediaType().schema(responseSchema.schema)));
                 PathItem pathItem = new PathItem()
                         .post(new Operation()
                                 .requestBody(new RequestBody()
-                                        .content(new Content().addMediaType("*/*",
+                                        .content(new Content().addMediaType("application/json",
                                                 new MediaType().schema(requestSchema.schema))))  // 设置请求体
                                 .responses(new ApiResponses()  // 定义响应
                                         .addApiResponse("200", successResponse)
