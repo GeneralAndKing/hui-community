@@ -23,6 +23,11 @@ export const asideMenu: AsideMenu[] = [
     title: '社区管理',
     icon: 'dashboard'
   },
+  {
+    name: '/dashboard/[communityId]/user/',
+    title: '用户管理',
+    icon: 'dashboard'
+  },
 ]
 
 export const NO_AUTH_PATH = [

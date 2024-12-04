@@ -6,8 +6,6 @@ import useAuthStore from "@/stores/auth";
 import type { DropdownOption } from "tdesign-vue-next/es/dropdown/type";
 import { type DropdownProps, MessagePlugin } from "tdesign-vue-next";
 import { asideMenu } from "@/router";
-import type { MenuRoute } from 'tdesign-vue-next/es/menu/type'
-
 const applicationStore = useApplicationStore();
 const authStore = useAuthStore();
 const router = useRouter();
@@ -90,7 +88,7 @@ const handleSelectCommunity: DropdownProps["onClick"] = (data) => {
       </t-aside>
       <t-layout>
         <t-content>
-          <div class="w-full h-full flex flex-col gap-y-4 p-4">
+          <div class="p-4 h-full main">
             <RouterView />
           </div>
         </t-content>

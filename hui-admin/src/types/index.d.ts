@@ -1,7 +1,8 @@
 import type { paths } from '@/types/client'
 
 export interface ResponseError {
-  message: string
+  message?: string
+  error?: string
 }
 
 

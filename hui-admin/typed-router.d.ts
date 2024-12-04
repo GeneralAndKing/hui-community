@@ -23,5 +23,6 @@ declare module 'vue-router/auto-routes' {
     '/dashboard': RouteRecordInfo<'/dashboard', '/dashboard', Record<never, never>, Record<never, never>>,
     '/dashboard/[communityId]/': RouteRecordInfo<'/dashboard/[communityId]/', '/dashboard/:communityId', { communityId: ParamValue<true> }, { communityId: ParamValue<false> }>,
     '/dashboard/[communityId]/community/': RouteRecordInfo<'/dashboard/[communityId]/community/', '/dashboard/:communityId/community', { communityId: ParamValue<true> }, { communityId: ParamValue<false> }>,
+    '/dashboard/[communityId]/user/': RouteRecordInfo<'/dashboard/[communityId]/user/', '/dashboard/:communityId/user', { communityId: ParamValue<true> }, { communityId: ParamValue<false> }>,
   }
 }

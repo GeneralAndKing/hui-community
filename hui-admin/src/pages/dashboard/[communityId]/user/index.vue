@@ -1,0 +1,144 @@
+<script setup lang="tsx">
+import { useRoute } from "vue-router";
+import { useQuery } from "@tanstack/vue-query";
+import { client } from "@/request";
+import { computed, reactive, ref, watch } from "vue";
+import { type FormProps, MessagePlugin, type PrimaryTableCol, type TableProps } from "tdesign-vue-next";
+import type { components } from "@/types/client";
+
+const route = useRoute("/dashboard/[communityId]/");
+const communityId = route.params.communityId;
+const condition: FormProps["data"] = reactive({
+  likedUsername: "",
+  likedDisplayName: "",
+  pageable: {
+    page: 0,
+    size: 10,
+    sort: ["id,desc"]
+  }
+});
+const { isPending, data, refetch } = useQuery({
+  queryKey: ["communityUsers", communityId],
+  queryFn: async () => {
+    const { data } = await client.GET("/sys-api/community/{communityId}/sys-user/page", {
+      params: {
+        path: { communityId },
+        query: {
+          likedUsername: condition.likedUsername,
+          likedDisplayName: condition.likedDisplayName,
+          pageable: condition.pageable
+        }
+      }
+    });
+    return data;
+  },
+  refetchOnMount: true
+});
+
+watch(condition, () => {
+  console.log(condition)
+})
+
+const onReset: FormProps["onReset"] = () => {
+  MessagePlugin.success("重置成功");
+};
+const onSubmit: FormProps["onSubmit"] = ({ validateResult, firstError }) => {
+  if (validateResult === true) {
+    refetch()
+  } else {
+    console.log("Validate Errors: ", firstError, validateResult);
+    MessagePlugin.warning(`${firstError}`);
+  }
+};
+
+const columns = ref<PrimaryTableCol<components["schemas"]["SysUserPageResponse"]>[]>([
+  {
+    colKey: "displayName",
+    title: "用户名称"
+  },
+  {
+    colKey: "username",
+    title: "账号"
+  },
+  {
+    colKey: "phone",
+    title: "手机号"
+  },
+  {
+    colKey: "lockedTime",
+    title: "锁定时间",
+    cell: (_, { row }) => {
+      const lockedTime = row.lockedTime;
+      return lockedTime ? <div>{new Date(lockedTime).toLocaleString()}</div> : <div>-</div>;
+    }
+  },
+  {
+    colKey: "roles",
+    title: "角色"
+  }
+]);
+
+const pagination = computed(() => {
+  return {
+    defaultCurrent: 1,
+    defaultPageSize: 10,
+    total: data.value?.totalElements ?? 0
+  } as TableProps["pagination"];
+});
+</script>
+
+<template>
+  <t-card bordered class="w-full flex h-full flex-col gap-4">
+    <t-form
+        ref="form"
+        layout="inline"
+        :data="condition"
+        label-width="calc(2em + 24px)"
+        scroll-to-first-error="smooth"
+        @reset="onReset"
+        @submit="onSubmit"
+    >
+      <t-form-item label="账号" name="likedDisplayName">
+        <t-input v-model="condition.likedUsername"  placeholder="请输入账号" />
+      </t-form-item>
+      <t-form-item label="用户名" name="likedDisplayName">
+        <t-input v-model="condition.likedDisplayName"  placeholder="请输入用户名" />
+      </t-form-item>
+
+      <t-form-item :status-icon="false">
+        <t-space size="small">
+          <t-button theme="primary" type="submit">提交</t-button>
+          <t-button theme="default" variant="base" type="reset">重置</t-button>
+        </t-space>
+      </t-form-item>
+    </t-form>
+    <t-table
+        hover
+        :loading="isPending"
+        row-key="index"
+        :data="data?.content ?? []"
+        :columns="columns"
+        :pagination="pagination"
+        class="flex-1 flex flex-col"
+        style="margin-top: 1rem"
+        :header-affixed-top="{
+          container: `.main`
+        }"
+        :pagination-affixed-bottom="{
+          container: `.main`
+        }"
+    ></t-table>
+  </t-card>
+</template>
+
+<style >
+.t-card__body {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.t-table__content {
+  flex: 1;
+}
+</style>

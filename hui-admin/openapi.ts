@@ -19,7 +19,8 @@ openapiTS("http://139.155.2.12:8080/v3/api-docs", {
         : BLOB;
     }
   },
-  exportType: true
+  exportType: true,
+  enum: true
 })
   .then(res => {
     const contents = astToString(res);
