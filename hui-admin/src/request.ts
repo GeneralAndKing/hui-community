@@ -41,7 +41,7 @@ const errorMiddleware: Middleware = {
 };
 
 export const client = createClient<paths>({
-  baseUrl: import.meta.env.VITE_SERVICE_BASE_URL,
+  baseUrl: '/api',
   querySerializer: (query) => {
     const queryArray: string[] = []
     for (const [k, v] of Object.entries(query)) {
