@@ -1,0 +1,15 @@
+:3000 {
+    root * /usr/share/caddy
+    encode gzip
+
+    # 反向代理 /api 到 hui-service_container:8080
+    handle_path /api/* {
+        reverse_proxy hui-service_container:8080
+    }
+
+    # 处理其他所有请求
+    handle {
+        file_server
+        try_files {path} /index.html
+    }
+}
