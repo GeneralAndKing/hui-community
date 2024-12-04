@@ -1,0 +1,78 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
+
+name: Hui-admin CICD
+
+on:
+  push:
+    branches: [ "master" ]
+    paths:
+      - 'hui-admin/**'
+  pull_request:
+    branches: [ "master" ]
+    paths:
+      - 'hui-admin/**'
+  workflow_dispatch:
+jobs:
+  ci-cd:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    env:
+      PROJECT_NAME: hui-admin
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            hui-admin
+          sparse-checkout-cone-mode: false
+
+      - name: Set working directory
+        run: |
+          echo "Setting working directory to hui-admin"
+          cd hui-admin
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./hui-admin
+          file: ./hui-admin/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.PROJECT_NAME }}:test
+
+      - name: Executing deploy remote ssh commands using password
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ secrets.TEST_SSH_HOST }}
+          username: ${{ secrets.TEST_SSH_USERNAME }}
+          password: ${{ secrets.TEST_SSH_PASSWORD }}
+          port: 22
+          script: |
+            CONTAINER_NAME="${{ env.PROJECT_NAME }}_container"
+            if [ "$(docker ps -a -q -f name=${CONTAINER_NAME})" ]; then
+            echo "Stopping and removing existing container..."
+            docker stop ${CONTAINER_NAME}
+            docker rm ${CONTAINER_NAME}
+            fi
+            echo "Pulling the latest Docker image..."
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.PROJECT_NAME }}:test
+            # 启动新的容器并传入环境变量
+            echo "Starting new container..."
+            docker network create hui
+            docker run -d \
+            --name ${CONTAINER_NAME} \
+            -p 3000:3000 \
+            --network hui \
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.PROJECT_NAME }}:test
