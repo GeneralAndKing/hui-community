@@ -1,6 +1,5 @@
 package cn.hui_community.service.configuration.security.authentication.token;
 
-import cn.hui_community.service.configuration.security.GlobalAuthHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

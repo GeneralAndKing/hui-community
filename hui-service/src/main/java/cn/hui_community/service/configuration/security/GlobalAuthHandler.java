@@ -60,7 +60,7 @@ public class GlobalAuthHandler implements AuthenticationFailureHandler, Authenti
     private void onSysUserSuccess(HttpServletRequest request,
                                   HttpServletResponse response, SysUser sysUser) throws IOException {
         Token token = tokenFactory.buildFromSysUser(sysUser);
-        String responseBody = objectMapper.writeValueAsString(token);
+        String responseBody = objectMapper.writeValueAsString(token.toResponse());
         try (PrintWriter writer = response.getWriter()) {
             writer.write(responseBody);
         }
@@ -68,7 +68,7 @@ public class GlobalAuthHandler implements AuthenticationFailureHandler, Authenti
 
     private void onUserSuccess(HttpServletRequest request, HttpServletResponse response, User user) throws IOException {
         Token token = tokenFactory.buildFromUser(user);
-        String responseBody = objectMapper.writeValueAsString(token);
+        String responseBody = objectMapper.writeValueAsString(token.toResponse());
         try (PrintWriter writer = response.getWriter()) {
             writer.write(responseBody);
         }

@@ -2,8 +2,8 @@ package cn.hui_community.service.component;
 
 import cn.hui_community.service.configuration.JwtConfiguration;
 import cn.hui_community.service.enums.PermissionTypeEnum;
-import cn.hui_community.service.model.Token;
 import cn.hui_community.service.model.SysUser;
+import cn.hui_community.service.model.Token;
 import cn.hui_community.service.model.User;
 import cn.hui_community.service.repository.TokenRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 @Component
@@ -29,12 +29,15 @@ public class TokenFactory {
 
     @Transactional(rollbackFor = Exception.class)
     public Token buildFromSysUser(SysUser user) {
+        String subject = PermissionTypeEnum.SYS.getValue();
         Instant now = Instant.now();
         Token token = Token.builder()
-                .accessToken(buildAccessToken(user.getId(), PermissionTypeEnum.SYS.getValue(), now, user.toTokenInfo()))
-                .refreshToken(buildRefreshToken(user.getId(), PermissionTypeEnum.SYS.getValue(), now))
-                .id(user.getId())
-                .subject(PermissionTypeEnum.SYS.getValue())
+                .accessToken(buildAccessToken(user.getId(), subject, now, user.toTokenInfo()))
+                .refreshToken(buildRefreshToken(user.getId(), subject, now))
+                .key(Token.Key.builder().id(user.getId())
+                        .subject(subject)
+                        .build())
+                .timeToLive(jwtProperties.refreshTokenExpiresTime())
                 .username(user.getUsername()).build();
         tokenRepository.save(token);
         return token;
@@ -42,31 +45,32 @@ public class TokenFactory {
 
     @Transactional(rollbackFor = Exception.class)
     public Token buildFromUser(User user) {
+        String subject = PermissionTypeEnum.USER.getValue();
         Instant now = Instant.now();
         Token token = Token.builder()
-                .accessToken(buildAccessToken(user.getId(), PermissionTypeEnum.USER.getValue(), now, Map.of()))
-                .refreshToken(buildRefreshToken(user.getId(), PermissionTypeEnum.USER.getValue(), now))
-                .id(user.getId())
-                .subject(PermissionTypeEnum.USER.getValue())
-                .username(user.getName()).build();
+                .accessToken(buildAccessToken(user.getId(), subject, now, Map.of()))
+                .refreshToken(buildRefreshToken(user.getId(), subject, now))
+                .key(Token.Key.builder().id(user.getId())
+                        .subject(subject)
+                        .build())
+                .username(user.getName())
+                .timeToLive(jwtProperties.refreshTokenExpiresTime())
+                .build();
         tokenRepository.save(token);
         return token;
     }
 
-    public Boolean validateRefreshToken(String id, String refreshToken) {
-        Optional<Token> optionalToken = tokenRepository.findById(id);
-        if (optionalToken.isPresent()) {
-            Token token = optionalToken.get();
-            return token.getRefreshToken().equals(refreshToken);
-        }
-        return Boolean.FALSE;
+    public Boolean validateRefreshToken(Token.Key key, String refreshToken) {
+        return tokenRepository.findById(key)
+                .map(token -> token.getRefreshToken().equals(refreshToken))
+                .orElse(Boolean.FALSE);
     }
 
 
     private String buildRefreshToken(String id, String subject, Instant now) {
         return buildToken(id, subject, now,
                 now.plus(jwtProperties.getRefreshTokenExpiresTime(), jwtProperties.getRefreshTokenExpiresUnit()),
-                claim -> claim.putAll(Map.of("id", id, "subject", subject))
+                claim -> claim.putAll(Collections.emptyMap())
         );
     }
 

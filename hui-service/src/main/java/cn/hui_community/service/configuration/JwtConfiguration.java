@@ -19,7 +19,6 @@ import java.util.List;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.DefaultResourceLoader;
@@ -87,6 +86,10 @@ public class JwtConfiguration {
          * Jwt token audience.
          */
         private List<String> audience = Collections.emptyList();
+
+        public Long refreshTokenExpiresTime() {
+            return getRefreshTokenExpiresUnit().getDuration().toSeconds() * getRefreshTokenExpiresTime();
+        }
 
     }
 

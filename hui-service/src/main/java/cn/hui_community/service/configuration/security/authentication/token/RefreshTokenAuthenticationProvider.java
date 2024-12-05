@@ -1,11 +1,12 @@
 package cn.hui_community.service.configuration.security.authentication.token;
 
+import cn.hui_community.service.component.TokenFactory;
 import cn.hui_community.service.enums.PermissionTypeEnum;
 import cn.hui_community.service.model.SysUser;
+import cn.hui_community.service.model.Token;
 import cn.hui_community.service.model.User;
 import cn.hui_community.service.repository.SysUserRepository;
 import cn.hui_community.service.repository.UserRepository;
-import cn.hui_community.service.component.TokenFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -33,14 +34,16 @@ public class RefreshTokenAuthenticationProvider implements AuthenticationProvide
         RefreshTokenAuthenticationToken refreshTokenAuthenticationToken = (RefreshTokenAuthenticationToken) authentication;
         String id = refreshTokenAuthenticationToken.getPrincipal().toString();
         String refreshToken = (String) refreshTokenAuthenticationToken.getCredentials();
+
         Jwt jwt = jwtDecoder.decode(refreshToken);
-        if (!jwt.getClaims().getOrDefault("id", "").equals(id)) {
+        String subject = jwt.getSubject();
+        if (!(jwt.getId().equals(id))) {
             throw new BadJwtException("token does not match user.");
         }
-        if (!tokenFactory.validateRefreshToken(id, refreshToken)) {
+        if (!tokenFactory.validateRefreshToken(Token.Key.builder().id(id).subject(subject).build(), refreshToken)) {
             throw new BadCredentialsException("invalid refresh token.");
         }
-        String subject = jwt.getClaims().getOrDefault("subject", "").toString();
+
         switch (PermissionTypeEnum.valueOf(subject)) {
             case SYS -> {
                 SysUser sysUser = sysUserRepository.findById(id)
