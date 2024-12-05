@@ -47,6 +47,7 @@ public class SysUserServiceImpl implements SysUserService {
         }
         return sysUserRepository.save(SysUser.builder()
                 .phone(request.getPhone())
+                .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .username(request.getUsername())
                 .roles(Collections.singleton(AuthHelper.visitorSysUserRole(communityId)))

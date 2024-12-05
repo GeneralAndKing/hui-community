@@ -17,5 +17,7 @@ public class AddSysUserRequest {
 
     private String phone;
 
+    private String email;
+
     private Instant expiredTime;
 }
