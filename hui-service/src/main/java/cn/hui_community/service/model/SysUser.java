@@ -76,7 +76,7 @@ public class SysUser extends Base {
                 .build();
     }
 
-    public SysUserPageResponse toPageResponse() {
+    public SysUserPageResponse toPageResponse(String communityId) {
         return SysUserPageResponse.builder()
                 .id(getId())
                 .createTime(getCreateTime())
@@ -84,7 +84,7 @@ public class SysUser extends Base {
                 .updateBy(getUpdateBy())
                 .updateTime(getUpdateTime())
                 .email(getEmail())
-                .roles(getRoles().stream().map(role -> role.getName() + "_" + role.getCommunityId()).collect(Collectors.toSet()))
+                .roles(getRoles().stream().filter(role -> role.getCommunityId().equals(communityId)).map(SysUserRole::getName).collect(Collectors.toSet()))
                 .phone(getPhone())
                 .lockedTime(getLockedTime())
                 .displayName(getDisplayName())

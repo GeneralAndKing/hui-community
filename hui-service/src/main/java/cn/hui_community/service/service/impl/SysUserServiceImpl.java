@@ -72,7 +72,7 @@ public class SysUserServiceImpl implements SysUserService {
             }
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         }, pageable);
-        return PageHelper.map(sysUserPage, SysUser::toPageResponse);
+        return PageHelper.map(sysUserPage, (sysUser -> sysUser.toPageResponse(communityId)));
     }
 
     @Override
