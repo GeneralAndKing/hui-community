@@ -12,7 +12,7 @@ const router = useRouter();
 const route = useRoute("/dashboard/[communityId]/");
 const communityId = route.params.communityId;
 
-console.log(route.name)
+console.log(route.name);
 
 onMounted(() => {
   void applicationStore.getUserInfo();
@@ -29,7 +29,6 @@ onMounted(() => {
     const firstElement = applicationStore.communityList[0];
     applicationStore.setCurrentCommunity(firstElement);
     router.push(`/dashboard/${firstElement.id}`);
-    return;
   }
 });
 

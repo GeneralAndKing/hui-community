@@ -1,8 +1,8 @@
-import { ref, computed, reactive, onMounted } from "vue";
+import { ref, computed, reactive } from "vue";
 import { defineStore } from "pinia";
 import { client } from "@/request";
 import { MessagePlugin } from "tdesign-vue-next";
-import type { AuthToken, Community, ResponseError } from "@/types";
+import type { AuthToken, ResponseError } from "@/types";
 import { useRouter } from "vue-router";
 
 const useAuthStore = defineStore(

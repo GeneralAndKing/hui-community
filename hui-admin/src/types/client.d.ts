@@ -1,4 +1,36 @@
 export type paths = {
+    "/sys-api/sys-user/{sysUserId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["updateSysUser"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/sys-api/sys-user/{sysUserId}/password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["updatePassword"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/sys-api/community/{communityId}": {
         parameters: {
             query?: never;
@@ -25,7 +57,23 @@ export type paths = {
         get?: never;
         put?: never;
         post: operations["assignRoles"];
-        delete?: never;
+        delete: operations["cancelRoles"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/sys-api/sys-user/{sysUserId}/lock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["lock"];
+        delete: operations["unlock"];
         options?: never;
         head?: never;
         patch?: never;
@@ -143,6 +191,22 @@ export type paths = {
         patch?: never;
         trace?: never;
     };
+    "/sys-api/sys-user/check-username": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["checkUsername"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/sys-api/permission": {
         parameters: {
             query?: never;
@@ -191,6 +255,22 @@ export type paths = {
         patch?: never;
         trace?: never;
     };
+    "/sys-api/community/page": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["communityPage"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/area": {
         parameters: {
             query?: never;
@@ -225,7 +305,7 @@ export type paths = {
             };
             requestBody?: {
                 content: {
-                    "*/*": {
+                    "application/json": {
                         username?: string;
                         password?: string;
                     };
@@ -237,7 +317,7 @@ export type paths = {
                         [name: string]: unknown;
                     };
                     content: {
-                        "*/*": {
+                        "application/json": {
                             id?: string;
                             subject?: string;
                             username?: string;
@@ -272,7 +352,7 @@ export type paths = {
             };
             requestBody?: {
                 content: {
-                    "*/*": {
+                    "application/json": {
                         code?: string;
                         username?: string;
                     };
@@ -284,7 +364,7 @@ export type paths = {
                         [name: string]: unknown;
                     };
                     content: {
-                        "*/*": {
+                        "application/json": {
                             id?: string;
                             subject?: string;
                             username?: string;
@@ -319,7 +399,7 @@ export type paths = {
             };
             requestBody?: {
                 content: {
-                    "*/*": {
+                    "application/json": {
                         refreshToken?: string;
                         id?: string;
                     };
@@ -331,7 +411,7 @@ export type paths = {
                         [name: string]: unknown;
                     };
                     content: {
-                        "*/*": {
+                        "application/json": {
                             id?: string;
                             subject?: string;
                             username?: string;
@@ -352,6 +432,54 @@ export type paths = {
 export type webhooks = Record<string, never>;
 export type components = {
     schemas: {
+        UpdateSysUserRequest: {
+            displayName?: string;
+            username?: string;
+            phone?: string;
+            email?: string;
+        };
+        PermissionResponse: {
+            id?: string;
+            createBy?: string;
+            updateBy?: string;
+            /** Format: date-time */
+            updateTime?: Date;
+            /** Format: date-time */
+            createTime?: Date;
+            name?: string;
+            type?: string;
+            description?: string;
+        };
+        SysUserResponse: {
+            id?: string;
+            createBy?: string;
+            updateBy?: string;
+            /** Format: date-time */
+            updateTime?: Date;
+            /** Format: date-time */
+            createTime?: Date;
+            displayName?: string;
+            username?: string;
+            phone?: string;
+            email?: string;
+            /** Format: date-time */
+            lockedTime?: Date;
+            roles?: components["schemas"]["SysUserRoleResponse"][];
+        };
+        SysUserRoleResponse: {
+            id?: string;
+            createBy?: string;
+            updateBy?: string;
+            /** Format: date-time */
+            updateTime?: Date;
+            /** Format: date-time */
+            createTime?: Date;
+            communityName?: string;
+            communityId?: string;
+            name?: string;
+            description?: string;
+            permissions?: components["schemas"]["PermissionResponse"][];
+        };
         UpdateCommunityRequest: {
             code?: string;
             name?: string;
@@ -379,51 +507,8 @@ export type components = {
             /** Format: float */
             latitude?: number;
         };
-        AssignRolesRequest: {
+        UpdateRolesRequest: {
             roleIds?: string[];
-        };
-        PermissionResponse: {
-            id?: string;
-            createBy?: string;
-            updateBy?: string;
-            /** Format: date-time */
-            updateTime?: Date;
-            /** Format: date-time */
-            createTime?: Date;
-            name?: string;
-            type?: string;
-            description?: string;
-        };
-        SysUserResponse: {
-            id?: string;
-            createBy?: string;
-            updateBy?: string;
-            /** Format: date-time */
-            updateTime?: Date;
-            /** Format: date-time */
-            createTime?: Date;
-            displayName?: string;
-            username?: string;
-            phone?: string;
-            /** Format: date-time */
-            lockedTime?: Date;
-            /** Format: date-time */
-            expiredTime?: Date;
-            roles?: components["schemas"]["SysUserRoleResponse"][];
-        };
-        SysUserRoleResponse: {
-            id?: string;
-            createBy?: string;
-            updateBy?: string;
-            /** Format: date-time */
-            updateTime?: Date;
-            /** Format: date-time */
-            createTime?: Date;
-            communityName?: string;
-            communityId?: string;
-            name?: string;
-            description?: string;
-            permissions?: components["schemas"]["PermissionResponse"][];
         };
         AddCommunityRequest: {
             code?: string;
@@ -440,6 +525,7 @@ export type components = {
             username?: string;
             password?: string;
             phone?: string;
+            email?: string;
             /** Format: date-time */
             expiredTime?: Date;
         };
@@ -455,65 +541,29 @@ export type components = {
             size?: number;
             sort?: string[];
         };
-        PageShopShowResponse: {
+        PageMetadata: {
+            /** Format: int64 */
+            size?: number;
+            /** Format: int64 */
+            number?: number;
             /** Format: int64 */
             totalElements?: number;
-            /** Format: int32 */
-            totalPages?: number;
-            /** Format: int32 */
-            size?: number;
-            content?: components["schemas"]["ShopShowResponse"][];
-            /** Format: int32 */
-            number?: number;
-            sort?: components["schemas"]["SortObject"][];
-            /** Format: int32 */
-            numberOfElements?: number;
-            pageable?: components["schemas"]["PageableObject"];
-            last?: boolean;
-            first?: boolean;
-            empty?: boolean;
-        };
-        PageableObject: {
             /** Format: int64 */
-            offset?: number;
-            sort?: components["schemas"]["SortObject"][];
-            paged?: boolean;
-            /** Format: int32 */
-            pageNumber?: number;
-            /** Format: int32 */
-            pageSize?: number;
-            unpaged?: boolean;
+            totalPages?: number;
+        };
+        PagedModelShopShowResponse: {
+            content?: components["schemas"]["ShopShowResponse"][];
+            page?: components["schemas"]["PageMetadata"];
         };
         ShopShowResponse: Record<string, never>;
-        SortObject: {
-            direction?: string;
-            nullHandling?: string;
-            ascending?: boolean;
-            property?: string;
-            ignoreCase?: boolean;
-        };
         PaymentCategoryResponse: {
             id?: string;
             name?: string;
             icon?: string;
         };
-        PageSysUserPageResponse: {
-            /** Format: int64 */
-            totalElements?: number;
-            /** Format: int32 */
-            totalPages?: number;
-            /** Format: int32 */
-            size?: number;
+        PagedModelSysUserPageResponse: {
             content?: components["schemas"]["SysUserPageResponse"][];
-            /** Format: int32 */
-            number?: number;
-            sort?: components["schemas"]["SortObject"][];
-            /** Format: int32 */
-            numberOfElements?: number;
-            pageable?: components["schemas"]["PageableObject"];
-            last?: boolean;
-            first?: boolean;
-            empty?: boolean;
+            page?: components["schemas"]["PageMetadata"];
         };
         SysUserPageResponse: {
             id?: string;
@@ -526,11 +576,16 @@ export type components = {
             displayName?: string;
             username?: string;
             phone?: string;
+            email?: string;
             /** Format: date-time */
             lockedTime?: Date;
             /** Format: date-time */
             expiredTime?: Date;
             roles?: string[];
+        };
+        PagedModelCommunityResponse: {
+            content?: components["schemas"]["CommunityResponse"][];
+            page?: components["schemas"]["PageMetadata"];
         };
         AreaResponse: {
             id?: string;
@@ -551,6 +606,54 @@ export type components = {
 };
 export type $defs = Record<string, never>;
 export interface operations {
+    updateSysUser: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                sysUserId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateSysUserRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["SysUserResponse"];
+                };
+            };
+        };
+    };
+    updatePassword: {
+        parameters: {
+            query: {
+                newPassword: string;
+            };
+            header?: never;
+            path: {
+                sysUserId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     updateCommunityById: {
         parameters: {
             query?: never;
@@ -579,9 +682,81 @@ export interface operations {
     };
     assignRoles: {
         parameters: {
-            query: {
-                request: components["schemas"]["AssignRolesRequest"];
+            query?: never;
+            header?: never;
+            path: {
+                sysUserId: string;
             };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateRolesRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["SysUserResponse"];
+                };
+            };
+        };
+    };
+    cancelRoles: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                sysUserId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateRolesRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["SysUserResponse"];
+                };
+            };
+        };
+    };
+    lock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                sysUserId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["SysUserResponse"];
+                };
+            };
+        };
+    };
+    unlock: {
+        parameters: {
+            query?: never;
             header?: never;
             path: {
                 sysUserId: string;
@@ -734,7 +909,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["PageShopShowResponse"];
+                    "*/*": components["schemas"]["PagedModelShopShowResponse"];
                 };
             };
         };
@@ -755,6 +930,28 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["SysUserResponse"];
+                };
+            };
+        };
+    };
+    checkUsername: {
+        parameters: {
+            query: {
+                username: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": boolean;
                 };
             };
         };
@@ -820,7 +1017,32 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["PageSysUserPageResponse"];
+                    "*/*": components["schemas"]["PagedModelSysUserPageResponse"];
+                };
+            };
+        };
+    };
+    communityPage: {
+        parameters: {
+            query: {
+                areaOrParentAreaId?: string;
+                likedName?: string;
+                likedCode?: string;
+                pageable: components["schemas"]["Pageable"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PagedModelCommunityResponse"];
                 };
             };
         };

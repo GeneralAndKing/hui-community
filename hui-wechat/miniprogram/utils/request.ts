@@ -20,6 +20,7 @@ const http = <T>(url: string, data?: any, method: HttpMethod = HttpMethod.GET, o
   const headers = {
     'Authorization': token ? `Bearer ${token}` : '',
     'Content-Type': 'application/json',
+    'Accept': 'application/json',
     // @ts-ignore
     ...restOptions.headers
   }

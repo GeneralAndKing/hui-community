@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --build --force",
-    "lint": "biome format --write ."
+    "lint": "eslint --fix ./",
+    "lint:inspector": "pnpm dlx  @eslint/config-inspector@latest"
   },
   "dependencies": {
     "@tanstack/vue-query": "^5.61.3",
@@ -22,16 +23,20 @@
     "vue-router": "^4.4.5"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.4",
+    "@eslint/js": "^9.16.0",
     "@tanstack/vue-query-devtools": "^5.62.2",
     "@tsconfig/node22": "^22.0.0",
     "@types/node": "^22.9.0",
     "@vitejs/plugin-vue": "^5.1.4",
     "@vitejs/plugin-vue-jsx": "^4.0.1",
     "@vue/tsconfig": "^0.5.1",
+    "eslint": "^9.16.0",
+    "eslint-plugin-vue": "^9.32.0",
+    "globals": "^15.13.0",
     "npm-run-all2": "^7.0.1",
-    "openapi-typescript": "^7.4.3",
+    "openapi-typescript": "^7.4.4",
     "typescript": "~5.6.3",
+    "typescript-eslint": "^8.17.0",
     "unocss": "^0.64.1",
     "unplugin-vue-router": "^0.10.8",
     "vite": "^5.4.10",

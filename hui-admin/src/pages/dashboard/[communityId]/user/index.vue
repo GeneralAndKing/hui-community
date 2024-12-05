@@ -2,9 +2,14 @@
 import { useRoute } from "vue-router";
 import { useQuery } from "@tanstack/vue-query";
 import { client } from "@/request";
-import { computed, reactive, ref, watch } from "vue";
+import {
+  computed,
+  reactive,
+  ref
+} from "vue";
 import { type FormProps, MessagePlugin, type PrimaryTableCol, type TableProps } from "tdesign-vue-next";
 import type { components } from "@/types/client";
+import UserEditDialog from "./_components/UserEditDialog.vue";
 
 const route = useRoute("/dashboard/[communityId]/");
 const communityId = route.params.communityId;
@@ -17,12 +22,12 @@ const condition: FormProps["data"] = reactive({
     sort: ["id,desc"]
   }
 });
-const { isPending, data, refetch } = useQuery({
+const {isPending, data, refetch} = useQuery({
   queryKey: ["communityUsers", communityId],
   queryFn: async () => {
-    const { data } = await client.GET("/sys-api/community/{communityId}/sys-user/page", {
+    const {data} = await client.GET("/sys-api/community/{communityId}/sys-user/page", {
       params: {
-        path: { communityId },
+        path: {communityId},
         query: {
           likedUsername: condition.likedUsername,
           likedDisplayName: condition.likedDisplayName,
@@ -35,21 +40,14 @@ const { isPending, data, refetch } = useQuery({
   refetchOnMount: true
 });
 
-watch(condition, () => {
-  console.log(condition)
-})
-
 const onReset: FormProps["onReset"] = () => {
   MessagePlugin.success("重置成功");
 };
-const onSubmit: FormProps["onSubmit"] = ({ validateResult, firstError }) => {
-  if (validateResult === true) {
-    refetch()
-  } else {
-    console.log("Validate Errors: ", firstError, validateResult);
-    MessagePlugin.warning(`${firstError}`);
-  }
+const onSubmit: FormProps["onSubmit"] = () => {
+  refetch();
 };
+
+const editRef = ref<null | InstanceType<typeof UserEditDialog>>(null);
 
 const columns = ref<PrimaryTableCol<components["schemas"]["SysUserPageResponse"]>[]>([
   {
@@ -65,9 +63,13 @@ const columns = ref<PrimaryTableCol<components["schemas"]["SysUserPageResponse"]
     title: "手机号"
   },
   {
+    colKey: "email",
+    title: "邮箱"
+  },
+  {
     colKey: "lockedTime",
     title: "锁定时间",
-    cell: (_, { row }) => {
+    cell: (_, {row}) => {
       const lockedTime = row.lockedTime;
       return lockedTime ? <div>{new Date(lockedTime).toLocaleString()}</div> : <div>-</div>;
     }
@@ -75,6 +77,33 @@ const columns = ref<PrimaryTableCol<components["schemas"]["SysUserPageResponse"]
   {
     colKey: "roles",
     title: "角色"
+  },
+  {
+    colKey: "id",
+    title: "操作",
+    cell: (h, {row}) => {
+      return (
+        <div class="table-operations">
+          <t-link
+            theme="primary"
+            hover="color"
+            data-id={row.id}
+            onClick={() => {
+              console.log(editRef.value);
+              editRef.value?.open({
+                id: row.id,
+                displayName: row.displayName,
+                username: row.username,
+                phone: row.phone,
+                email: row.email
+              });
+            }}
+          >
+              编辑
+          </t-link>
+        </div>
+      );
+    }
   }
 ]);
 
@@ -82,13 +111,14 @@ const pagination = computed(() => {
   return {
     defaultCurrent: 1,
     defaultPageSize: 10,
-    total: data.value?.totalElements ?? 0
+    total: data.value?.page?.totalElements ?? 0
   } as TableProps["pagination"];
 });
 </script>
 
 <template>
   <t-card bordered class="w-full flex h-full flex-col gap-4">
+    <UserEditDialog ref="editRef"/>
     <t-form
         ref="form"
         layout="inline"
@@ -99,10 +129,10 @@ const pagination = computed(() => {
         @submit="onSubmit"
     >
       <t-form-item label="账号" name="likedDisplayName">
-        <t-input v-model="condition.likedUsername"  placeholder="请输入账号" />
+        <t-input v-model="condition.likedUsername" placeholder="请输入账号"/>
       </t-form-item>
       <t-form-item label="用户名" name="likedDisplayName">
-        <t-input v-model="condition.likedDisplayName"  placeholder="请输入用户名" />
+        <t-input v-model="condition.likedDisplayName" placeholder="请输入用户名"/>
       </t-form-item>
 
       <t-form-item :status-icon="false">
@@ -131,7 +161,7 @@ const pagination = computed(() => {
   </t-card>
 </template>
 
-<style >
+<style>
 .t-card__body {
   height: 100%;
   display: flex;

@@ -5,7 +5,7 @@ export const auth = (): Promise<any> =>
     wx.login({
       success: (loginResult: WechatMiniprogram.LoginSuccessCallbackResult) => {
         console.log(loginResult);
-        post<any>('/user/login', {code: loginResult.code, username: "admin"})
+        post<any>('/user-api/login', {code: loginResult.code, username: "admin"})
           .then((result: any) => {
             console.log(result);
             resolve(result)

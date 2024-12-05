@@ -7,7 +7,7 @@ const NULL = ts.factory.createLiteralTypeNode(ts.factory.createNull()); // `null
 const BLOB = ts.factory.createTypeReferenceNode(ts.factory.createIdentifier("Blob")); // `Blob`
 
 openapiTS("http://139.155.2.12:8080/v3/api-docs", {
-  transform(schemaObject, metadata) {
+  transform (schemaObject) {
     if (schemaObject.format === "date-time") {
       return schemaObject.nullable
         ? ts.factory.createUnionTypeNode([DATE, NULL])
@@ -25,4 +25,4 @@ openapiTS("http://139.155.2.12:8080/v3/api-docs", {
   .then(res => {
     const contents = astToString(res);
     fs.writeFileSync("./src/types/client.d.ts", contents);
-  })
+  });
