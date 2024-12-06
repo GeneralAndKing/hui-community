@@ -22,12 +22,12 @@ const condition: FormProps["data"] = reactive({
     sort: ["id,desc"]
   }
 });
-const {isPending, data, refetch} = useQuery({
+const { isPending, data, refetch } = useQuery({
   queryKey: ["communityUsers", communityId],
   queryFn: async () => {
-    const {data} = await client.GET("/sys-api/community/{communityId}/sys-user/page", {
+    const { data } = await client.GET("/sys-api/community/{communityId}/sys-user/page", {
       params: {
-        path: {communityId},
+        path: { communityId },
         query: {
           likedUsername: condition.likedUsername,
           likedDisplayName: condition.likedDisplayName,
@@ -69,7 +69,7 @@ const columns = ref<PrimaryTableCol<components["schemas"]["SysUserPageResponse"]
   {
     colKey: "lockedTime",
     title: "锁定时间",
-    cell: (_, {row}) => {
+    cell: (_, { row }) => {
       const lockedTime = row.lockedTime;
       return lockedTime ? <div>{new Date(lockedTime).toLocaleString()}</div> : <div>-</div>;
     }
@@ -81,7 +81,7 @@ const columns = ref<PrimaryTableCol<components["schemas"]["SysUserPageResponse"]
   {
     colKey: "id",
     title: "操作",
-    cell: (h, {row}) => {
+    cell: (h, { row }) => {
       return (
         <div class="table-operations">
           <t-link
@@ -89,7 +89,6 @@ const columns = ref<PrimaryTableCol<components["schemas"]["SysUserPageResponse"]
             hover="color"
             data-id={row.id}
             onClick={() => {
-              console.log(editRef.value);
               editRef.value?.open({
                 id: row.id,
                 displayName: row.displayName,
@@ -99,7 +98,7 @@ const columns = ref<PrimaryTableCol<components["schemas"]["SysUserPageResponse"]
               });
             }}
           >
-              编辑
+            编辑
           </t-link>
         </div>
       );
@@ -114,6 +113,10 @@ const pagination = computed(() => {
     total: data.value?.page?.totalElements ?? 0
   } as TableProps["pagination"];
 });
+
+const handleNewItem = () => {
+  editRef.value?.open();
+};
 </script>
 
 <template>
@@ -137,8 +140,8 @@ const pagination = computed(() => {
 
       <t-form-item :status-icon="false">
         <t-space size="small">
-          <t-button theme="primary" type="submit">提交</t-button>
-          <t-button theme="default" variant="base" type="reset">重置</t-button>
+          <t-button theme="primary" type="submit">搜索</t-button>
+          <t-button theme="default" variant="base" @click="handleNewItem">新增</t-button>
         </t-space>
       </t-form-item>
     </t-form>

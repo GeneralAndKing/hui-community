@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.16.0",
+    "@stylistic/eslint-plugin": "^2.11.0",
     "@tanstack/vue-query-devtools": "^5.62.2",
     "@tsconfig/node22": "^22.0.0",
     "@types/node": "^22.9.0",

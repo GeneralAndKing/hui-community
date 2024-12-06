@@ -30,7 +30,8 @@ const useAuthStore = defineStore(
         auth.refreshToken = data.refreshToken;
         void MessagePlugin.success("登录成功");
         void router.push("/dashboard");
-      } finally {
+      }
+      finally {
         signInLoading.value = false;
       }
     };

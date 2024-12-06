@@ -28,7 +28,7 @@ const useApplicationStore = defineStore(
         return [];
       }
       return information.value.roles.map(
-        (role) =>
+        role =>
           ({
             name: role.communityName,
             id: role.communityId
