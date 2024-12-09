@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import { useRoute } from "vue-router";
-import { useQuery } from "@tanstack/vue-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import { client } from "@/request";
 import {
   computed,
@@ -38,6 +38,31 @@ const { isPending, data, refetch } = useQuery({
     return data;
   },
   refetchOnMount: true
+});
+const queryClient = useQueryClient();
+const { mutate: disableMutate, isPending: disablePending } = useMutation({
+  mutationFn: async (data: {
+    id: string;
+  }) => client.POST("/sys-api/sys-user/{sysUserId}/lock", {
+    params: {
+      path: { sysUserId: data.id }
+    }
+  }),
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ["communityUsers"] });
+  }
+});
+const { mutate: enableMutate, isPending: enablePending } = useMutation({
+  mutationFn: async (data: {
+    id: string;
+  }) => client.DELETE("/sys-api/sys-user/{sysUserId}/lock", {
+    params: {
+      path: { sysUserId: data.id }
+    }
+  }),
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ["communityUsers"] });
+  }
 });
 
 const onReset: FormProps["onReset"] = () => {
@@ -84,11 +109,12 @@ const columns = ref<PrimaryTableCol<components["schemas"]["SysUserPageResponse"]
     cell: (h, { row }) => {
       return (
         <div class="table-operations">
-          <t-link
+          <t-button
             theme="primary"
-            hover="color"
+            variant="text"
             data-id={row.id}
             onClick={() => {
+              console.log(editRef.value);
               editRef.value?.open({
                 id: row.id,
                 displayName: row.displayName,
@@ -99,7 +125,29 @@ const columns = ref<PrimaryTableCol<components["schemas"]["SysUserPageResponse"]
             }}
           >
             编辑
-          </t-link>
+          </t-button>
+          <t-popconfirm
+            theme="danger"
+            content={`确认${row.lockedTime ? "解除禁用" : "禁用"}吗`}
+            onConfirm={() => {
+              if (!row.id) {
+                return;
+              }
+              if (row.lockedTime) {
+                enableMutate({ id: row.id });
+              } else {
+                disableMutate({ id: row.id });
+              }
+            }}
+          >
+            <t-button
+              theme="danger"
+              variant="text"
+              disabled={row.lockedTime ? enablePending : disablePending}
+              data-id={row.id}
+              content={row.lockedTime ? "解禁" : "禁用"}
+            />
+          </t-popconfirm>
         </div>
       );
     }
@@ -115,7 +163,7 @@ const pagination = computed(() => {
 });
 
 const handleNewItem = () => {
-  editRef.value?.open();
+  editRef.value?.open(undefined);
 };
 </script>
 
