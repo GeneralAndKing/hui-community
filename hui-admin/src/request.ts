@@ -30,15 +30,12 @@ const errorMiddleware: Middleware = {
     let message = `未知错误： ${data.message || data.error}`;
     if (response.status >= 500) {
       message = `服务器内部错误：${data.message || data.error}`;
-    }
-    else if (response.status === 401) {
+    } else if (response.status === 401) {
       message = `当前未登录：${data.message || data.error}`;
       void router.push("/auth");
-    }
-    else if (response.status === 403) {
+    } else if (response.status === 403) {
       message = `当前没有权限访问：${data.message || data.error}`;
-    }
-    else if (response.status === 400) {
+    } else if (response.status === 400) {
       message = `请求参数错误：${data.message || data.error}`;
     }
     void MessagePlugin.error(message);
@@ -56,15 +53,13 @@ export const client = createClient<paths>({
         for (const value of v) {
           queryArray.push(`${k}=${value}`);
         }
-      }
-      else if (k === "pageable") {
+      } else if (k === "pageable") {
         // Spring boot 接受的参数是分页的时候需要进行处理下
         const pv = v as Record<string, never>;
         for (const [k, v] of Object.entries(pv)) {
           queryArray.push(`${k}=${v}`);
         }
-      }
-      else {
+      } else {
         queryArray.push(`${k}=${v}`);
       }
     }

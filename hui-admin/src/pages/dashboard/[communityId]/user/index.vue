@@ -7,7 +7,7 @@ import {
   reactive,
   ref
 } from "vue";
-import { type FormProps, MessagePlugin, type PrimaryTableCol, type TableProps } from "tdesign-vue-next";
+import { type FormProps, type PrimaryTableCol, type TableProps } from "tdesign-vue-next";
 import type { components } from "@/types/client";
 import UserEditDialog from "./_components/UserEditDialog.vue";
 
@@ -23,7 +23,7 @@ const condition: FormProps["data"] = reactive({
   }
 });
 const { isPending, data, refetch } = useQuery({
-  queryKey: ["communityUsers", communityId],
+  queryKey: ["communityUsers"],
   queryFn: async () => {
     const { data } = await client.GET("/sys-api/community/{communityId}/sys-user/page", {
       params: {
@@ -65,9 +65,6 @@ const { mutate: enableMutate, isPending: enablePending } = useMutation({
   }
 });
 
-const onReset: FormProps["onReset"] = () => {
-  MessagePlugin.success("重置成功");
-};
 const onSubmit: FormProps["onSubmit"] = () => {
   refetch();
 };
@@ -176,7 +173,6 @@ const handleNewItem = () => {
         :data="condition"
         label-width="calc(2em + 24px)"
         scroll-to-first-error="smooth"
-        @reset="onReset"
         @submit="onSubmit"
     >
       <t-form-item label="账号" name="likedDisplayName">
