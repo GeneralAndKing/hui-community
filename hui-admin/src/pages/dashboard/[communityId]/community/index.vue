@@ -89,7 +89,6 @@ const handleNewItem = () => {
         :data="condition"
         label-width="calc(2em + 24px)"
         scroll-to-first-error="smooth"
-        @reset="onReset"
         @submit="onSubmit"
     >
       <t-form-item label="名称" name="likedDisplayName">
