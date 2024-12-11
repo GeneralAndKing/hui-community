@@ -5,7 +5,7 @@ import { type CustomValidator, type FormInstanceFunctions, type FormProps } from
 import { useMutation, useQueryClient } from "@tanstack/vue-query";
 import { client } from "@/request";
 import type { components } from "@/types/client";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 
 const form = ref<FormInstanceFunctions | null>(null);
 const formData: FormProps["data"] = reactive({
@@ -173,17 +173,18 @@ const rules: FormProps["rules"] = {
 </script>
 
 <template>
-  <t-dialog :visible="visible" :close-btn="true"
-            :closeOnEscKeydown="false"
-            confirm-btn="保存"
-            cancel-btn="取消"
-            :on-confirm="handleSubmit"
-            :confirm-loading="updatePending || addPending"
-            :on-close="() => {
-              visible = false;
-              form?.clearValidate();
-            }">
-    <template #header>{{id ? '编辑' : '新增'}}用户</template>
+  <t-dialog
+      :visible="visible" :close-btn="true"
+      :closeOnEscKeydown="false"
+      confirm-btn="保存"
+      cancel-btn="取消"
+      :on-confirm="handleSubmit"
+      :confirm-loading="updatePending || addPending"
+      :on-close="() => {
+        visible = false;
+        form?.clearValidate();
+      }">
+    <template #header>{{ id ? '编辑' : '新增' }}用户</template>
     <template #body>
       <t-form ref="form" style="margin-bottom: 5px" :data="formData" :rules="rules" requiredMark resetType="initial">
         <t-form-item label="名称" name="displayName" :initial-data="formData.displayName ?? ''">

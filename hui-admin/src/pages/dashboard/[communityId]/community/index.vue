@@ -63,7 +63,27 @@ const columns = ref<PrimaryTableCol<components["schemas"]["CommunityResponse"]>[
         </div>
       );
     }
+  },
+  {
+    colKey: "id",
+    title: "操作",
+    cell: (h, { row }) => {
+      return (
+        <div class="table-operations">
+          <t-button
+            theme="primary"
+            variant="text"
+            data-id={row.id}
+            onClick={() => {
+            }}
+          >
+            编辑
+          </t-button>
+        </div>
+      );
+    }
   }
+
 ]);
 
 const pagination = computed(() => {
