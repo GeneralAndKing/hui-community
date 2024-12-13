@@ -1,6 +1,6 @@
 package cn.hui_community.service.model;
 
-import cn.hui_community.service.model.dto.response.SysUserPageResponse;
+import cn.hui_community.service.model.dto.response.CommunitySysUserResponse;
 import cn.hui_community.service.model.dto.response.SysUserResponse;
 import jakarta.persistence.*;
 import lombok.*;
@@ -76,8 +76,8 @@ public class SysUser extends Base {
                 .build();
     }
 
-    public SysUserPageResponse toPageResponse(String communityId) {
-        return SysUserPageResponse.builder()
+    public CommunitySysUserResponse toCommunityResponse(String communityId) {
+        return CommunitySysUserResponse.builder()
                 .id(getId())
                 .createTime(getCreateTime())
                 .createBy(getCreateBy())

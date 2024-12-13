@@ -1,5 +1,6 @@
 package cn.hui_community.service.model;
 
+import cn.hui_community.service.model.dto.response.SysUserRolePageResponse;
 import cn.hui_community.service.model.dto.response.SysUserRoleResponse;
 import jakarta.persistence.*;
 import lombok.*;
@@ -62,6 +63,20 @@ public class SysUserRole extends Base {
                 .updateTime(getUpdateTime())
                 .communityName(getCommunity().getName())
                 .communityId(getCommunityId())
+                .description(getDescription())
+                .permissions(getPermissions().stream().map(Permission::toResponse).collect(Collectors.toSet()))
+                .name(getName())
+                .build();
+    }
+
+    public SysUserRolePageResponse toPageResponse() {
+        return SysUserRolePageResponse
+                .builder()
+                .id(getId())
+                .createBy(getCreateBy())
+                .updateBy(getUpdateBy())
+                .createTime(getCreateTime())
+                .updateTime(getUpdateTime())
                 .description(getDescription())
                 .permissions(getPermissions().stream().map(Permission::toResponse).collect(Collectors.toSet()))
                 .name(getName())

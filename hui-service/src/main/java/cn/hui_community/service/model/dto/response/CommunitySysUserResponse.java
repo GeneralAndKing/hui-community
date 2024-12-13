@@ -8,7 +8,7 @@ import java.util.Set;
 
 @SuperBuilder
 @Getter
-public class SysUserPageResponse extends BaseResponse {
+public class CommunitySysUserResponse extends BaseResponse {
     private String displayName;
 
     private String username;

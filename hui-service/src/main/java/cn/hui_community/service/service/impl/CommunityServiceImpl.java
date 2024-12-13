@@ -3,19 +3,15 @@ package cn.hui_community.service.service.impl;
 import cn.hui_community.service.helper.PageHelper;
 import cn.hui_community.service.helper.ResponseStatusExceptionHelper;
 import cn.hui_community.service.helper.AuthHelper;
-import cn.hui_community.service.model.Area;
-import cn.hui_community.service.model.Community;
-import cn.hui_community.service.model.Permission;
-import cn.hui_community.service.model.SysUserRole;
+import cn.hui_community.service.model.*;
 import cn.hui_community.service.model.dto.request.AddCommunityRequest;
 import cn.hui_community.service.model.dto.request.AddSysRoleRequest;
 import cn.hui_community.service.model.dto.request.UpdateCommunityRequest;
 import cn.hui_community.service.model.dto.response.CommunityResponse;
+import cn.hui_community.service.model.dto.response.CommunitySysUserResponse;
+import cn.hui_community.service.model.dto.response.SysUserRolePageResponse;
 import cn.hui_community.service.model.dto.response.SysUserRoleResponse;
-import cn.hui_community.service.repository.AreaRepository;
-import cn.hui_community.service.repository.CommunityRepository;
-import cn.hui_community.service.repository.PermissionRepository;
-import cn.hui_community.service.repository.SysUserRoleRepository;
+import cn.hui_community.service.repository.*;
 import cn.hui_community.service.service.CommunityService;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +35,7 @@ public class CommunityServiceImpl implements CommunityService {
     private final AreaRepository areaRepository;
     private final SysUserRoleRepository sysUserRoleRepository;
     private final PermissionRepository permissionRepository;
+    private final SysUserRepository sysUserRepository;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -61,6 +59,7 @@ public class CommunityServiceImpl implements CommunityService {
                         .community(community)
                         .permissions(Collections.singleton(AuthHelper.visitSysPermission()))
                         .name(AuthHelper.VISITOR_ROLE_NAME)
+                        .description(AuthHelper.VISITOR_ROLE_NAME)
                         .build()
         );
         return community.toResponse();
@@ -88,7 +87,7 @@ public class CommunityServiceImpl implements CommunityService {
     }
 
     @Override
-    public SysUserRoleResponse addSysRole(String communityId, AddSysRoleRequest request) {
+    public SysUserRoleResponse addSysUserRole(String communityId, AddSysRoleRequest request) {
         Community community = communityRepository.findById(communityId)
                 .orElseThrow(ResponseStatusExceptionHelper.badRequestSupplier("community %s does not exist", communityId));
         if (sysUserRoleRepository.findByCommunityIdAndName(communityId, request.getName()).isPresent()) {
@@ -147,5 +146,48 @@ public class CommunityServiceImpl implements CommunityService {
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         }, pageable);
         return PageHelper.map(communityPage, Community::toResponse);
+    }
+
+    @Override
+    public Page<SysUserRolePageResponse> sysUserRolePage(String communityId, String likedName, List<String> permissionIds, Pageable pageable) {
+        if (!communityRepository.existsById(communityId)) {
+            throw ResponseStatusExceptionHelper.badRequest("community %s does not exist", communityId);
+        }
+        if (CollectionUtils.isNotEmpty(permissionIds)) {
+            List<Permission> permissionList = permissionRepository.findAllById(permissionIds);
+            if (!CollectionUtils.isEqualCollection(permissionList.stream().map(Permission::getId).toList(), permissionIds)) {
+                throw ResponseStatusExceptionHelper.badRequest("permissionIds don't match");
+            }
+        }
+        Page<SysUserRole> sysUserRolePage = sysUserRoleRepository.findAll((root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            predicates.add(criteriaBuilder.equal(root.get("communityId"), communityId));
+            if (CollectionUtils.isNotEmpty(permissionIds)) {
+                List<Permission> permissionList = permissionRepository.findAllById(permissionIds);
+                if (!CollectionUtils.isEqualCollection(permissionList.stream().map(Permission::getId).toList(), permissionIds)) {
+                    throw ResponseStatusExceptionHelper.badRequest("permissionIds don't match");
+                }
+                predicates.add(root.get("communityId").in(permissionList));
+            }
+            if (StringUtils.isNotBlank(likedName)) {
+                predicates.add(criteriaBuilder.like(root.get("name"), "%" + likedName + "%"));
+            }
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        }, pageable);
+        return PageHelper.map(sysUserRolePage, SysUserRole::toPageResponse);
+    }
+
+    @Override
+    public List<CommunitySysUserResponse> removeRole(String communityId, String sysUserRoleId) {
+        SysUserRole sysUserRole = sysUserRoleRepository.findByCommunityIdAndId(communityId, sysUserRoleId)
+                .orElseThrow(ResponseStatusExceptionHelper.badRequestSupplier("sysUserRole %s does not exist", sysUserRoleId));
+        List<SysUser> sysUserList = sysUserRepository.findAllByRolesContains(sysUserRole);
+        if (CollectionUtils.isNotEmpty(sysUserList)) {
+            sysUserList.forEach(sysUser -> {
+                sysUser.getRoles().remove(sysUserRole);
+            });
+            sysUserList = sysUserRepository.saveAll(sysUserList);
+        }
+        return sysUserList.stream().map((sysUser) -> sysUser.toCommunityResponse(communityId)).toList();
     }
 }

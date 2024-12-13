@@ -9,7 +9,7 @@ import cn.hui_community.service.model.SysUserRole;
 import cn.hui_community.service.model.dto.request.AddSysUserRequest;
 import cn.hui_community.service.model.dto.request.UpdateRolesRequest;
 import cn.hui_community.service.model.dto.request.UpdateSysUserRequest;
-import cn.hui_community.service.model.dto.response.SysUserPageResponse;
+import cn.hui_community.service.model.dto.response.CommunitySysUserResponse;
 import cn.hui_community.service.model.dto.response.SysUserResponse;
 import cn.hui_community.service.repository.CommunityRepository;
 import cn.hui_community.service.repository.SysUserRepository;
@@ -56,7 +56,7 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
-    public Page<SysUserPageResponse> page(String communityId, String likedUsername, String likedDisplayName, Pageable pageable) {
+    public Page<CommunitySysUserResponse> page(String communityId, String likedUsername, String likedDisplayName, Pageable pageable) {
         Page<SysUser> sysUserPage = sysUserRepository.findAll((root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
             if (StringUtils.isNotBlank(communityId)) {
@@ -72,7 +72,7 @@ public class SysUserServiceImpl implements SysUserService {
             }
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         }, pageable);
-        return PageHelper.map(sysUserPage, (sysUser -> sysUser.toPageResponse(communityId)));
+        return PageHelper.map(sysUserPage, (sysUser -> sysUser.toCommunityResponse(communityId)));
     }
 
     @Override
