@@ -4,6 +4,7 @@ import { client } from "@/request";
 import { type FormProps, type PrimaryTableCol, type TableProps } from "tdesign-vue-next";
 import { computed, reactive, ref } from "vue";
 import type { components } from "@/types/client";
+import CommunityEditDialog from "@/pages/dashboard/[communityId]/community/_components/CommunityEditDialog.vue";
 
 const condition: FormProps["data"] = reactive({
   likedName: "",
@@ -30,6 +31,8 @@ const { isPending, data, refetch } = useQuery({
   },
   refetchOnMount: true
 });
+const editRef = ref<null | InstanceType<typeof CommunityEditDialog>>(null);
+
 const columns = ref<PrimaryTableCol<components["schemas"]["CommunityResponse"]>[]>([
   {
     colKey: "name",
@@ -51,8 +54,8 @@ const columns = ref<PrimaryTableCol<components["schemas"]["CommunityResponse"]>[
     colKey: "id",
     title: "经纬度",
     cell: (_, { row }) => {
-      const longitude = row.longitude as numebr;
-      const latitude = row.latitude as numebr;
+      const longitude = row.longitude as number;
+      const latitude = row.latitude as number;
       return (
         <div>
           (
@@ -75,6 +78,9 @@ const columns = ref<PrimaryTableCol<components["schemas"]["CommunityResponse"]>[
             variant="text"
             data-id={row.id}
             onClick={() => {
+              editRef.value?.open(row.id, {
+                ...row
+              });
             }}
           >
             编辑
@@ -97,12 +103,13 @@ const onSubmit: FormProps["onSubmit"] = () => {
   refetch();
 };
 const handleNewItem = () => {
-  // TODO
+  editRef.value?.open(undefined, undefined);
 };
 </script>
 
 <template>
   <t-card bordered class="w-full flex h-full flex-col gap-4">
+    <CommunityEditDialog ref="editRef" />
     <t-form
         ref="form"
         layout="inline"

@@ -111,7 +111,6 @@ const columns = ref<PrimaryTableCol<components["schemas"]["SysUserPageResponse"]
             variant="text"
             data-id={row.id}
             onClick={() => {
-              console.log(editRef.value);
               editRef.value?.open({
                 id: row.id,
                 displayName: row.displayName,
