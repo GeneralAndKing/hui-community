@@ -1,23 +1,32 @@
 <!--pages/user/user.wxml-->
-<t-navbar t-class-placeholder="t-navbar-placeholder" t-class-content="t-navbar-content" title="我的"
-          t-class-title="nav-title"/>
-<layout title="我的" value="/pages/user/user" nav="{{false}}">
-  <view class="bg-gray-50 h-full">
-    <view class="user-bg w-full relative flex flex-col pt-4">
-      <view class="flex flex-row justify-between items-center px-4 ">
-        <view class="flex flex-row items-center gap-2 text-white">
-          <t-avatar size="28px" image="/image/vue-color-avatar.png"/>
-          <view>笑笑笑笑怪</view>
-        </view>
-        <view class="text-sm text-gray-200">
-          设置 >
-        </view>
+<layout title="我的" value="/pages/user/user" nav="{{true}}">
+  <view class="flex flex-row px-2 py-1 gap-lg mx-2 mt-4 card-data justify-between items-center rounded-3xl">
+    <view class="flex flex-row gap-2 items-center text-sm">
+      <t-avatar size="small" image="https://tdesign.gtimg.com/mobile/demos/avatar1.png" />
+      <view>飞翔的翅膀</view>
+    </view>
+    <view class="mr-2">
+      <t-icon name="chevron-right-s" />
+    </view>
+  </view>
+  <view class="flex flex-col gap-4 mt-4">
+    <view class="flex flex-col gap-2 card-data rounded-lg m-2 p-4 vip-card">
+      <view class="flex flex-row justify-between items-center relative">
+        <view class="text-xs font-mono absolute -left-29 py-1 px-2 vip-name">会员卡</view>
+        <view></view>
+        <view class="text-xs font-mono">2024-12-01</view>
       </view>
-      <view class="absolute card px-4 w-full">
-        <t-button theme="primary" size="large" open-type="getPhoneNumber" bindgetphonenumber="getUserInfo">
-          确认登录
-        </t-button>
+      <view class="flex-1 flex text-center justify-center items-center vip-number">
+        500
+      </view>
+      <view class="flex flex-row justify-end text-xs font-mono items-end">
+        美发沙龙（金杨路店）
       </view>
     </view>
+    <t-cell-group theme="card" class="card-data m-0">
+      <t-cell title="哈哈哈哈" leftIcon="internet" hover arrow />
+      <t-cell title="再来一次" leftIcon="lock-on" hover arrow />
+      <t-cell title="联系客服" leftIcon="service" hover arrow />
+    </t-cell-group>
   </view>
 </layout>
