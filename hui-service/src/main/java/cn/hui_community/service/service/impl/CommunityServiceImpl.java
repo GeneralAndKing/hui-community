@@ -181,6 +181,9 @@ public class CommunityServiceImpl implements CommunityService {
     public List<CommunitySysUserResponse> removeRole(String communityId, String sysUserRoleId) {
         SysUserRole sysUserRole = sysUserRoleRepository.findByCommunityIdAndId(communityId, sysUserRoleId)
                 .orElseThrow(ResponseStatusExceptionHelper.badRequestSupplier("sysUserRole %s does not exist", sysUserRoleId));
+        if (sysUserRole.equals(AuthHelper.visitorSysUserRole(communityId))) {
+            throw ResponseStatusExceptionHelper.badRequest("Cannot remove visitor role");
+        }
         List<SysUser> sysUserList = sysUserRepository.findAllByRolesContains(sysUserRole);
         if (CollectionUtils.isNotEmpty(sysUserList)) {
             sysUserList.forEach(sysUser -> {
