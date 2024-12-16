@@ -1,13 +1,19 @@
 package cn.hui_community.service.model.dto.response;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
 
 
 @Data
 @Builder
-public class AreaResponse {
+@AllArgsConstructor
+@NoArgsConstructor
+public class AreaResponse{
 
     private String id;
 

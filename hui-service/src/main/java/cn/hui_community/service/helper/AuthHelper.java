@@ -38,11 +38,25 @@ public class AuthHelper {
     public static final String SUPER_AUTHORITY_PREFIX = PermissionTypeEnum.SYS.getValue() + "_" + SUPER_PERMISSION_NAME + "_";
 
 
+    /**
+     * A list of Triple objects representing the assigned system permissions.
+     * Each Triple contains the permission name, permission type, and a description of the permission.
+     *
+     * @see Triple
+     * @see PermissionTypeEnum
+     */
     private static final List<Triple<String, String, String>> assignedSysPermissions = List.of(
             Triple.of(VISIT_PERMISSION_NAME, PermissionTypeEnum.SYS.getValue(), "The visit permission is the initial permission for each community and is used to bind the community to which the user belongs"),
             Triple.of(ADMIN_PERMISSION_NAME, PermissionTypeEnum.SYS.getValue(), "The Admin permission can manage their associated communities")
-
     );
+    
+    /**
+     * A list of Triple objects representing hidden system permissions.
+     * Each Triple contains the permission name, permission type, and a description of the permission.
+     *
+     * @see Triple
+     * @see PermissionTypeEnum
+     */
     private static final List<Triple<String, String, String>> hiddenSysPermissionList = List.of(
             Triple.of(SUPER_PERMISSION_NAME, PermissionTypeEnum.SYS.getValue(), "The super permission is used for platform administrator")
     );
@@ -72,17 +86,7 @@ public class AuthHelper {
         }
     }
 
-
-    public static List<Permission> currentUserPermissions() {
-        return SecurityContextHolder.getContext().getAuthentication().getAuthorities()
-                .stream().flatMap(grantedAuthority -> {
-                    if (grantedAuthority instanceof Permission) {
-                        return Stream.of((Permission) grantedAuthority);
-                    }
-                    return Stream.empty();
-                }).toList();
-    }
-
+    
     public static User currentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication instanceof JwtAuthenticationToken jwtAuthenticationToken) {
@@ -123,10 +127,13 @@ public class AuthHelper {
 
 
     /**
-     * 判断是否有可分配的权限
+     * This method checks if the current SysUser has the authority to assign the given roles.
+     * It verifies if the current SysUser has the ADMIN_PERMISSION_NAME for each community associated with the roles.
      *
-     * @param roleIds
-     * @return
+     * @param roleIds A set of role IDs to be checked for authority.
+     * @return A boolean value indicating whether the current SysUser has the authority to assign all the given roles.
+     * Returns true if the current SysUser has the ADMIN_PERMISSION_NAME for each community associated with the roles,
+     * and false otherwise.
      */
     public boolean hasAssignedRolesAuthority(Set<String> roleIds) {
         List<String> adminCommunityIds = currentSysUser().getRoles()
@@ -139,9 +146,16 @@ public class AuthHelper {
             return false;
         }
         return CollectionUtils.containsAll(adminCommunityIds, roleIds);
-
     }
 
+    /**
+     * This method checks if the current user has a specific authority prefix.
+     * It iterates through the granted authorities of the current user and checks if any authority starts with the given permission prefix.
+     *
+     * @param permissionPrefix The prefix to be checked for authority.
+     * @return A boolean value indicating whether the current user has the authority with the given prefix.
+     * Returns true if the current user has an authority that starts with the given prefix, and false otherwise.
+     */
     public boolean hasAuthorityPrefix(String permissionPrefix) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         for (GrantedAuthority grantedAuthority : authentication.getAuthorities()) {

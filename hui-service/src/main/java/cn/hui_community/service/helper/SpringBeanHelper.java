@@ -2,6 +2,7 @@ package cn.hui_community.service.helper;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
@@ -18,7 +19,7 @@ public class SpringBeanHelper implements BeanFactoryPostProcessor, ApplicationCo
     private static ConfigurableListableBeanFactory beanFactory;
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(@NotNull ApplicationContext applicationContext) throws BeansException {
         SpringBeanHelper.applicationContext = applicationContext;
     }
 
@@ -30,7 +31,6 @@ public class SpringBeanHelper implements BeanFactoryPostProcessor, ApplicationCo
             return factory;
         }
     }
-
 
     public static <T> T getBean(String beanName) {
         return (T) getBeanFactory().getBean(beanName);
@@ -44,7 +44,7 @@ public class SpringBeanHelper implements BeanFactoryPostProcessor, ApplicationCo
 
 
     @Override
-    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+    public void postProcessBeanFactory(@NotNull ConfigurableListableBeanFactory beanFactory) throws BeansException {
         SpringBeanHelper.beanFactory = beanFactory;
     }
 }

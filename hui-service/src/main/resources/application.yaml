@@ -34,6 +34,8 @@ wechat-mini:
   user:
     app-id: ${WECHAT_USER_APP_ID}
     secret: ${WECHAT_USER_SECRET}
+cache:
+  universal-ttl: 60m
 server:
   error:
     include-stacktrace: always

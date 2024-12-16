@@ -1,8 +1,8 @@
 package cn.hui_community.service.service.impl;
 
+import cn.hui_community.service.helper.AuthHelper;
 import cn.hui_community.service.helper.PageHelper;
 import cn.hui_community.service.helper.ResponseStatusExceptionHelper;
-import cn.hui_community.service.helper.AuthHelper;
 import cn.hui_community.service.model.*;
 import cn.hui_community.service.model.dto.request.AddCommunityRequest;
 import cn.hui_community.service.model.dto.request.AddSysRoleRequest;
@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
