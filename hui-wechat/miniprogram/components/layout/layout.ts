@@ -23,6 +23,12 @@ Component({
       { value: '/pages/home/home', icon: 'shop', ariaLabel: '商家' },
       { value: '/pages/user/user', icon: 'user', ariaLabel: '用户' }
     ],
+    communityVisible: false,
+    communityValue: [],
+    communityList: [
+      { label: '超级小区', value: '超级小区' },
+      { label: '观山小区', value: '观山小区' }
+    ]
   },
 
   /**
@@ -34,6 +40,22 @@ Component({
       wx.redirectTo({
         url: e.detail.value
       })
+    },
+    onPickerChange(e: any) {
+      console.log(1)
+      console.log(e)
+      this.setData({ communityVisible: false });
+    },
+    onColumnChange(e: any) {
+      console.log(2)
+      console.log(e)
+    },
+    onPickerCancel() {
+      this.setData({ communityVisible: false });
+    },
+    onSelect () {
+      console.log('test')
+      this.setData({ communityVisible: true });
     }
   }
 })

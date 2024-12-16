@@ -6,8 +6,26 @@
       title="{{title}}"
       t-class-title="nav-title"
       wx:if="{{nav}}"
-  />
+  >
+    <view slot="left" class="text-gray-4" bindtap="onSelect" style="font-size: 0.75rem">
+      超级小区
+    </view>
+  </t-navbar>
 </view>
+<t-picker
+    visible="{{communityVisible}}"
+    value="{{communityValue}}"
+    data-key="date"
+    title="选择社区"
+    cancelBtn="取消"
+    confirmBtn="确认"
+    usingCustomNavbar
+    bindchange="onPickerChange"
+    bindpick="onColumnChange"
+    bindcancel="onPickerCancel"
+>
+  <t-picker-item options="{{communityList}}" />
+</t-picker>
 <t-tab-bar t-class="t-tab-bar"
            value="{{value}}"
            bind:change="onChange"

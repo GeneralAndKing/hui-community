@@ -39,6 +39,7 @@ page,root-portal-content,::before,::after{--un-rotate:0;--un-rotate-x:0;--un-rot
 .text-lg{font-size:36rpx;line-height:56rpx;}
 .text-sm{font-size:28rpx;line-height:40rpx;}
 .text-xs{font-size:24rpx;line-height:32rpx;}
+.text-gray-4,
 .text-gray-400{--un-text-opacity:1;color:rgb(156 163 175 / var(--un-text-opacity)) /* #9ca3af */;}
 .font-mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;}
 .card-data{box-shadow:var(--td-tab-bar-round-shadow, var(--td-shadow-3, 0 6px 30px 5px rgba(0, 0, 0, 0.05), 0 16px 24px 2px rgba(0, 0, 0, 0.04), 0 8px 10px -5px rgba(0, 0, 0, 0.08)));}
