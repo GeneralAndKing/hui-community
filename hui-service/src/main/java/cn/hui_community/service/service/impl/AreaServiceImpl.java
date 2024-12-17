@@ -22,5 +22,6 @@ public class AreaServiceImpl implements AreaService {
         if (all != null && all) {
             return areaRepository.findAll().stream().map(Area::toResponse).collect(Collectors.toList());
         }
-        return areaRepository.findAllByParentId(parentId).stream().map(Area::toResponse).collect(Collectors.toList());    }
+        return areaRepository.findAllByParentId(parentId).stream().map(Area::toResponse).collect(Collectors.toList());
+    }
 }

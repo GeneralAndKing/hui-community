@@ -39,7 +39,4 @@ public class ShopRoleMapping extends Base {
     @Column(name = "expired_time")
     private Instant expiredTime;
 
-    @Column(name = "locked_time")
-    private Instant lockedTime;
-
 }

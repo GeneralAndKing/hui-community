@@ -52,11 +52,18 @@ public class SysUserController {
         return sysUserService.cancelRoles(sysUserId, request);
     }
 
+    /**
+     * Locks a system user by their ID.
+     *
+     * @param sysUserId The ID of the system user to lock.
+     * @return The response containing details of the locked system user.
+     */
     @PostMapping("/{sysUserId}/lock")
     @PreAuthorize("hasAuthority(@auth.SUPER_AUTHORITY_PREFIX+'001')")
     public SysUserResponse lock(@PathVariable String sysUserId) {
         return sysUserService.lock(sysUserId);
     }
+
     @DeleteMapping("/{sysUserId}/lock")
     @PreAuthorize("hasAuthority(@auth.SUPER_AUTHORITY_PREFIX+'001')")
     public SysUserResponse unlock(@PathVariable String sysUserId) {

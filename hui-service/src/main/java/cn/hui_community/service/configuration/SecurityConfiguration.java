@@ -31,7 +31,15 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 public class SecurityConfiguration {
-
+    /**
+     * Configuration for spring security, including cors, authentication and authorization.
+     * <ul>
+     *     <li>{@link #passwordEncoder()}</li>
+     *     <li>{@link #authManager(HttpSecurity, Map)}</li>
+     *     <li>{@link #securityFilterChain(HttpSecurity, GlobalAuthHandler, Map)}</li>
+     *     <li>{@link #corsConfigurationSource()}</li>
+     * </ul>
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -42,10 +50,9 @@ public class SecurityConfiguration {
         AuthenticationManagerBuilder authenticationManagerBuilder =
                 http.getSharedObject(AuthenticationManagerBuilder.class);
         providerMap.forEach((key, provider) -> {
-            log.info("configuration provider: %s".formatted(key));
+            log.info("Configuring provider for key: {}", key);
             authenticationManagerBuilder.authenticationProvider(provider);
         });
-        authenticationManagerBuilder.parentAuthenticationManager(null);
         return authenticationManagerBuilder.build();
     }
 

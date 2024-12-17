@@ -7,6 +7,7 @@ public enum PermissionTypeEnum {
 
     SYS("SYS"),
     USER("USER"),
+    SHOP("SHOP"),
     SHOPKEEPER("SHOPKEEPER");
     private final String value;
 

@@ -1,6 +1,7 @@
 package cn.hui_community.service.model;
 
 
+import cn.hui_community.service.model.dto.response.ShopRoleResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -9,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -22,6 +24,8 @@ import java.util.Set;
 @Slf4j
 @EntityListeners(AuditingEntityListener.class)
 public class ShopRole extends Base {
+
+    @Column(name = "name", unique = true)
     private String name;
 
     @ManyToMany
@@ -32,10 +36,21 @@ public class ShopRole extends Base {
     )
     private Set<Permission> permissions;
 
-    @OneToMany(mappedBy = "role",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
     private Set<ShopRoleMapping> mappings;
 
     private String description;
 
 
+    public ShopRoleResponse toResponse() {
+        return ShopRoleResponse.builder()
+                .id(getId())
+                .createTime(getCreateTime())
+                .createBy(getCreateBy())
+                .updateBy(getUpdateBy())
+                .name(getName())
+                .description(getDescription())
+                .permissions(getPermissions().stream().map(Permission::toResponse).collect(Collectors.toSet()))
+                .build();
+    }
 }

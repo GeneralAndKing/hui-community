@@ -1,5 +1,6 @@
 package cn.hui_community.service.model;
 
+import cn.hui_community.service.model.dto.response.ShopCategoryResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -30,6 +31,9 @@ public class ShopCategory extends Base {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "image")
+    private String image;
+
     @ManyToOne
     @JoinColumn(name = "parent_id")
     private ShopCategory parent;
@@ -39,9 +43,21 @@ public class ShopCategory extends Base {
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ShopCategory> children;
 
-    @Column(name = "level")
-    private Integer level;
-
     @ManyToMany
     private Set<Shop> shops;
+
+    public ShopCategoryResponse toResponse() {
+        return ShopCategoryResponse.builder()
+                .id(getId())
+                .createTime(getCreateTime())
+                .createBy(getCreateBy())
+                .updateBy(getUpdateBy())
+                .updateTime(getUpdateTime())
+                .name(getName())
+                .description(getDescription())
+                .image(getImage())
+                .parentId(getParentId())
+                .parentName(getParent().getName())
+                .build();
+    }
 }

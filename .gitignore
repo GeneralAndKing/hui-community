@@ -53,6 +53,8 @@ xcuserdata/
 # IntelliJ project files
 */.idea
 .idea
+*/.vscode
+.vscode
 *.iml
 out
 gen

@@ -1,5 +1,6 @@
 package cn.hui_community.service.model;
 
+import cn.hui_community.service.model.dto.response.ShopkeeperResponse;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -28,4 +29,20 @@ public class Shopkeeper extends Base {
 
     @Column(name = "description")
     private String description;
+
+    @Column(name = "open_id", unique = true)
+    private String openId;
+
+
+    public ShopkeeperResponse toResponse() {
+        return ShopkeeperResponse.builder()
+                .id(getId())
+                .createTime(getCreateTime())
+                .createBy(getCreateBy())
+                .updateBy(getUpdateBy())
+                .name(getName())
+                .description(getDescription())
+                .openId(getOpenId())
+                .build();
+    }
 }
