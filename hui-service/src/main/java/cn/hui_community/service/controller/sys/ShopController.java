@@ -1,6 +1,8 @@
 package cn.hui_community.service.controller.sys;
 
+import cn.hui_community.service.model.dto.request.UpdateShowRoleRequest;
 import cn.hui_community.service.model.dto.response.ShopDetailResponse;
+import cn.hui_community.service.model.dto.response.ShopRoleMappingResponse;
 import cn.hui_community.service.model.dto.response.ShopSysShowResponse;
 import cn.hui_community.service.service.ShopService;
 import lombok.RequiredArgsConstructor;
@@ -28,5 +30,11 @@ public class ShopController {
     @PreAuthorize("hasAuthority(@auth.SUPER_AUTHORITY_PREFIX+'001')")
     public ShopDetailResponse detail(@PathVariable String shopId) {
         return shopService.detail(shopId);
+    }
+
+    @PutMapping("/{shopId}/role")
+    @PreAuthorize("hasAuthority(@auth.SUPER_AUTHORITY_PREFIX+'001')")
+    public ShopRoleMappingResponse enableRoles(@PathVariable String shopId, @RequestBody UpdateShowRoleRequest request) {
+        return shopService.updateRole(shopId, request);
     }
 }

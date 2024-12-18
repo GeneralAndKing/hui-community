@@ -1,6 +1,7 @@
 package cn.hui_community.service.model;
 
 
+import cn.hui_community.service.model.dto.response.ShopRoleMappingResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -39,4 +40,15 @@ public class ShopRoleMapping extends Base {
     @Column(name = "expired_time")
     private Instant expiredTime;
 
+    public ShopRoleMappingResponse toResponse() {
+        return ShopRoleMappingResponse.builder()
+                .id(getId())
+                .createTime(getCreateTime())
+                .createBy(getCreateBy())
+                .updateBy(getUpdateBy())
+                .roleId(getRoleId())
+                .shopId(getShopId())
+                .expiredTime(getExpiredTime())
+                .build();
+    }
 }

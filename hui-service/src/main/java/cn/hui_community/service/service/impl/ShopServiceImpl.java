@@ -2,13 +2,16 @@ package cn.hui_community.service.service.impl;
 
 import cn.hui_community.service.helper.PageHelper;
 import cn.hui_community.service.helper.ResponseStatusExceptionHelper;
+import cn.hui_community.service.helper.ShopRoleHelper;
 import cn.hui_community.service.model.CommunityShopMapping;
 import cn.hui_community.service.model.Shop;
+import cn.hui_community.service.model.ShopRole;
+import cn.hui_community.service.model.ShopRoleMapping;
+import cn.hui_community.service.model.dto.request.UpdateShowRoleRequest;
 import cn.hui_community.service.model.dto.response.ShopDetailResponse;
+import cn.hui_community.service.model.dto.response.ShopRoleMappingResponse;
 import cn.hui_community.service.model.dto.response.ShopSysShowResponse;
-import cn.hui_community.service.repository.CommunityRepository;
-import cn.hui_community.service.repository.CommunityShopMappingRepository;
-import cn.hui_community.service.repository.ShopRepository;
+import cn.hui_community.service.repository.*;
 import cn.hui_community.service.service.ShopService;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
@@ -21,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +32,8 @@ public class ShopServiceImpl implements ShopService {
     private final ShopRepository shopRepository;
     private final CommunityRepository communityRepository;
     private final CommunityShopMappingRepository communityShopMappingRepository;
+    private final ShopRoleRepository shopRoleRepository;
+    private final ShopRoleMappingRepository shopRoleMappingRepository;
 
 
     @Override
@@ -57,6 +63,26 @@ public class ShopServiceImpl implements ShopService {
         Shop shop = shopRepository.findById(shopId)
                 .orElseThrow(ResponseStatusExceptionHelper.badRequestSupplier("shop %s does not exist", shopId));
         return shop.toDetailResponse();
+    }
+
+    @Override
+    public ShopRoleMappingResponse updateRole(String shopId, UpdateShowRoleRequest request) {
+        Shop shop = shopRepository.findById(shopId)
+                .orElseThrow(ResponseStatusExceptionHelper.badRequestSupplier("shop %s does not exist", shopId));
+        Set<ShopRoleMapping> roles = shop.getRoles();
+        ShopRole shopRole = ShopRoleHelper.fromEnum(request.getRole());
+        for (ShopRoleMapping shopRoleMapping : roles) {
+            if (shopRoleMapping.getRoleId().equals(shopRole.getId())) {
+                shopRoleMapping.setExpiredTime(request.getExpiredTime());
+                return shopRoleMappingRepository.save(shopRoleMapping).toResponse();
+            }
+        }
+        return shopRoleMappingRepository.save(ShopRoleMapping.builder()
+                .shop(shop)
+                .role(shopRole)
+                .expiredTime(request.getExpiredTime())
+                .build()
+        ).toResponse();
     }
 
 }
