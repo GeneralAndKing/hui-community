@@ -5,10 +5,15 @@ page,root-portal-content,::before,::after{--un-rotate:0;--un-rotate-x:0;--un-rot
 .relative{position:relative;}
 .-left-29{left:-29rpx;}
 .line-clamp-1{overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:1;line-clamp:1;}
+.line-clamp-2{overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;}
 .m-0{margin:0;}
 .m-2{margin:16rpx;}
+.mx-1{margin-left:8rpx;margin-right:8rpx;}
 .mx-2{margin-left:16rpx;margin-right:16rpx;}
+.my-1{margin-top:8rpx;margin-bottom:8rpx;}
+.my-4{margin-top:32rpx;margin-bottom:32rpx;}
 .mr-2{margin-right:16rpx;}
+.mt-2{margin-top:16rpx;}
 .mt-3{margin-top:24rpx;}
 .mt-4{margin-top:32rpx;}
 .block{display:block;}
@@ -27,8 +32,12 @@ page,root-portal-content,::before,::after{--un-rotate:0;--un-rotate-x:0;--un-rot
 .gap-4{gap:32rpx;}
 .gap-lg{gap:40rpx;}
 .gap-y-3{row-gap:24rpx;}
+.overflow-hidden{overflow:hidden;}
+.text-ellipsis{text-overflow:ellipsis;}
 .rounded-3xl{border-radius:48rpx;}
+.rounded-full{border-radius:9999px;}
 .rounded-lg{border-radius:16rpx;}
+.bg-amber{--un-bg-opacity:1;background-color:rgb(251 191 36 / var(--un-bg-opacity)) /* #fbbf24 */;}
 .bg-gray-50{--un-bg-opacity:1;background-color:rgb(249 250 251 / var(--un-bg-opacity)) /* #f9fafb */;}
 .bg-white{--un-bg-opacity:1;background-color:rgb(255 255 255 / var(--un-bg-opacity)) /* #fff */;}
 .p-4{padding:32rpx;}
@@ -41,5 +50,7 @@ page,root-portal-content,::before,::after{--un-rotate:0;--un-rotate-x:0;--un-rot
 .text-xs{font-size:24rpx;line-height:32rpx;}
 .text-gray-4,
 .text-gray-400{--un-text-opacity:1;color:rgb(156 163 175 / var(--un-text-opacity)) /* #9ca3af */;}
+.font-bold{font-weight:700;}
 .font-mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;}
+.line-through{text-decoration-line:line-through;}
 .card-data{box-shadow:var(--td-tab-bar-round-shadow, var(--td-shadow-3, 0 6px 30px 5px rgba(0, 0, 0, 0.05), 0 16px 24px 2px rgba(0, 0, 0, 0.04), 0 8px 10px -5px rgba(0, 0, 0, 0.08)));}

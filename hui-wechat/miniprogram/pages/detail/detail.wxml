@@ -1,0 +1,79 @@
+<view class="block">
+  <t-navbar
+      left-arrow
+      t-class-placeholder="t-navbar-placeholder"
+      t-class-content="t-navbar-content"
+      title="标题文字"
+      t-class-title="nav-title"
+  />
+</view>
+<view class="flex flex-row px-2 py-1 gap-lg mx-2 mt-4 card-data justify-between items-center rounded-3xl">
+  <view class="flex flex-row gap-2 items-center text-sm">
+    <t-avatar size="small" image="https://tdesign.gtimg.com/mobile/demos/avatar1.png" />
+    <view>飞翔的翅膀</view>
+  </view>
+  <view class="mr-2">
+    <t-icon name="chevron-right-s" />
+  </view>
+</view>
+<view class="flex flex-col gap-4 mt-4 mx-2">
+  <view class="flex flex-col gap-2 card-data rounded-lg m-2 p-4 vip-card">
+    <view class="flex flex-row justify-between items-center relative">
+      <view class="text-xs font-mono absolute -left-29 py-1 px-2 vip-name">会员卡</view>
+      <view></view>
+      <view class="text-xs font-mono">2024-12-01</view>
+    </view>
+    <view class="flex-1 flex text-center justify-center items-center vip-number">
+      500
+    </view>
+    <view class="flex flex-row justify-end text-xs font-mono items-end">
+      美发沙龙（金杨路店）
+    </view>
+  </view>
+</view>
+
+<view class="side-bar-wrapper mt-2 mx-1 card-data" style="height: calc(100vh - {{navbarHeight}}px)">
+  <t-side-bar value="{{sideBarIndex}}" bind:change="onSideBarChange">
+    <t-side-bar-item
+        wx:for="{{categories}}"
+        wx:key="label"
+        value="{{item.value || index}}"
+        label="{{item.label}}"
+        badge-props="{{item.badgeProps}}"
+    />
+  </t-side-bar>
+  <scroll-view class="content px-2" scroll-y scroll-with-animation scroll-top="{{scrollTop}}" bind:scroll="onScroll">
+    <view wx:for="{{categories}}" wx:key="index" class="section">
+      <view class="title text-gray-4 my-1 text-sm ">{{item.title || item.label}}</view>
+      <t-grid column="{{1}}" border="{{false}}">
+        <block wx:for="{{item.items}}" wx:key="index" wx:for-item="cargo">
+          <view class="flex flex-row gap-2 my-4">
+            <t-image
+                src="https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0"
+                width="96"
+                height="96"
+                shape="round"
+                aria-label="一个放置在墙角的黄色行李箱"
+            />
+            <view class="flex-col flex gap-2">
+              <view class="text-sm line-clamp-2 overflow-hidden text-ellipsis font-bold">超级好吃的哒哒哒大叔大婶的撒哒哒哒大超级好吃的哒哒哒大叔大婶的撒哒哒哒大超级好吃的哒哒哒大叔大婶的撒哒哒哒大超级好吃的哒哒哒大叔大婶的撒哒哒哒大</view>
+              <view class="text-gray-4 text-xs">月售 100+ 剩余 20</view>
+              <view class="flex flex-row items-end justify-between">
+                <view class="flex flex-row items-end gap-2">
+                  <view>
+                    <text class="font-bold text-xs">￥</text>
+                    <text class="font-bold text-md">4.2</text>
+                  </view>
+                  <view class="text-gray-4 text-xs line-through">￥4.5</view>
+                </view>
+                <view class="rounded-full bg-amber font-bold flex justify-center items-center font-bold" style="width: 1.25rem;height: 1.25rem">
+                  <t-icon name="plus" />
+                </view>
+              </view>
+            </view>
+          </view>
+        </block>
+      </t-grid>
+    </view>
+  </scroll-view>
+</view>

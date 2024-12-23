@@ -1,12 +1,12 @@
 {
-  "usingComponents": {
-    "layout": "/components/layout/layout",
-    "t-swiper": "tdesign-miniprogram/swiper/swiper",
-    "t-avatar": "tdesign-miniprogram/avatar/avatar",
-    "t-navbar": "tdesign-miniprogram/navbar/navbar",
-    "t-button": "tdesign-miniprogram/button/button",
-    "t-icon": "tdesign-miniprogram/icon/icon",
-    "t-cell-group": "tdesign-miniprogram/cell-group/cell-group",
-    "t-cell": "tdesign-miniprogram/cell/cell"
+  "usingComponents" : {
+    "layout" : "/components/layout/layout",
+    "t-swiper" : "tdesign-miniprogram/swiper/swiper",
+    "t-avatar" : "tdesign-miniprogram/avatar/avatar",
+    "t-navbar" : "tdesign-miniprogram/navbar/navbar",
+    "t-button" : "tdesign-miniprogram/button/button",
+    "t-icon" : "tdesign-miniprogram/icon/icon",
+    "t-cell-group" : "tdesign-miniprogram/cell-group/cell-group",
+    "t-cell" : "tdesign-miniprogram/cell/cell"
   }
 }
