@@ -1,9 +1,6 @@
 package cn.hui_community.service.controller.sys;
 
-import cn.hui_community.service.model.dto.request.AddCommunityRequest;
-import cn.hui_community.service.model.dto.request.AddSysRoleRequest;
-import cn.hui_community.service.model.dto.request.AddSysUserRequest;
-import cn.hui_community.service.model.dto.request.UpdateCommunityRequest;
+import cn.hui_community.service.model.dto.request.*;
 import cn.hui_community.service.model.dto.response.*;
 import cn.hui_community.service.service.CommunityService;
 import cn.hui_community.service.service.SysUserService;
@@ -60,7 +57,7 @@ public class CommunityController {
 
     @PostMapping("/{communityId}/role")
     @PreAuthorize("hasAuthority(@auth.ADMIN_AUTHORITY_PREFIX+#communityId) or hasAuthority(@auth.SUPER_AUTHORITY_PREFIX+'001')")
-    public SysUserRoleResponse addNewSysUserRole(@PathVariable String communityId, AddSysRoleRequest request) {
+    public SysUserRoleResponse addNewSysUserRole(@PathVariable String communityId, AddSysUserRoleRequest request) {
         return communityService.addSysUserRole(communityId, request);
     }
 
@@ -79,5 +76,12 @@ public class CommunityController {
     public List<CommunitySysUserResponse> removeRole(@PathVariable String communityId,
                                                      @PathVariable String sysUserRoleId) {
         return communityService.removeRole(communityId, sysUserRoleId);
+    }
+
+    @PutMapping("/{communityId}/role/{sysUserRoleId}")
+    @PreAuthorize("hasAuthority(@auth.ADMIN_AUTHORITY_PREFIX+#communityId) or hasAuthority(@auth.SUPER_AUTHORITY_PREFIX+'001')")
+    public SysUserRoleResponse updateRole(@PathVariable String communityId,
+                                          @PathVariable String sysUserRoleId, @RequestBody UpdateSysUserUserRoleRequest request) {
+        return communityService.updateSysUserRole(communityId, sysUserRoleId, request);
     }
 }

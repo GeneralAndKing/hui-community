@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import cn.hui_community.service.model.dto.request.UpdateSysUserUserRoleRequest;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -21,7 +23,7 @@ import cn.hui_community.service.model.Permission;
 import cn.hui_community.service.model.SysUser;
 import cn.hui_community.service.model.SysUserRole;
 import cn.hui_community.service.model.dto.request.AddCommunityRequest;
-import cn.hui_community.service.model.dto.request.AddSysRoleRequest;
+import cn.hui_community.service.model.dto.request.AddSysUserRoleRequest;
 import cn.hui_community.service.model.dto.request.UpdateCommunityRequest;
 import cn.hui_community.service.model.dto.response.CommunityResponse;
 import cn.hui_community.service.model.dto.response.CommunitySysUserResponse;
@@ -96,7 +98,7 @@ public class CommunityServiceImpl implements CommunityService {
     }
 
     @Override
-    public SysUserRoleResponse addSysUserRole(String communityId, AddSysRoleRequest request) {
+    public SysUserRoleResponse addSysUserRole(String communityId, AddSysUserRoleRequest request) {
         Community community = communityRepository.findById(communityId)
                 .orElseThrow(
                         ResponseStatusExceptionHelper.badRequestSupplier("community %s does not exist", communityId));
@@ -120,7 +122,7 @@ public class CommunityServiceImpl implements CommunityService {
 
     @Override
     public Page<CommunityResponse> page(String likedCode, String likedName, String areaOrParentAreaId,
-            Pageable pageable) {
+                                        Pageable pageable) {
         ArrayList<String> areaIds = new ArrayList<>();
         if (StringUtils.isNotBlank(areaOrParentAreaId)) {
             Area area = areaRepository.findById(areaOrParentAreaId)
@@ -164,7 +166,7 @@ public class CommunityServiceImpl implements CommunityService {
 
     @Override
     public Page<SysUserRolePageResponse> sysUserRolePage(String communityId, String likedName,
-            List<String> permissionIds, Pageable pageable) {
+                                                         List<String> permissionIds, Pageable pageable) {
         if (!communityRepository.existsById(communityId)) {
             throw ResponseStatusExceptionHelper.badRequest("community %s does not exist", communityId);
         }
@@ -210,5 +212,23 @@ public class CommunityServiceImpl implements CommunityService {
             sysUserList = sysUserRepository.saveAll(sysUserList);
         }
         return sysUserList.stream().map((sysUser) -> sysUser.toCommunityResponse(communityId)).toList();
+    }
+
+    @Override
+    public SysUserRoleResponse updateSysUserRole(String communityId, String sysUserRoleId, UpdateSysUserUserRoleRequest request) {
+        if (!communityRepository.existsById(communityId)) {
+            throw ResponseStatusExceptionHelper.badRequest("community %s does not exist", communityId);
+        }
+        List<Permission> permissionList = permissionRepository.findAllById(request.getPermissionIds());
+        if (!CollectionUtils.isEqualCollection(permissionList.stream().map(Permission::getId).toList(),
+                request.getPermissionIds())) {
+            throw ResponseStatusExceptionHelper.badRequest("permissionIds don't match");
+        }
+        SysUserRole sysUserRole = sysUserRoleRepository.findById(sysUserRoleId)
+                .orElseThrow(ResponseStatusExceptionHelper.badRequestSupplier("sysUserRole %s does not exist",
+                        sysUserRoleId));
+        sysUserRole.setName(request.getName());
+        sysUserRole.setPermissions(new HashSet<>(permissionList));
+        return sysUserRole.toResponse();
     }
 }
