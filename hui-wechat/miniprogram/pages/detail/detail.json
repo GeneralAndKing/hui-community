@@ -7,6 +7,7 @@
     "t-image" : "tdesign-miniprogram/image/image",
     "t-icon" : "tdesign-miniprogram/icon/icon",
     "t-cell" : "tdesign-miniprogram/cell/cell",
-    "t-avatar" : "tdesign-miniprogram/avatar/avatar"
+    "t-avatar" : "tdesign-miniprogram/avatar/avatar",
+    "t-button" : "tdesign-miniprogram/button/button"
   }
 }
