@@ -36,7 +36,14 @@ const editRef = ref<null | InstanceType<typeof CommunityEditDialog>>(null);
 const columns = ref<PrimaryTableCol<components["schemas"]["CommunityResponse"]>[]>([
   {
     colKey: "name",
-    title: "小区名称"
+    title: "小区名称",
+    cell: (_, { row }) => {
+      return (
+        <t-link theme="primary" underline href={`/dashboard/${row.code}`}>
+          {row.name}
+        </t-link>
+      );
+    }
   },
   {
     colKey: "address",

@@ -21,12 +21,12 @@ export const asideMenu: AsideMenu[] = [
   {
     name: "/dashboard/[communityId]/community/",
     title: "社区管理",
-    icon: "dashboard"
+    icon: "city-1"
   },
   {
     name: "/dashboard/[communityId]/user/",
-    title: "用户管理",
-    icon: "dashboard"
+    title: "员工管理",
+    icon: "user-1"
   }
 ];
 
