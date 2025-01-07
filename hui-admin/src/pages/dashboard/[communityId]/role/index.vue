@@ -137,7 +137,7 @@ const handleNewItem = () => {
 
 <template>
   <t-card bordered class="w-full flex h-full flex-col gap-4">
-    <RoleEditDialog ref="editRef" :permission="permission" />
+    <RoleEditDialog ref="editRef" :permission="permission ?? []" />
     <t-form
         ref="form"
         layout="inline"

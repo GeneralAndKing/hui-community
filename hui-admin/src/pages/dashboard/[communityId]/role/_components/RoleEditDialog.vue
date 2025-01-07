@@ -44,23 +44,6 @@ const handleOpen = (editId: string | undefined, current: components["schemas"]["
   void form.value?.clearValidate();
 };
 defineExpose({ open: handleOpen });
-
-const { data: permissionData } = useQuery({
-  queryKey: ["communityPermissions"],
-  queryFn: async () => {
-    const { data } = await client.GET("/sys-api/permission");
-    return data;
-  },
-  refetchOnMount: true
-});
-
-const permissionOptions = computed(() => {
-  return (permissionData.value ?? []).map(item => ({
-    value: item.id,
-    label: `[${item.type}] ${item.name}`
-  }));
-});
-
 const queryClient = useQueryClient();
 const { mutate: addMutate, isPending: addPending } = useMutation({
   mutationFn: async (data: components["schemas"]["AddSysUserRoleRequest"]) =>
@@ -139,7 +122,7 @@ const rules: FormProps["rules"] = {
         <t-form-item label="权限" name="permissionIds" :initial-data="formData.permissionIds ?? []">
           <t-transfer
               v-model="formData.permissionIds"
-              :data="permissionOptions"
+              :data="options"
               showCheckAll
           />
         </t-form-item>
