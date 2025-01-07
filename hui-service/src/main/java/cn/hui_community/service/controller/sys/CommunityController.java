@@ -57,7 +57,7 @@ public class CommunityController {
 
     @PostMapping("/{communityId}/role")
     @PreAuthorize("hasAuthority(@auth.ADMIN_AUTHORITY_PREFIX+#communityId) or hasAuthority(@auth.SUPER_AUTHORITY_PREFIX+'001')")
-    public SysUserRoleResponse addNewSysUserRole(@PathVariable String communityId, AddSysUserRoleRequest request) {
+    public SysUserRoleResponse addNewSysUserRole(@PathVariable String communityId, @RequestBody AddSysUserRoleRequest request) {
         return communityService.addSysUserRole(communityId, request);
     }
 
