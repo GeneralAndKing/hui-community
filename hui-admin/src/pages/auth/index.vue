@@ -73,7 +73,7 @@ const onSubmit: FormProps["onSubmit"] = ({ validateResult, firstError }) => {
           </t-form-item>
 
           <t-form-item>
-            <t-button theme="primary" type="submit" block>登录</t-button>
+            <t-button theme="primary" type="submit" :loading="authStore.isLoading" block>登录</t-button>
           </t-form-item>
         </t-form>
       </div>

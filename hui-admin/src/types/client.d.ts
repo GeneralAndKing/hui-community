@@ -31,6 +31,38 @@ export type paths = {
     patch?: never;
     trace?: never;
   };
+  "/sys-api/shop/{shopId}/role": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put: operations["enableRoles"];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/sys-api/shop-category/{shopCategoryId}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put: operations["update"];
+    post?: never;
+    delete: operations["remove_1"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/sys-api/community/{communityId}": {
     parameters: {
       query?: never;
@@ -42,6 +74,22 @@ export type paths = {
     put: operations["updateCommunityById"];
     post?: never;
     delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/sys-api/community/{communityId}/role/{sysUserRoleId}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put: operations["updateRole"];
+    post?: never;
+    delete: operations["removeRole"];
     options?: never;
     head?: never;
     patch?: never;
@@ -74,6 +122,22 @@ export type paths = {
     put?: never;
     post: operations["lock"];
     delete: operations["unlock"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/sys-api/shop-category": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations["add"];
+    delete?: never;
     options?: never;
     head?: never;
     patch?: never;
@@ -159,22 +223,6 @@ export type paths = {
     patch?: never;
     trace?: never;
   };
-  "/user-api/shop": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get: operations["page"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
   "/sys-api/sys-user/my": {
     parameters: {
       query?: never;
@@ -199,6 +247,54 @@ export type paths = {
       cookie?: never;
     };
     get: operations["checkUsername"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/sys-api/shop/{shopId}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["detail"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/sys-api/shop/page": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["page"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/sys-api/shop-category/page": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["page_1"];
     put?: never;
     post?: never;
     delete?: never;
@@ -255,6 +351,22 @@ export type paths = {
     patch?: never;
     trace?: never;
   };
+  "/sys-api/community/{communityId}/role/page": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["remove"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/sys-api/community/page": {
     parameters: {
       query?: never;
@@ -271,7 +383,7 @@ export type paths = {
     patch?: never;
     trace?: never;
   };
-  "/area": {
+  "/shop-category": {
     parameters: {
       query?: never;
       header?: never;
@@ -279,6 +391,22 @@ export type paths = {
       cookie?: never;
     };
     get: operations["all_2"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/area": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["all_3"];
     put?: never;
     post?: never;
     delete?: never;
@@ -480,6 +608,45 @@ export type components = {
       description?: string;
       permissions?: components["schemas"]["PermissionResponse"][];
     };
+    UpdateShowRoleRequest: {
+      /** @enum {string} */
+      role?: UpdateShowRoleRequestRole;
+      /** Format: date-time */
+      expiredTime?: Date;
+    };
+    ShopRoleMappingResponse: {
+      id?: string;
+      createBy?: string;
+      updateBy?: string;
+      /** Format: date-time */
+      updateTime?: Date;
+      /** Format: date-time */
+      createTime?: Date;
+      roleId?: string;
+      shopId?: string;
+      /** Format: date-time */
+      expiredTime?: Date;
+    };
+    UpdateShopCategoryRequest: {
+      name?: string;
+      image?: string;
+      description?: string;
+      parentId?: string;
+    };
+    ShopCategoryResponse: {
+      id?: string;
+      createBy?: string;
+      updateBy?: string;
+      /** Format: date-time */
+      updateTime?: Date;
+      /** Format: date-time */
+      createTime?: Date;
+      name?: string;
+      image?: string;
+      description?: string;
+      parentId?: string;
+      parentName?: string;
+    };
     UpdateCommunityRequest: {
       code?: string;
       name?: string;
@@ -507,8 +674,19 @@ export type components = {
       /** Format: float */
       latitude?: number;
     };
+    UpdateSysUserUserRoleRequest: {
+      permissionIds: string[];
+      name: string;
+      description: string;
+    };
     UpdateRolesRequest: {
       roleIds?: string[];
+    };
+    AddShopCategoryRequest: {
+      name?: string;
+      image?: string;
+      description?: string;
+      parentId?: string;
     };
     AddCommunityRequest: {
       code?: string;
@@ -529,10 +707,59 @@ export type components = {
       /** Format: date-time */
       expiredTime?: Date;
     };
-    AddSysRoleRequest: {
-      permissionIds?: string[];
+    AddSysUserRoleRequest: {
+      permissionIds: string[];
+      name: string;
+      description: string;
+    };
+    ShopDetailResponse: {
+      id?: string;
+      createBy?: string;
+      updateBy?: string;
+      /** Format: date-time */
+      updateTime?: Date;
+      /** Format: date-time */
+      createTime?: Date;
+      name?: string;
+      address?: string;
+      phone?: string;
+      areaId?: string;
+      facadeImg?: string;
+      businessImg?: string[];
+      image?: string;
+      notice?: string;
+      owner?: components["schemas"]["ShopkeeperResponse"];
+      /** Format: float */
+      longitude?: number;
+      /** Format: float */
+      latitude?: number;
+      roles?: components["schemas"]["ShopRoleResponse"][];
+      categories?: components["schemas"]["ShopCategoryResponse"][];
+      communities?: components["schemas"]["CommunityResponse"][];
+    };
+    ShopRoleResponse: {
+      id?: string;
+      createBy?: string;
+      updateBy?: string;
+      /** Format: date-time */
+      updateTime?: Date;
+      /** Format: date-time */
+      createTime?: Date;
       name?: string;
       description?: string;
+      permissions?: components["schemas"]["PermissionResponse"][];
+    };
+    ShopkeeperResponse: {
+      id?: string;
+      createBy?: string;
+      updateBy?: string;
+      /** Format: date-time */
+      updateTime?: Date;
+      /** Format: date-time */
+      createTime?: Date;
+      name?: string;
+      description?: string;
+      openId?: string;
     };
     Pageable: {
       /** Format: int32 */
@@ -551,21 +778,41 @@ export type components = {
       /** Format: int64 */
       totalPages?: number;
     };
-    PagedModelShopShowResponse: {
-      content?: components["schemas"]["ShopShowResponse"][];
+    PagedModelShopSysShowResponse: {
+      content?: components["schemas"]["ShopSysShowResponse"][];
       page?: components["schemas"]["PageMetadata"];
     };
-    ShopShowResponse: Record<string, never>;
+    ShopSysShowResponse: {
+      id?: string;
+      createBy?: string;
+      updateBy?: string;
+      /** Format: date-time */
+      updateTime?: Date;
+      /** Format: date-time */
+      createTime?: Date;
+      name?: string;
+      address?: string;
+      phone?: string;
+      areaId?: string;
+      facadeImg?: string;
+      image?: string;
+      notice?: string;
+      /** Format: float */
+      longitude?: number;
+      /** Format: float */
+      latitude?: number;
+      categories?: components["schemas"]["ShopCategoryResponse"][];
+    };
+    PagedModelShopCategoryResponse: {
+      content?: components["schemas"]["ShopCategoryResponse"][];
+      page?: components["schemas"]["PageMetadata"];
+    };
     PaymentCategoryResponse: {
       id?: string;
       name?: string;
       icon?: string;
     };
-    PagedModelSysUserPageResponse: {
-      content?: components["schemas"]["SysUserPageResponse"][];
-      page?: components["schemas"]["PageMetadata"];
-    };
-    SysUserPageResponse: {
+    CommunitySysUserResponse: {
       id?: string;
       createBy?: string;
       updateBy?: string;
@@ -582,6 +829,26 @@ export type components = {
       /** Format: date-time */
       expiredTime?: Date;
       roles?: string[];
+    };
+    PagedModelCommunitySysUserResponse: {
+      content?: components["schemas"]["CommunitySysUserResponse"][];
+      page?: components["schemas"]["PageMetadata"];
+    };
+    PagedModelSysUserRolePageResponse: {
+      content?: components["schemas"]["SysUserRolePageResponse"][];
+      page?: components["schemas"]["PageMetadata"];
+    };
+    SysUserRolePageResponse: {
+      id?: string;
+      createBy?: string;
+      updateBy?: string;
+      /** Format: date-time */
+      updateTime?: Date;
+      /** Format: date-time */
+      createTime?: Date;
+      name?: string;
+      description?: string;
+      permissions?: components["schemas"]["PermissionResponse"][];
     };
     PagedModelCommunityResponse: {
       content?: components["schemas"]["CommunityResponse"][];
@@ -654,6 +921,78 @@ export interface operations {
       };
     };
   };
+  enableRoles: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        shopId: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateShowRoleRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ShopRoleMappingResponse"];
+        };
+      };
+    };
+  };
+  update: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        shopCategoryId: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateShopCategoryRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ShopCategoryResponse"];
+        };
+      };
+    };
+  };
+  remove_1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        shopCategoryId: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
   updateCommunityById: {
     parameters: {
       query?: never;
@@ -676,6 +1015,56 @@ export interface operations {
         };
         content: {
           "*/*": components["schemas"]["CommunityResponse"];
+        };
+      };
+    };
+  };
+  updateRole: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        communityId: string;
+        sysUserRoleId: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateSysUserUserRoleRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["SysUserRoleResponse"];
+        };
+      };
+    };
+  };
+  removeRole: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        communityId: string;
+        sysUserRoleId: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["CommunitySysUserResponse"][];
         };
       };
     };
@@ -776,6 +1165,30 @@ export interface operations {
       };
     };
   };
+  add: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["AddShopCategoryRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ShopCategoryResponse"];
+        };
+      };
+    };
+  };
   createPayment: {
     parameters: {
       query?: never;
@@ -846,16 +1259,18 @@ export interface operations {
   };
   addNewSysUserRole: {
     parameters: {
-      query: {
-        request: components["schemas"]["AddSysRoleRequest"];
-      };
+      query?: never;
       header?: never;
       path: {
         communityId: string;
       };
       cookie?: never;
     };
-    requestBody?: never;
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["AddSysUserRoleRequest"];
+      };
+    };
     responses: {
       /** @description OK */
       200: {
@@ -884,32 +1299,6 @@ export interface operations {
         };
         content: {
           "*/*": string;
-        };
-      };
-    };
-  };
-  page: {
-    parameters: {
-      query: {
-        pageable: components["schemas"]["Pageable"];
-        communityId?: string;
-        categoryId?: string;
-        longitude?: number;
-        latitude?: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["PagedModelShopShowResponse"];
         };
       };
     };
@@ -952,6 +1341,77 @@ export interface operations {
         };
         content: {
           "*/*": boolean;
+        };
+      };
+    };
+  };
+  detail: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        shopId: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ShopDetailResponse"];
+        };
+      };
+    };
+  };
+  page: {
+    parameters: {
+      query: {
+        pageable: components["schemas"]["Pageable"];
+        communityId?: string;
+        categoryIds?: string[];
+        likedName?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["PagedModelShopSysShowResponse"];
+        };
+      };
+    };
+  };
+  page_1: {
+    parameters: {
+      query: {
+        parentId?: string;
+        likedName?: string;
+        pageable: components["schemas"]["Pageable"];
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["PagedModelShopCategoryResponse"];
         };
       };
     };
@@ -1017,7 +1477,33 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["PagedModelSysUserPageResponse"];
+          "*/*": components["schemas"]["PagedModelCommunitySysUserResponse"];
+        };
+      };
+    };
+  };
+  remove: {
+    parameters: {
+      query: {
+        permissionIds?: string[];
+        likedName?: string;
+        pageable: components["schemas"]["Pageable"];
+      };
+      header?: never;
+      path: {
+        communityId: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["PagedModelSysUserRolePageResponse"];
         };
       };
     };
@@ -1049,7 +1535,33 @@ export interface operations {
   };
   all_2: {
     parameters: {
-      query?: never;
+      query?: {
+        parentId?: string;
+        all?: boolean;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ShopCategoryResponse"][];
+        };
+      };
+    };
+  };
+  all_3: {
+    parameters: {
+      query?: {
+        parentId?: string;
+        all?: boolean;
+      };
       header?: never;
       path?: never;
       cookie?: never;
@@ -1067,4 +1579,10 @@ export interface operations {
       };
     };
   };
+}
+export enum UpdateShowRoleRequestRole {
+  DEPOSIT = "DEPOSIT",
+  TIME = "TIME",
+  SCORE = "SCORE",
+  DISPATCH = "DISPATCH"
 }

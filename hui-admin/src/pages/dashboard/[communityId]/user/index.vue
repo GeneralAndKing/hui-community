@@ -71,7 +71,7 @@ const onSubmit: FormProps["onSubmit"] = () => {
 
 const editRef = ref<null | InstanceType<typeof UserEditDialog>>(null);
 
-const columns = ref<PrimaryTableCol<components["schemas"]["SysUserPageResponse"]>[]>([
+const columns = ref<PrimaryTableCol<components["schemas"]["CommunitySysUserResponse"]>[]>([
   {
     colKey: "displayName",
     title: "用户名称"
