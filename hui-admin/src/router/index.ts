@@ -32,6 +32,11 @@ export const asideMenu: AsideMenu[] = [
     name: "/dashboard/[communityId]/role/",
     title: "角色管理",
     icon: "user-list"
+  },
+  {
+    name: "/dashboard/[communityId]/shop/",
+    title: "商家管理",
+    icon: "shop-2"
   }
 ];
 
