@@ -47,6 +47,7 @@ public class ShopCategory extends Base {
     private Set<Shop> shops;
 
     public ShopCategoryResponse toResponse() {
+        ShopCategory parent = getParent();
         return ShopCategoryResponse.builder()
                 .id(getId())
                 .createTime(getCreateTime())
@@ -57,7 +58,7 @@ public class ShopCategory extends Base {
                 .description(getDescription())
                 .image(getImage())
                 .parentId(getParentId())
-                .parentName(getParent().getName())
+                .parentName(parent!=null?parent.getName():null)
                 .build();
     }
 }
