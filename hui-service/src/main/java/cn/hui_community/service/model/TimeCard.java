@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -17,10 +18,10 @@ import java.math.BigDecimal;
 @SuperBuilder
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Table(name = "h_deposit_card")
+@Table(name = "h_time_card")
 @Slf4j
 @EntityListeners(AuditingEntityListener.class)
-public class DepositCard extends Base {
+public class TimeCard extends Base {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "template_id")
@@ -29,8 +30,8 @@ public class DepositCard extends Base {
     @Column(name = "template_id", insertable = false, updatable = false)
     private String templateId;
 
-    @Column(name = "balance")
-    private BigDecimal balance;
+    @Column(name = "expired_time")
+    private Instant expiredTime;
 
     @Column(name = "code")
     private String code;
@@ -40,6 +41,4 @@ public class DepositCard extends Base {
 
     @Column(name = "user_id", insertable = false, updatable = false)
     private String userId;
-
-
 }

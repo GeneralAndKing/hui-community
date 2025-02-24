@@ -17,11 +17,10 @@ import java.math.BigDecimal;
 @SuperBuilder
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Table(name = "h_deposit_card")
+@Table(name = "h_score_card")
 @Slf4j
 @EntityListeners(AuditingEntityListener.class)
-public class DepositCard extends Base {
-
+public class ScoreCard extends Base{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "template_id")
     private CardTemplate template;
@@ -40,6 +39,5 @@ public class DepositCard extends Base {
 
     @Column(name = "user_id", insertable = false, updatable = false)
     private String userId;
-
 
 }

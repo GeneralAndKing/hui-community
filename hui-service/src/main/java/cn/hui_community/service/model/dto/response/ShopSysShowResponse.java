@@ -1,5 +1,6 @@
 package cn.hui_community.service.model.dto.response;
 
+import cn.hui_community.service.enums.CardEnum;
 import cn.hui_community.service.model.Area;
 import cn.hui_community.service.model.ShopCategory;
 import cn.hui_community.service.model.ShopRoleMapping;
@@ -10,11 +11,12 @@ import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @SuperBuilder
 @Getter
-public class ShopSysShowResponse extends BaseResponse{
+public class ShopSysShowResponse extends BaseResponse {
 
     private String name;
 
@@ -23,7 +25,6 @@ public class ShopSysShowResponse extends BaseResponse{
 
 
     private String phone;
-
 
 
     private String areaId;
@@ -45,4 +46,6 @@ public class ShopSysShowResponse extends BaseResponse{
 
 
     private Set<ShopCategoryResponse> categories;
+
+
 }

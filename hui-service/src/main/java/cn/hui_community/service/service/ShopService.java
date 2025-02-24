@@ -14,5 +14,6 @@ public interface ShopService {
 
     ShopDetailResponse detail(String shopId);
 
+
     ShopRoleMappingResponse updateRole(String shopId, UpdateShowRoleRequest request);
 }

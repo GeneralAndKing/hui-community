@@ -1,11 +1,13 @@
 package cn.hui_community.service.model.dto.response;
 
+import cn.hui_community.service.enums.CardEnum;
 import cn.hui_community.service.model.*;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Getter
@@ -41,4 +43,7 @@ public class ShopDetailResponse extends BaseResponse {
 
 
     private Set<CommunityResponse> communities;
+
+
+    private Map<CardEnum, CardTemplateResponse> cardTemplates;
 }

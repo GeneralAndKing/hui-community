@@ -1,5 +1,6 @@
 package cn.hui_community.service.model;
 
+import cn.hui_community.service.enums.CardEnum;
 import cn.hui_community.service.model.dto.response.ShopDetailResponse;
 import cn.hui_community.service.model.dto.response.ShopSysShowResponse;
 import jakarta.persistence.*;
@@ -10,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -84,6 +86,11 @@ public class Shop extends Base {
     @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL)
     private Set<CommunityShopMapping> communityShopMappings;
 
+
+    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL)
+    @MapKey(name = "type")
+    private Map<CardEnum, CardTemplate> cardMap;
+
     public ShopSysShowResponse toSysShowResponse() {
         return ShopSysShowResponse.builder()
                 .id(getId())
@@ -123,6 +130,13 @@ public class Shop extends Base {
                 .businessImg(getBusinessImg())
                 .roles(getRoles().stream().map(mapping -> mapping.getRole().toResponse()).collect(Collectors.toSet()))
                 .communities(getCommunityShopMappings().stream().map(mapping -> mapping.getCommunity().toResponse()).collect(Collectors.toSet()))
+                .cardTemplates(getCardMap().entrySet().stream()
+                        .collect(Collectors.toMap(
+                                Map.Entry::getKey,
+                                entry -> entry.getValue().toResponse()
+                        )))
                 .build();
     }
+
+
 }
