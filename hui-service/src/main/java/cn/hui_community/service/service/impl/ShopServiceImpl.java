@@ -3,14 +3,9 @@ package cn.hui_community.service.service.impl;
 import cn.hui_community.service.helper.PageHelper;
 import cn.hui_community.service.helper.ResponseStatusExceptionHelper;
 import cn.hui_community.service.helper.ShopRoleHelper;
-import cn.hui_community.service.model.CommunityShopMapping;
-import cn.hui_community.service.model.Shop;
-import cn.hui_community.service.model.ShopRole;
-import cn.hui_community.service.model.ShopRoleMapping;
+import cn.hui_community.service.model.*;
 import cn.hui_community.service.model.dto.request.UpdateShowRoleRequest;
-import cn.hui_community.service.model.dto.response.ShopDetailResponse;
-import cn.hui_community.service.model.dto.response.ShopRoleMappingResponse;
-import cn.hui_community.service.model.dto.response.ShopSysShowResponse;
+import cn.hui_community.service.model.dto.response.*;
 import cn.hui_community.service.repository.*;
 import cn.hui_community.service.service.ShopService;
 import jakarta.persistence.criteria.Join;
@@ -25,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -83,6 +79,15 @@ public class ShopServiceImpl implements ShopService {
                 .expiredTime(request.getExpiredTime())
                 .build()
         ).toResponse();
+    }
+
+    @Override
+    public List<MenuResponse> products(String shopId) {
+        Shop shop = shopRepository.findById(shopId)
+                .orElseThrow(ResponseStatusExceptionHelper.badRequestSupplier("shop %s does not exist", shopId));
+        return MenuResponse.buildArray(shop.getProducts().stream()
+                .map(Product::toResponse)
+                .toList());
     }
 
 }

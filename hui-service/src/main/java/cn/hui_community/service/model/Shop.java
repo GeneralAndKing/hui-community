@@ -88,6 +88,10 @@ public class Shop extends Base {
 
 
     @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL)
+    private Set<Product> products;
+
+
+    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL)
     @MapKey(name = "type")
     private Map<CardEnum, CardTemplate> cardMap;
 
@@ -97,6 +101,7 @@ public class Shop extends Base {
                 .createTime(getCreateTime())
                 .createBy(getCreateBy())
                 .updateBy(getUpdateBy())
+                .updateTime(getUpdateTime())
                 .name(getName())
                 .address(getAddress())
                 .phone(getPhone())

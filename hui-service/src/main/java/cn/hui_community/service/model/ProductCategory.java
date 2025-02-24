@@ -1,15 +1,12 @@
 package cn.hui_community.service.model;
 
-
-import cn.hui_community.service.model.dto.response.ProductResponse;
+import cn.hui_community.service.model.dto.response.ProductCategoryResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import java.math.BigDecimal;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -19,25 +16,10 @@ import java.math.BigDecimal;
 @SuperBuilder
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Table(name = "h_product")
+@Table(name = "h_product_category")
 @Slf4j
 @EntityListeners(AuditingEntityListener.class)
-public class Product extends Base {
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "shop_id")
-    private Shop shop;
-
-
-    @Column(name = "shop_id", insertable = false, updatable = false)
-    private String shopId;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "category_id")
-    private ProductCategory category;
-
-    @Column(name = "category_id", insertable = false, updatable = false)
-    private String categoryId;
+public class ProductCategory extends Base {
 
 
     @Column(name = "name")
@@ -46,14 +28,18 @@ public class Product extends Base {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "image")
-    private String image;
+    @Column(name = "sort")
+    private Integer sort;
 
-    @Column(name = "price")
-    private BigDecimal price;
+    @ManyToOne
+    @JoinColumn(name = "shop_id")
+    private Shop shop;
 
-    public ProductResponse toResponse() {
-        return ProductResponse.builder()
+    @Column(name = "shop_id", insertable = false, updatable = false)
+    private String shopId;
+
+    public ProductCategoryResponse toResponse() {
+        return ProductCategoryResponse.builder()
                 .id(getId())
                 .createTime(getCreateTime())
                 .createBy(getCreateBy())
@@ -61,10 +47,8 @@ public class Product extends Base {
                 .updateTime(getUpdateTime())
                 .name(getName())
                 .description(getDescription())
-                .image(getImage())
-                .price(getPrice())
+                .sort(getSort())
                 .shopId(getShopId())
-                .category(getCategory().toResponse())
                 .build();
     }
 }
